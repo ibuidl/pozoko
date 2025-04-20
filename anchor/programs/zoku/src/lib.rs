@@ -1,6 +1,11 @@
 #![allow(clippy::result_large_err)]
 
 use anchor_lang::prelude::*;
+pub mod instructions;
+pub mod state;
+
+pub use state::*;
+pub use instructions::*;
 
 declare_id!("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
 
@@ -30,6 +35,12 @@ pub mod zoku {
     ctx.accounts.zoku.count = value.clone();
     Ok(())
   }
+
+  pub fn create_channel(ctx: Context<ChannelCreate>, args: ChannelArgs) ->Result<()>{
+    instructions::channel_create::channel_create(ctx, args);
+    Ok(())
+  }
+
 }
 
 #[derive(Accounts)]
