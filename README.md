@@ -3,10 +3,10 @@
 ## Getting Started
 
 ### design
-creator
-![web3合约设计-创作者 drawio](https://github.com/user-attachments/assets/7aa2b562-9a02-4b2b-98f1-5dddf65b0624)
-user
-![web3合约设计-用户 drawio](https://github.com/user-attachments/assets/874715e2-a331-4c2c-9f73-8aa9d22010bb)
+![web3合约设计-创作者 drawio](https://github.com/user-attachments/assets/5bc59cec-f171-4f50-82ee-b707b39cabd2)
+
+
+![web3合约设计-用户 drawio](https://github.com/user-attachments/assets/3795e257-0a4c-4826-b2a8-c93f96107ca1)
 
 ### Prerequisites
 
