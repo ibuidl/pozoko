@@ -2,6 +2,12 @@
 
 ## Getting Started
 
+### design
+![web3合约设计-创作者 drawio](https://github.com/user-attachments/assets/5bc59cec-f171-4f50-82ee-b707b39cabd2)
+
+
+![web3合约设计-用户 drawio](https://github.com/user-attachments/assets/3795e257-0a4c-4826-b2a8-c93f96107ca1)
+
 ### Prerequisites
 
 - Node v18.18.0 or higher
