@@ -9,7 +9,6 @@ pub fn initialize_ep(
     ctx: Context<EpCreate>,
     metadata_cid: String,
 ) -> Result<()> {
-    let ep_address = ctx.accounts.ep_account.key();
     let ep_account =  ctx.accounts.ep_account.deref_mut();
     let channel_address = ctx.accounts.channel_info.key();
     let channel_info = ctx.accounts.channel_info.deref_mut();
@@ -27,10 +26,10 @@ pub fn initialize_ep(
         .ok_or(ErrorCode::MathOverflow)?;
 
     emit!(EpisodeCreatedEvent {
-        episode: ep_address,
+        episode: ctx.accounts.ep_account.key(),
         channel: channel_address,
         creator: ctx.accounts.creator.key(),
-        metadata_cid: ep_account.metadata_cid.clone(),
+        metadata_cid.clone(),
         created_at: ep_account.created_at,
     });
     Ok(())

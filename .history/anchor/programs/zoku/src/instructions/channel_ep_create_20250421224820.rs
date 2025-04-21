@@ -2,14 +2,13 @@ use anchor_lang::prelude::*;
 
 use std:: ops::DerefMut;
 
-use crate::states::{ChannelInfo, EpisodeCreatedEvent, EpisodeInfo};
+use crate::states::{ChannelInfo, EpisodeInfo};
 use crate::error::ErrorCode;
 
 pub fn initialize_ep(
     ctx: Context<EpCreate>,
     metadata_cid: String,
 ) -> Result<()> {
-    let ep_address = ctx.accounts.ep_account.key();
     let ep_account =  ctx.accounts.ep_account.deref_mut();
     let channel_address = ctx.accounts.channel_info.key();
     let channel_info = ctx.accounts.channel_info.deref_mut();
@@ -26,13 +25,13 @@ pub fn initialize_ep(
         .checked_add(1)
         .ok_or(ErrorCode::MathOverflow)?;
 
-    emit!(EpisodeCreatedEvent {
-        episode: ep_address,
-        channel: channel_address,
-        creator: ctx.accounts.creator.key(),
-        metadata_cid: ep_account.metadata_cid.clone(),
-        created_at: ep_account.created_at,
-    });
+        emit!(EpisodeCreated {
+            episode: ctx.accounts.ep_account.key(),
+            channel: channel_address,
+            creator: ctx.accounts.creator.key(),
+            metadata_cid,
+            created_at: ep_account.created_at,
+        });
     Ok(())
 }
 

@@ -27,7 +27,7 @@ pub fn initialize_ep(
         .ok_or(ErrorCode::MathOverflow)?;
 
     emit!(EpisodeCreatedEvent {
-        episode: ep_address,
+        episode: ctx.accounts.ep_account.key(),
         channel: channel_address,
         creator: ctx.accounts.creator.key(),
         metadata_cid: ep_account.metadata_cid.clone(),
