@@ -6,21 +6,21 @@ use anchor_lang::prelude::*;
 #[derive(InitSpace)]
 pub struct EpisodeInfo{
 
-    //频道中的序号
-    pub order: i32,
+    //episode order
+    pub order: u64,
 
-    //单元名称
+    //episode title
     #[max_len(500)]
     pub title: String,
 
-    //单元图片
+    //episode image
     #[max_len(1000)]
     pub image: String,
 
-    //音频链接地址
+    //episode audio file link
     #[max_len(500)]
     pub url: String,
 
-    //发布时间
+    //episode publish time
     pub publish_at: i64,
 }

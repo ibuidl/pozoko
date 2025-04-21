@@ -6,12 +6,12 @@ use anchor_lang::prelude::*;
 #[derive(InitSpace)]
 pub struct UserTransData{
 
-    //创作者
+    //subscipe user
     pub user: Pubkey,
 
-    //交易时间
+    //pay time
     pub trans_at: i64,
 
-    //金额
+    //pay
     pub amount: u64,
 }

@@ -36,8 +36,15 @@ pub mod zoku {
     Ok(())
   }
 
+  //create channel
   pub fn create_channel(ctx: Context<ChannelCreate>, args: ChannelArgs) ->Result<()>{
     instructions::channel_create::channel_create(ctx, args);
+    Ok(())
+  }
+
+  //publish episode
+  pub fn publish_episode(ctx: Context<EpisodeCreate>, args: EpisodeArgs) -> Result<()>{
+    instructions::episode_create::episode_create(ctx, args);
     Ok(())
   }
 

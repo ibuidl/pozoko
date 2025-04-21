@@ -6,25 +6,36 @@ use crate::state::episode_info::EpisodeInfo;
 #[derive(InitSpace)]
 pub struct ChannelData{
 
-    //频道名称
+    //channel title
     #[max_len(500)]
     pub title: String,
 
-    //封面图片
+    //channel cover image
     #[max_len(10000)]
     pub image: String,
 
-    //创作者
+    //channel type(free or pay)
+    pub channel_type: i32,
+
     pub creator: Pubkey,
 
-    //频道创建时间
+    //subscribe total
+    pub follow: i64,
+
+    //create time
     pub create_at: i64,
 
-    //频道描述
+    //channel description
     #[max_len(500)]
     pub description: String,
 
-    //剧集
+    //episode list
     #[max_len(10000)]
     pub eps: Vec<EpisodeInfo>,
+}
+
+impl ChannelData{
+    pub const SEED_PREFIX: &'static str = "channel_v1";
+
+    pub const AMOUNT: u64 = 10000;
 }
