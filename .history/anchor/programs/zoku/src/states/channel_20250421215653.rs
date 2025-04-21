@@ -19,8 +19,8 @@ pub struct ChannelInfo {
     #[max_len(10)]
     pub creators: Vec<Creator>,
 
-    #[max_len(200)]
-    pub avatar: String,
+    #[max_len(100)]
+    pub ipfs_hash: String,
 }
 
 #[derive(InitSpace, Clone, AnchorSerialize, AnchorDeserialize)]
@@ -52,21 +52,4 @@ impl ChannelInfo {
                 .collect(),
         )
     }
-}
-
-#[account]
-#[derive(InitSpace)]
-pub struct EpisodeInfo {
-    pub channel: Pubkey,
-    pub created_at: i64,
-    pub likes: u64,
-    pub is_published: bool,
-    pub rewards: u64,
-
-    #[max_len(200)]
-    pub metadata_cid: String,
-}
-
-impl EpisodeInfo {
-    pub const SEED_PREFIX: &'static str = "episodeInfo_v1";
 }

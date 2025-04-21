@@ -19,7 +19,7 @@ pub struct ChannelNftArgs {
     pub url: String,
     pub description: String,
     pub creators: Vec<Creator>,
-    pub avatar: String,
+    pub ipfs_hash: String,
     pub is_enabled: bool,
     pub type_of_cost: TypeOfCost,
     pub seller_fee_basis_points: u16
@@ -35,7 +35,7 @@ impl ChannelNftArgs {
         ChannelInfo {
             creators: self.creators,
             is_enabled: self.is_enabled,
-            avatar: self.avatar,
+            ipfs_hash: self.ipfs_hash,
             description: self.description,
             type_of_cost: self.type_of_cost,
             mint_account:mint_account,
