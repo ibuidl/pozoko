@@ -59,14 +59,10 @@ impl ChannelInfo {
 pub struct EpisodeInfo {
     pub channel: Pubkey,
     pub created_at: i64,
-    pub likes: u64,
+    pub duration: u32,
     pub is_published: bool,
     pub rewards: u64,
 
     #[max_len(200)]
     pub metadata_cid: String,
-}
-
-impl EpisodeInfo {
-    pub const SEED_PREFIX: &'static str = "episodeInfo_v1";
 }

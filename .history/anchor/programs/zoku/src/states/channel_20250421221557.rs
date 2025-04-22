@@ -66,7 +66,3 @@ pub struct EpisodeInfo {
     #[max_len(200)]
     pub metadata_cid: String,
 }
-
-impl EpisodeInfo {
-    pub const SEED_PREFIX: &'static str = "episodeInfo_v1";
-}
