@@ -6,8 +6,8 @@ use anchor_lang::prelude::*;
 #[derive(InitSpace)]
 pub struct EpisodeInfo{
 
-    //episode order
-    pub order: u64,
+    //episode unique key
+    pub episode_id: u64,
 
     //episode title
     #[max_len(500)]

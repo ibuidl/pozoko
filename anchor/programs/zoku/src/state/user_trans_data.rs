@@ -1,17 +1,13 @@
-use anchor_lang::prelude::*;
+// use std::collections::HashMap;
+
+// use anchor_lang::prelude::*;
 
 
 
-#[account]
-#[derive(InitSpace)]
-pub struct UserTransData{
+// #[account]
+// #[derive(InitSpace)]
+// pub struct UserTransData{
 
-    //subscipe user
-    pub user: Pubkey,
-
-    //pay time
-    pub trans_at: i64,
-
-    //pay
-    pub amount: u64,
-}
+//     //subscibe user
+//     pub trans: HashMap<Pubkey, i64>,
+// }

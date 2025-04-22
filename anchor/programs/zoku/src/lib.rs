@@ -48,6 +48,12 @@ pub mod zoku {
     Ok(())
   }
 
+  //user subscribe channel
+  pub fn channel_subscribe(ctx: Context<ChannelSbscribe>, args:SubscribeArgs) ->Result<()>{
+    instructions::channel_subscribe::channel_subscribe(ctx, args);
+    Ok(())
+  }
+
 }
 
 #[derive(Accounts)]

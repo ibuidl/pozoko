@@ -49,7 +49,7 @@ pub fn channel_create(ctx: Context<ChannelCreate>, args:ChannelArgs) -> Result<(
             ctx.accounts.token_program.to_account_info(),
             MintTo{
                 mint: ctx.accounts.channel_mint_account.to_account_info(),
-                to: ctx.accounts.channel_associated_token_account.to_account_info(),
+                to: ctx.accounts.creator_ata.to_account_info(),
                 authority: ctx.accounts.authority.to_account_info(),
             },
             singer_seeds,
@@ -126,7 +126,6 @@ pub struct ChannelCreate<'info>{
         seeds=[
             ChannelData::SEED_PREFIX.as_bytes(),
             &args.id.to_string().as_bytes(),
-            &args.title.to_string().as_bytes(),
         ],
         bump
     )]
@@ -137,8 +136,8 @@ pub struct ChannelCreate<'info>{
         payer = authority,
         space = 8 + ChannelData::INIT_SPACE,
         seeds = [
-            channel_mint_account.key().as_ref(),
             ChannelData::SEED_PREFIX.as_bytes(),
+            channel_mint_account.key().as_ref(),
         ],
         bump,
     )]
@@ -151,7 +150,7 @@ pub struct ChannelCreate<'info>{
         associated_token::mint = channel_mint_account,
         associated_token::authority = authority,
     )]
-    pub channel_associated_token_account: Box<Account<'info, TokenAccount>>,
+    pub creator_ata: Box<Account<'info, TokenAccount>>,
 
 
     #[account(mut)]

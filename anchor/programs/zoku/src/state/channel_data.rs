@@ -14,7 +14,10 @@ pub struct ChannelData{
     #[max_len(10000)]
     pub image: String,
 
-    //channel type(free or pay)
+    //channel subscribe type(free or pay)
+    pub channel_sub_type: i32,
+
+    //channel type(text, audio or video)
     pub channel_type: i32,
 
     pub creator: Pubkey,
@@ -29,6 +32,8 @@ pub struct ChannelData{
     #[max_len(500)]
     pub description: String,
 
+    pub price: u64,
+
     //episode list
     #[max_len(10000)]
     pub eps: Vec<EpisodeInfo>,
@@ -36,6 +41,4 @@ pub struct ChannelData{
 
 impl ChannelData{
     pub const SEED_PREFIX: &'static str = "channel_v1";
-
-    pub const AMOUNT: u64 = 10000;
 }

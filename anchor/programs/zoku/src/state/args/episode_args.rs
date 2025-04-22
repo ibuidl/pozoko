@@ -6,14 +6,14 @@ use crate::state::episode_info::EpisodeInfo;
 #[account]
 pub struct EpisodeArgs{
 
-    //channel_nft_mint_account
+    //channel unique key
     pub channel_id: u64,
 
-    //channel title
-    pub channel_title: String,
+    //channel version
+    pub channel_version: String,
 
-    //episode order
-    pub order: u64,
+    //episode unique key
+    pub episode_id: u64,
 
     //episode title
     pub title: String,
@@ -31,7 +31,7 @@ impl EpisodeArgs{
         
         let clock = Clock::get().unwrap();
         EpisodeInfo{
-            order:self.order,
+            episode_id:self.episode_id,
             title:self.title,
             image: self.image,
             url:self.url,

@@ -24,7 +24,6 @@ pub struct EpisodeCreate<'info>{
         seeds=[
             ChannelData::SEED_PREFIX.as_bytes(),
             &args.channel_id.to_string().as_bytes(),
-            &args.channel_title.to_string().as_bytes(),
         ],
         bump
     )]
