@@ -53,8 +53,8 @@ pub mod zoku {
         instructions::channel_nft_mint(ctx, amount)
     }
 
-    pub fn initialize_ep(ctx: Context<EpCreate>, metadata_cid: String) -> Result<()> {
-        instructions::initialize_ep(ctx, metadata_cid)
+    pub fn initialize_ep(ctx: Context<EpCreate>, args: EpisodeArgs) -> Result<()> {
+        instructions::initialize_ep(ctx, args)
     }
 }
 

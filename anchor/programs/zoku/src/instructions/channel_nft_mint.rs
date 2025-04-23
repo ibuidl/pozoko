@@ -18,8 +18,8 @@ pub fn channel_nft_mint(ctx: Context<ChannelNftMint>,amount: u64)-> Result<()>{
         &[ctx.bumps.channel_info],
     ]];
 
-    channel_info.mint_amount = channel_info
-        .mint_amount
+    channel_info.nft_mint_amount = channel_info
+        .nft_mint_amount
         .checked_add(amount)
         .ok_or(ErrorCode::MathOverflow)?;
     
