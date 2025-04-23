@@ -24,7 +24,8 @@ pub struct ChannelNftMintEvent {
 
 #[event]
 pub struct EpisodeCreatedEvent {
-    pub episode: Pubkey,
+    pub episode_name: String,
+    pub episode_symbol: String,
     pub channel: Pubkey,
     pub creator: Pubkey,
     pub metadata_cid: String,

@@ -8,7 +8,7 @@ use anchor_spl::{
 };
 
 
-use crate::states::{ ChannelEtfCreateEvent, ChannelInfo,  Creator, TypeOfCost};
+use crate::states::{ ChannelEtfCreateEvent, ChannelInfo, Creator,  TypeOfCost};
 use crate::error::ErrorCode;
 
 
@@ -28,7 +28,7 @@ pub struct ChannelNftArgs {
 impl ChannelNftArgs {
     fn create_account(
         self, 
-        mint_account: Pubkey ,
+        nft_mint_account: Pubkey,
     ) -> ChannelInfo {
         let clock = Clock::get().unwrap();
 
@@ -38,9 +38,12 @@ impl ChannelNftArgs {
             avatar: self.avatar,
             description: self.description,
             type_of_cost: self.type_of_cost,
-            mint_account:mint_account,
+            nft_mint_account: nft_mint_account,
+            name: self.name,
+            symbol: self.symbol,
+            episodes: vec![],
             like: 0,
-            mint_amount: 0,
+            nft_mint_amount: 0,
             num_of_subscribers: 0,
             num_of_audios: 0,
             created_at: clock.unix_timestamp,

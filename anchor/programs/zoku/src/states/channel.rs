@@ -4,8 +4,8 @@ use anchor_spl::metadata::mpl_token_metadata;
 #[account]
 #[derive(InitSpace)]
 pub struct ChannelInfo {
-    pub mint_account: Pubkey,
-    pub mint_amount: u64,
+    pub nft_mint_account: Pubkey,
+    pub nft_mint_amount: u64,
     pub is_enabled: bool,
     pub like: u64,
     pub num_of_subscribers: u64,
@@ -13,14 +13,23 @@ pub struct ChannelInfo {
     pub created_at: i64,
     pub type_of_cost: TypeOfCost,
 
-    #[max_len(50)]
+    #[max_len(20)]
+    pub name: String,
+
+    #[max_len(10)]
+    pub symbol: String,
+
+    #[max_len(100)]
     pub description: String,
 
     #[max_len(10)]
-    pub creators: Vec<Creator>,
+    pub creators: Vec<Creator>, //creator[0] is main creator
 
     #[max_len(200)]
     pub avatar: String,
+
+    #[max_len(99)]
+    pub episodes: Vec<EpisodeInfo>,
 }
 
 #[derive(InitSpace, Clone, AnchorSerialize, AnchorDeserialize)]
@@ -59,9 +68,14 @@ impl ChannelInfo {
 pub struct EpisodeInfo {
     pub channel: Pubkey,
     pub created_at: i64,
-    pub likes: u64,
     pub is_published: bool,
     pub rewards: u64,
+
+    #[max_len(20)]
+    pub name: String,
+
+    #[max_len(10)]
+    pub symbol: String,
 
     #[max_len(200)]
     pub metadata_cid: String,
