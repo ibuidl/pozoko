@@ -1,10 +1,8 @@
-
-use anchor_lang::{prelude::*, solana_program::{program::invoke, system_instruction}};
-use anchor_spl::{associated_token::AssociatedToken, metadata::{create_master_edition_v3, create_metadata_accounts_v3, mpl_token_metadata::types::DataV2, CreateMasterEditionV3, CreateMetadataAccountsV3, Metadata}, token::{mint_to, transfer, Mint, MintTo, Token, TokenAccount, Transfer}};
-
-use crate::{ChannelData, SubscribeArgs};
-
-
+use anchor_lang::{prelude::*, solana_program::{program::invoke, stake::state::Meta, system_instruction}};
+use anchor_spl::{associated_token::AssociatedToken
+    , metadata::{create_master_edition_v3, create_metadata_accounts_v3, mpl_token_metadata::types::{Creator, DataV2}, update_metadata_accounts_v2, CreateMasterEditionV3, CreateMetadataAccountsV3, Metadata, MetadataAccount, UpdateMetadataAccountsV2}
+, token::{mint_to, transfer, Mint, MintTo, Token, TokenAccount, Transfer}};
+use crate::{ChannelInfo, PodCastError, SubscribeArgs};
 
 pub fn channel_subscribe(ctx: Context<ChannelSbscribe>, args:SubscribeArgs) -> Result<()>{
     //check the remaining quantity of minted tokens.
@@ -23,29 +21,9 @@ pub fn channel_subscribe(ctx: Context<ChannelSbscribe>, args:SubscribeArgs) -> R
             ),
             1,
         )?;
-    } else {
-        if args.amount == channel_info_account.price {
-            let sender = &ctx.accounts.listener;
-            let receiver = &ctx.accounts.creator;
-            let transfer_instruction = system_instruction::transfer(
-                &sender.key(),
-                &receiver.key(),
-                args.amount,
-            );
-            invoke(
-                &transfer_instruction,
-                &[
-                    sender.to_account_info(),
-                    receiver.to_account_info(),
-                    ctx.accounts.system_program.to_account_info(),
-                ],
-            )?;
-            //How do I create pay record mapping for nft?
-        } else {
-
-        }
     }
     channel_info_account.follow += 1;
+
     Ok(())
 }
 
@@ -59,24 +37,27 @@ pub struct ChannelSbscribe<'info>{
 
     #[account(
         mut,
-        seeds=[
-            ChannelData::SEED_PREFIX.as_bytes(),
-            &args.channel_id.to_string().as_bytes(),
-        ],
-        bump
-    )]
-    pub channel_mint_account: Box<Account<'info, Mint>>,
-
-    #[account(
-        mut,
         seeds = [
-            ChannelData::SEED_PREFIX.as_bytes(),
-            channel_mint_account.key().as_ref(),
+            ChannelInfo::SEED_PREFIX.as_bytes(),
+            &args.channel_title.to_string().as_bytes(),
+            &args.channnel_create_at.to_string().as_bytes(),
+            creator.key().as_ref(),
         ],
         bump,
     )]
 
-    pub channel_info_account: Box<Account<'info, ChannelData>>,
+    pub channel_info_account: Box<Account<'info, ChannelInfo>>,
+
+    #[account(
+        mut,
+        seeds=[
+            ChannelInfo::SEED_PREFIX.as_bytes(),
+            channel_info_account.key().as_ref(),
+            creator.key().as_ref(),
+        ],
+        bump
+    )]
+    pub channel_mint_account: Box<Account<'info, Mint>>,
 
     #[account(
         mut,
@@ -103,5 +84,5 @@ pub struct ChannelSbscribe<'info>{
 
     pub associated_token_program: Program<'info, AssociatedToken>,
 
-
+    pub token_metadata_program: Program<'info, Metadata>,
 }

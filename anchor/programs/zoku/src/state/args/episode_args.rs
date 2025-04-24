@@ -7,16 +7,16 @@ use crate::state::episode_info::EpisodeInfo;
 pub struct EpisodeArgs{
 
     //channel unique key
-    pub channel_id: u64,
+    pub channel_title: String,
 
-    //channel version
-    pub channel_version: String,
+    //channel create time
+    pub channel_create_at: u64,
 
-    //episode unique key
-    pub episode_id: u64,
+    //episode create time
+    pub episode_create_at: u64,
 
     //episode title
-    pub title: String,
+    pub episode_title: String,
 
     //episode image
     pub image: String,
@@ -29,14 +29,14 @@ impl EpisodeArgs{
 
     pub fn create_episode_info(self)->EpisodeInfo{
         
-        let clock = Clock::get().unwrap();
         EpisodeInfo{
-            episode_id:self.episode_id,
-            title:self.title,
+            create_at:self.episode_create_at,
+            title:self.episode_title,
             image: self.image,
             url:self.url,
-            publish_at:clock.unix_timestamp,
+            income:0,
+            price:EpisodeInfo::MIN_BALANCE,
         }
 
-    }   
+    } 
 }

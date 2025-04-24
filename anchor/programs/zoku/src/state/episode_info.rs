@@ -6,8 +6,8 @@ use anchor_lang::prelude::*;
 #[derive(InitSpace)]
 pub struct EpisodeInfo{
 
-    //episode unique key
-    pub episode_id: u64,
+    //episode create time
+    pub create_at: u64,
 
     //episode title
     #[max_len(500)]
@@ -21,6 +21,17 @@ pub struct EpisodeInfo{
     #[max_len(500)]
     pub url: String,
 
-    //episode publish time
-    pub publish_at: i64,
+    //episode income
+    pub income: u64,
+
+    //episode price
+    pub price: u64,
+}
+
+impl EpisodeInfo{
+    pub const SEED_PREFIX: &'static str = "episode_v1";
+
+    pub const MIN_BALANCE: u64 = 20_000_000;
+
+    pub const LISTENER_SHARE: u8 = 5;
 }

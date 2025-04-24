@@ -4,7 +4,7 @@ use crate::state::episode_info::EpisodeInfo;
 
 #[account]
 #[derive(InitSpace)]
-pub struct ChannelData{
+pub struct ChannelInfo{
 
     //channel title
     #[max_len(500)]
@@ -26,19 +26,20 @@ pub struct ChannelData{
     pub follow: i64,
 
     //create time
-    pub create_at: i64,
+    pub create_at: u64,
 
     //channel description
     #[max_len(500)]
     pub description: String,
-
-    pub price: u64,
-
-    //episode list
-    #[max_len(10000)]
-    pub eps: Vec<EpisodeInfo>,
+    
+    //episode count
+    pub episode_count: u64,
 }
 
-impl ChannelData{
+impl ChannelInfo{
     pub const SEED_PREFIX: &'static str = "channel_v1";
+
+    pub const MIN_BALANCE: u64 = 30_000_000;
+
+    pub const LISTENER_SHARE: u8 = 5;
 }

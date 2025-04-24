@@ -54,6 +54,24 @@ pub mod zoku {
     Ok(())
   }
 
+  //create profile
+  pub fn create_profile(ctx: Context<ProfileCreate>, args: ProfileArgs) ->Result<()>{
+    instructions::profile_create::profile_create(ctx, args);
+    Ok(())
+  }
+
+  //release channel nft
+  pub fn release_channel_nft(ctx: Context<ReleaseChannelnft>, args: ChannelArgs) -> Result<()>{
+    instructions::release_channel_nft::release_channel_nft(ctx, args);
+    Ok(())
+  }
+
+  //user mint record create
+  pub fn listener_mint_record(ctx: Context<ListenerMintRecordCreate>, args:ListenerMintArgs) ->Result<()>{
+    instructions::listener_mint_record::listener_trans_record(ctx, args);
+    Ok(())
+  }
+
 }
 
 #[derive(Accounts)]

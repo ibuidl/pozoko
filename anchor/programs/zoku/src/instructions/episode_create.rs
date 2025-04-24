@@ -1,15 +1,16 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token};
 
-use crate::{ChannelData, EpisodeArgs};
+use crate::{ChannelInfo, EpisodeArgs, EpisodeInfo};
 
 
 
 
 pub fn episode_create(ctx: Context<EpisodeCreate>, args:EpisodeArgs) -> Result<()>{
     let episode = args.create_episode_info();
+    ctx.accounts.episode_info_account.set_inner(episode.clone());
     let channel_info_account = &mut ctx.accounts.channel_info_account;
-    channel_info_account.eps.push(episode);
+    channel_info_account.episode_count += 1;
     Ok(())
 }
 
@@ -18,29 +19,34 @@ pub fn episode_create(ctx: Context<EpisodeCreate>, args:EpisodeArgs) -> Result<(
 #[instruction(args:EpisodeArgs)]
 pub struct EpisodeCreate<'info>{
 
-
     #[account(
         mut,
-        seeds=[
-            ChannelData::SEED_PREFIX.as_bytes(),
-            &args.channel_id.to_string().as_bytes(),
-        ],
-        bump
-    )]
-    pub channel_mint_account: Box<Account<'info, Mint>>,
-
-    #[account(
-        init_if_needed,
-        payer = authority,
-        space = 8 + ChannelData::INIT_SPACE,
         seeds = [
-            channel_mint_account.key().as_ref(),
-            ChannelData::SEED_PREFIX.as_bytes(),
+            ChannelInfo::SEED_PREFIX.as_bytes(),
+            &args.channel_title.to_string().as_bytes(),
+            args.channel_create_at.to_string().as_bytes(),
+            authority.key().as_ref(),
         ],
         bump,
     )]
 
-    pub channel_info_account: Box<Account<'info, ChannelData>>,
+    pub channel_info_account: Box<Account<'info, ChannelInfo>>,
+
+    #[account(
+        init_if_needed,
+        payer = authority,
+        space = 8 + EpisodeInfo::INIT_SPACE,
+        seeds = [
+            EpisodeInfo::SEED_PREFIX.as_bytes(),
+            &args.episode_title.to_string().as_bytes(),
+            args.episode_create_at.to_string().as_ref(),
+            channel_info_account.key().as_ref(),
+            authority.key().as_ref(),
+        ],
+        bump,
+    )]
+
+    pub episode_info_account: Box<Account<'info, EpisodeInfo>>,
 
 
     #[account(mut)]

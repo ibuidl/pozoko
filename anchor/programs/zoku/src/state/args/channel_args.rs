@@ -1,15 +1,12 @@
-use crate::state::channel_data::ChannelData;
+use crate::state::channel_info::ChannelInfo;
 use anchor_lang::{prelude::*};
 
 
 #[account]
 pub struct ChannelArgs{
 
-    //channel unique key
-    pub id: u64,
-
     //channel title
-    pub title: String,
+    pub channel_title: String,
 
     //channel cover image
     pub image: String,
@@ -23,25 +20,23 @@ pub struct ChannelArgs{
     //channel description
     pub description: String,
 
-    //channel price
-    pub price: u64,
+    //create time
+    pub channel_create_at: u64,
 }
 
 impl ChannelArgs{
-    pub fn create_channel_data(self, creator: Pubkey)->ChannelData{
+    pub fn create_channel_data(self, creator: Pubkey)->ChannelInfo{
         
-        let clock = Clock::get().unwrap();
-        ChannelData{
-            title:self.title,
+        ChannelInfo{
+            title:self.channel_title,
             image:self.image,
             channel_sub_type:self.channel_sub_type,
             channel_type: self.channel_type,
             follow:0,
             creator,
-            create_at:clock.unix_timestamp,
+            create_at:self.channel_create_at,
             description:self.description,
-            price:self.price,
-            eps: Vec::new(),
+            episode_count: 0,
         }
 
     }   
