@@ -17,4 +17,10 @@ pub enum PodCastError{
     #[msg("Please pay the full amount of solana.")]
     NoPayEnoughSol,
 
+    #[msg("The staker does not have enough NFTs.")]
+    NoNft,
+
+    #[msg("No stake NFTs.")]
+    NoStake,
+
 }

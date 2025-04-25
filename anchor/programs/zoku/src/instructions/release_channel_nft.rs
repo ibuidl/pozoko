@@ -1,6 +1,6 @@
 
 use anchor_lang::prelude::*;
-use anchor_spl::{associated_token::{AssociatedToken}, metadata::{create_master_edition_v3, create_metadata_accounts_v3, mpl_token_metadata::types::DataV2, CreateMasterEditionV3, CreateMetadataAccountsV3, Metadata}, token::{mint_to, Mint, MintTo, Token, TokenAccount}};
+use anchor_spl::{associated_token::AssociatedToken, metadata::{create_master_edition_v3, create_metadata_accounts_v3, mpl_token_metadata::types::{Creator, DataV2}, CreateMasterEditionV3, CreateMetadataAccountsV3, Metadata}, token::{mint_to, Mint, MintTo, Token, TokenAccount}};
 
 use crate::{ChannelArgs, ChannelInfo, PodCastError};
 
@@ -14,11 +14,9 @@ pub fn release_channel_nft(ctx: Context<ReleaseChannelnft>, args:ChannelArgs) ->
     );
 
     let channel_info_account = ctx.accounts.channel_info_account.key();
-    let authority = ctx.accounts.authority.key();
     let singer_seeds: &[&[&[u8]]] = &[&[
         ChannelInfo::SEED_PREFIX.as_bytes(),
         channel_info_account.as_ref(),
-        authority.as_ref(),
         &[ctx.bumps.channel_mint_account],
     ]];
     create_metadata_accounts_v3(
@@ -27,8 +25,8 @@ pub fn release_channel_nft(ctx: Context<ReleaseChannelnft>, args:ChannelArgs) ->
             CreateMetadataAccountsV3 {
                 metadata: ctx.accounts.metadata_account.to_account_info(),
                 mint: ctx.accounts.channel_mint_account.to_account_info(),
-                mint_authority: ctx.accounts.authority.to_account_info(),
-                update_authority: ctx.accounts.authority.to_account_info(),
+                mint_authority: ctx.accounts.nft_manager.to_account_info(),
+                update_authority: ctx.accounts.nft_manager.to_account_info(),
                 payer: ctx.accounts.authority.to_account_info(),
                 system_program: ctx.accounts.system_program.to_account_info(),
                 rent: ctx.accounts.rent.to_account_info(),
@@ -40,11 +38,16 @@ pub fn release_channel_nft(ctx: Context<ReleaseChannelnft>, args:ChannelArgs) ->
             symbol: args.channel_title.to_string(),
             uri: args.image.to_string(),
             seller_fee_basis_points: 0,
-            creators: None,
+            creators: Some(vec![
+                Creator {
+                    address: ctx.accounts.authority.key(),
+                    verified: false,
+                    share: 100,
+                }]),
             collection: None,
             uses: None,
         },
-        false, // Is mutable
+        true, // Is mutable
         true,  // Update authority is signer
         None,  // Collection details
     )?;
@@ -71,8 +74,8 @@ pub fn release_channel_nft(ctx: Context<ReleaseChannelnft>, args:ChannelArgs) ->
                 payer: ctx.accounts.authority.to_account_info(),
                 mint: ctx.accounts.channel_mint_account.to_account_info(),
                 metadata: ctx.accounts.metadata_account.to_account_info(),
-                mint_authority: ctx.accounts.authority.to_account_info(),
-                update_authority: ctx.accounts.authority.to_account_info(),
+                mint_authority: ctx.accounts.nft_manager.to_account_info(),
+                update_authority: ctx.accounts.nft_manager.to_account_info(),
                 system_program: ctx.accounts.system_program.to_account_info(),
                 token_program: ctx.accounts.token_program.to_account_info(),
                 rent: ctx.accounts.rent.to_account_info(),
@@ -85,7 +88,6 @@ pub fn release_channel_nft(ctx: Context<ReleaseChannelnft>, args:ChannelArgs) ->
     //set channel info into pda account
     let channel_info = args.create_channel_data(ctx.accounts.authority.key());
     ctx.accounts.channel_info_account.set_inner(channel_info.clone());
-
     Ok(())
 }
 
@@ -93,6 +95,17 @@ pub fn release_channel_nft(ctx: Context<ReleaseChannelnft>, args:ChannelArgs) ->
 #[derive(Accounts)]
 #[instruction(args:ChannelArgs)]
 pub struct ReleaseChannelnft<'info>{
+
+    #[account(
+        init_if_needed,
+        payer = authority,
+        space = 8,
+        seeds = [
+            b"nft_manager", 
+            channel_mint_account.key().as_ref()],
+        bump,
+    )]
+    pub nft_manager: AccountInfo<'info>,
 
     #[account(
         mut,
@@ -124,12 +137,11 @@ pub struct ReleaseChannelnft<'info>{
         init_if_needed,
         payer = authority,
         mint::decimals=0,
-        mint::authority = authority,
-        mint::freeze_authority = authority,
+        mint::authority = nft_manager,
+        mint::freeze_authority = nft_manager,
         seeds=[
             ChannelInfo::SEED_PREFIX.as_bytes(),
             channel_info_account.key().as_ref(),
-            authority.key().as_ref(),
         ],
         bump
     )]
