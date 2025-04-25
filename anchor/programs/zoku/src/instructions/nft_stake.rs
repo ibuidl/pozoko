@@ -15,7 +15,7 @@ pub fn stake(ctx:Context<NftStake>)->Result<()>{
             ctx.accounts.token_program.to_account_info(),
             Transfer{
                 from: ctx.accounts.user_ata.to_account_info(),
-                to: ctx.accounts.stake_info_account.to_account_info(),
+                to: ctx.accounts.program_receipt_nft_ata.to_account_info(),
                 authority: ctx.accounts.user.to_account_info(),
             },
         ),
@@ -116,6 +116,14 @@ pub struct NftStake<'info>{
         bump,
     )]
     pub stake_info_account: Box<Account<'info, StakeInfo>>,
+
+    #[account(
+        init_if_needed,
+        payer=user,
+        associated_token::mint = channel_mint_account,
+        associated_token::authority = stake_info_account,
+    )]
+    pub program_receipt_nft_ata: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,

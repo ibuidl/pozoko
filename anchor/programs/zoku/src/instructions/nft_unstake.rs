@@ -22,9 +22,9 @@ pub fn stake(ctx:Context<NftUnStake>)->Result<()>{
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
             Transfer{
-                from: ctx.accounts.stake_info_account.to_account_info(),
+                from: ctx.accounts.program_receipt_nft_ata.to_account_info(),
                 to: ctx.accounts.user_ata.to_account_info(),
-                authority: ctx.accounts.user.to_account_info(),
+                authority: ctx.accounts.stake_info_account.to_account_info(),
             },
             singer_seeds,
         ),
@@ -118,6 +118,14 @@ pub struct NftUnStake<'info>{
         bump,
     )]
     pub stake_info_account: Box<Account<'info, StakeInfo>>,
+
+    #[account(
+        init_if_needed,
+        payer=user,
+        associated_token::mint = channel_mint_account,
+        associated_token::authority = stake_info_account,
+    )]
+    pub program_receipt_nft_ata: Box<Account<'info, TokenAccount>>,
 
     #[account(
         mut,
