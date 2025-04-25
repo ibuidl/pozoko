@@ -32,8 +32,9 @@ pub struct ChannelInfo{
     #[max_len(500)]
     pub description: String,
     
-    //episode count
-    pub episode_count: u64,
+    //episode list
+    #[max_len(1000)]
+    pub episode_list: Vec<EpisodeInfo>,
 }
 
 impl ChannelInfo{

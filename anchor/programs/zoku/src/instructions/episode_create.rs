@@ -8,9 +8,8 @@ use crate::{ChannelInfo, EpisodeArgs, EpisodeInfo};
 
 pub fn episode_create(ctx: Context<EpisodeCreate>, args:EpisodeArgs) -> Result<()>{
     let episode = args.create_episode_info();
-    ctx.accounts.episode_info_account.set_inner(episode.clone());
     let channel_info_account = &mut ctx.accounts.channel_info_account;
-    channel_info_account.episode_count += 1;
+    channel_info_account.episode_list.push(episode);
     Ok(())
 }
 
@@ -31,23 +30,6 @@ pub struct EpisodeCreate<'info>{
     )]
 
     pub channel_info_account: Box<Account<'info, ChannelInfo>>,
-
-    #[account(
-        init_if_needed,
-        payer = authority,
-        space = 8 + EpisodeInfo::INIT_SPACE,
-        seeds = [
-            EpisodeInfo::SEED_PREFIX.as_bytes(),
-            &args.episode_title.to_string().as_bytes(),
-            args.episode_create_at.to_string().as_ref(),
-            channel_info_account.key().as_ref(),
-            authority.key().as_ref(),
-        ],
-        bump,
-    )]
-
-    pub episode_info_account: Box<Account<'info, EpisodeInfo>>,
-
 
     #[account(mut)]
     pub authority: Signer<'info>,
