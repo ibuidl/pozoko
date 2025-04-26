@@ -2,69 +2,45 @@
 
 use anchor_lang::prelude::*;
 
-declare_id!("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
+declare_id!("4B1ETA2cRMQfEpgnavcGbgxfcnUHtJVthtGqYC9Ndgqt");
+
+pub mod args;
+pub mod contexts;
+pub mod errors;
+pub mod events;
+pub mod instructions;
+pub mod states;
+
+use args::*;
+use contexts::*;
 
 #[program]
 pub mod zoku {
     use super::*;
 
-  pub fn close(_ctx: Context<CloseZoku>) -> Result<()> {
-    Ok(())
-  }
+    pub fn upsert_user(ctx: Context<UpsertUserContext>, metadata_cid: String) -> Result<()> {
+        instructions::upsert_user(ctx, metadata_cid)
+    }
 
-  pub fn decrement(ctx: Context<Update>) -> Result<()> {
-    ctx.accounts.zoku.count = ctx.accounts.zoku.count.checked_sub(1).unwrap();
-    Ok(())
-  }
+    pub fn upsert_podcast(
+        ctx: Context<UpsertPodcastContext>,
+        args: UpsertPodcastArgs,
+    ) -> Result<()> {
+        instructions::upsert_podcast(ctx, args)
+    }
 
-  pub fn increment(ctx: Context<Update>) -> Result<()> {
-    ctx.accounts.zoku.count = ctx.accounts.zoku.count.checked_add(1).unwrap();
-    Ok(())
-  }
+    pub fn upsert_episode(
+        ctx: Context<UpsertEpisodeContext>,
+        args: UpsertEpisodeArgs,
+    ) -> Result<()> {
+        instructions::upsert_episode(ctx, args)
+    }
 
-  pub fn initialize(_ctx: Context<InitializeZoku>) -> Result<()> {
-    Ok(())
-  }
+    pub fn create_nft(ctx: Context<CreateNftContext>, args: CreateNftArgs) -> Result<()> {
+        instructions::create_nft(ctx, args)
+    }
 
-  pub fn set(ctx: Context<Update>, value: u8) -> Result<()> {
-    ctx.accounts.zoku.count = value.clone();
-    Ok(())
-  }
-}
-
-#[derive(Accounts)]
-pub struct InitializeZoku<'info> {
-  #[account(mut)]
-  pub payer: Signer<'info>,
-
-  #[account(
-  init,
-  space = 8 + Zoku::INIT_SPACE,
-  payer = payer
-  )]
-  pub zoku: Account<'info, Zoku>,
-  pub system_program: Program<'info, System>,
-}
-#[derive(Accounts)]
-pub struct CloseZoku<'info> {
-  #[account(mut)]
-  pub payer: Signer<'info>,
-
-  #[account(
-  mut,
-  close = payer, // close account and return lamports to payer
-  )]
-  pub zoku: Account<'info, Zoku>,
-}
-
-#[derive(Accounts)]
-pub struct Update<'info> {
-  #[account(mut)]
-  pub zoku: Account<'info, Zoku>,
-}
-
-#[account]
-#[derive(InitSpace)]
-pub struct Zoku {
-  count: u8,
+    pub fn mint_nft(ctx: Context<MintNftContext>, args: MintNftArgs) -> Result<()> {
+        instructions::mint_nft(ctx, args)
+    }
 }
