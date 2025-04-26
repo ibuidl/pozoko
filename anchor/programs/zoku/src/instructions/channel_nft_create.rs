@@ -42,9 +42,7 @@ impl ChannelNftArgs {
             name: self.name,
             symbol: self.symbol,
             episodes: vec![],
-            like: 0,
             nft_mint_amount: 0,
-            num_of_subscribers: 0,
             num_of_audios: 0,
             created_at: clock.unix_timestamp,
         }
@@ -52,6 +50,8 @@ impl ChannelNftArgs {
 }
 
 pub fn channel_nft_create(ctx: Context<ChannelNFTCreate>, args: ChannelNftArgs) -> Result<()> {
+    require!(!args.creators.is_empty(), ErrorCode::CreatorsEmpty);
+
     let total_share: u8 = args.creators.iter().map(|creator| creator.share).sum();
     require!(total_share == 100, ErrorCode::InvalidCreatorShare);
 

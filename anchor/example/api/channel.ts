@@ -13,13 +13,13 @@ export interface ChannelNftArgs {
   url: string;
   description: string;
   creators: Creator[];
-  ipfsHash: string;
+  avatar: string;
   isEnabled: boolean;
   typeOfCost: { free: {} } | { paid: {} };
   sellerFeeBasisPoints: number;
 }
 
-export async function initChannelEtf(
+export async function initChannelNft(
   wallet: anchor.Wallet,
   args: ChannelNftArgs
   //wallet02: anchor.web3.Keypair,
@@ -30,7 +30,7 @@ export async function initChannelEtf(
   //   }
 
   //   console.log(
-  //     "交易签名者公钥:",
+  //     "signer pubkey:",
   //     signers.map((signer) => signer.publicKey.toString())
   //   );
 
@@ -43,7 +43,7 @@ export async function initChannelEtf(
     .rpc();
 }
 
-export async function ChannelEtfMint(
+export async function ChannelNftMint(
   wallet: anchor.Wallet,
   channelMintAccount: anchor.web3.PublicKey,
   amount: anchor.BN

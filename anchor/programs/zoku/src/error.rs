@@ -10,4 +10,7 @@ pub enum ErrorCode {
 
     #[msg("Invalid amount")]
     InvalidAmount,
+
+    #[msg("Creators Empty")]
+    CreatorsEmpty,
 }
