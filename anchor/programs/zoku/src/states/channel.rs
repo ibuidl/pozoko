@@ -7,8 +7,6 @@ pub struct ChannelInfo {
     pub nft_mint_account: Pubkey,
     pub nft_mint_amount: u64,
     pub is_enabled: bool,
-    pub like: u64,
-    pub num_of_subscribers: u64,
     pub num_of_audios: u64,
     pub created_at: i64,
     pub type_of_cost: TypeOfCost,
@@ -28,7 +26,7 @@ pub struct ChannelInfo {
     #[max_len(200)]
     pub avatar: String,
 
-    #[max_len(99)]
+    #[max_len(30)]
     pub episodes: Vec<EpisodeInfo>,
 }
 
