@@ -4,5 +4,8 @@
     "source.organizeImports": "always",
     "source.addMissingImports": "always",
     "source.sortImports": "always"
-  }
+  },
+  "cSpell.words": [
+    "pozoku"
+  ]
 }
