@@ -26,11 +26,7 @@ pub fn channel_create(ctx: Context<ChannelCreate>, args:ChannelArgs) -> Result<(
 pub struct ChannelCreate<'info>{
 
     #[account(
-        seeds = [
-            ProfileInfo::SEED_PREFIX.as_bytes(),
-            authority.key().as_ref(),
-        ],
-        bump,
+        mut,
     )]
 
     pub profile_account: Box<Account<'info, ProfileInfo>>,
@@ -43,7 +39,7 @@ pub struct ChannelCreate<'info>{
             ChannelInfo::SEED_PREFIX.as_bytes(),
             &args.channel_title.to_string().as_bytes(),
             args.channel_create_at.to_string().as_bytes(),
-            authority.key().as_ref(),
+            profile_account.key().as_ref(),
         ],
         bump,
     )]

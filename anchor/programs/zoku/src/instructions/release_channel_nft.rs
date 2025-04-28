@@ -2,7 +2,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, metadata::{create_master_edition_v3, create_metadata_accounts_v3, mpl_token_metadata::types::{Creator, DataV2}, CreateMasterEditionV3, CreateMetadataAccountsV3, Metadata}, token::{mint_to, Mint, MintTo, Token, TokenAccount}};
 
-use crate::{ChannelArgs, ChannelInfo, PodCastError};
+use crate::{ChannelArgs, ChannelInfo, PodCastError, StakePool};
 
 
 
@@ -99,12 +99,49 @@ pub struct ReleaseChannelnft<'info>{
     #[account(
         init_if_needed,
         payer = authority,
+        mint::decimals=0,
+        mint::authority = nft_manager,
+        mint::freeze_authority = nft_manager,
+        seeds=[
+            ChannelInfo::SEED_PREFIX.as_bytes(),
+            channel_info_account.key().as_ref(),
+        ],
+        bump
+    )]
+    pub channel_mint_account: Box<Account<'info, Mint>>,
+
+    #[account(
+        init_if_needed,
+        payer = authority,
+        space = 8 + StakePool::INIT_SPACE,
+        seeds = [
+            StakePool::SEED_PREFIX.as_bytes(),
+            channel_mint_account.key().as_ref(),
+        ],
+        bump,
+    )]
+    pub stake_pool_account: Box<Account<'info, StakePool>>,
+
+    #[account(
+        init_if_needed,
+        payer=authority,
+        associated_token::mint = channel_mint_account,
+        associated_token::authority = stake_pool_account,
+    )]
+    pub program_receipt_nft_ata: Box<Account<'info, TokenAccount>>,
+
+    #[account(
+        init_if_needed,
+        payer = authority,
         space = 8,
         seeds = [
             b"nft_manager", 
             channel_mint_account.key().as_ref()],
         bump,
     )]
+    /// CHECK: This account is a PDA used to manage NFT-related operations.
+    /// It is validated through seeds and bump, and its ownership is checked.
+    /// The PDA is derived using the seeds and bump, ensuring it is the correct account.
     pub nft_manager: AccountInfo<'info>,
 
     #[account(
@@ -118,6 +155,7 @@ pub struct ReleaseChannelnft<'info>{
         bump,
         seeds::program = token_metadata_program.key()
     )]
+    /// CHECK:
     pub master_edition_account: AccountInfo<'info>,
 
     #[account(
@@ -130,32 +168,12 @@ pub struct ReleaseChannelnft<'info>{
         bump,
         seeds::program = token_metadata_program.key()
     )]
+    /// CHECK: Validate address by deriving pda
     pub metadata_account: AccountInfo<'info>,
 
-    
-    #[account(
-        init_if_needed,
-        payer = authority,
-        mint::decimals=0,
-        mint::authority = nft_manager,
-        mint::freeze_authority = nft_manager,
-        seeds=[
-            ChannelInfo::SEED_PREFIX.as_bytes(),
-            channel_info_account.key().as_ref(),
-        ],
-        bump
-    )]
-    pub channel_mint_account: Box<Account<'info, Mint>>,
 
     #[account(
         mut,
-        seeds = [
-            ChannelInfo::SEED_PREFIX.as_bytes(),
-            &args.channel_title.to_string().as_bytes(),
-            args.channel_create_at.to_string().as_bytes(),
-            authority.key().as_ref(),
-        ],
-        bump,
     )]
     pub channel_info_account: Box<Account<'info, ChannelInfo>>,
 

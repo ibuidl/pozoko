@@ -36,7 +36,9 @@ impl ChannelArgs{
             creator,
             create_at:self.channel_create_at,
             description:self.description,
+            episode_count : 0,
             episode_list:Vec::new(),
+            last_update:0,
         }
 
     }   

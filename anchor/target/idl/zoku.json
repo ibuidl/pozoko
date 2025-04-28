@@ -8,8 +8,184 @@
   },
   "instructions": [
     {
+      "name": "channel_subscribe",
+      "discriminator": [
+        176,
+        128,
+        121,
+        223,
+        137,
+        193,
+        111,
+        82
+      ],
+      "accounts": [
+        {
+          "name": "channel_mint_account",
+          "writable": true
+        },
+        {
+          "name": "creator_ata",
+          "writable": true
+        },
+        {
+          "name": "listener_ata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "listener"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "channel_mint_account"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "nft_manager",
+          "docs": [
+            "It is validated through seeds and bump, and its ownership is checked.",
+            "The PDA is derived using the seeds and bump, ensuring it is the correct account."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  110,
+                  102,
+                  116,
+                  95,
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "channel_mint_account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "listener",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "token_metadata_program",
+          "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "close",
-      "discriminator": [98, 165, 201, 177, 108, 65, 206, 96],
+      "discriminator": [
+        98,
+        165,
+        201,
+        177,
+        108,
+        65,
+        206,
+        96
+      ],
       "accounts": [
         {
           "name": "payer",
@@ -24,8 +200,148 @@
       "args": []
     },
     {
+      "name": "create_channel",
+      "discriminator": [
+        37,
+        105,
+        253,
+        99,
+        87,
+        46,
+        223,
+        20
+      ],
+      "accounts": [
+        {
+          "name": "profile_account",
+          "writable": true
+        },
+        {
+          "name": "channel_info_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  110,
+                  110,
+                  101,
+                  108,
+                  95,
+                  118,
+                  49
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "args.channel_title"
+              },
+              {
+                "kind": "arg",
+                "path": "args.channel_create_at"
+              },
+              {
+                "kind": "account",
+                "path": "profile_account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "ChannelArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "create_profile",
+      "discriminator": [
+        225,
+        205,
+        234,
+        143,
+        17,
+        186,
+        50,
+        220
+      ],
+      "accounts": [
+        {
+          "name": "profile_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "ProfileArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "decrement",
-      "discriminator": [106, 227, 168, 59, 248, 27, 150, 101],
+      "discriminator": [
+        106,
+        227,
+        168,
+        59,
+        248,
+        27,
+        150,
+        101
+      ],
       "accounts": [
         {
           "name": "zoku",
@@ -36,7 +352,16 @@
     },
     {
       "name": "increment",
-      "discriminator": [11, 18, 104, 9, 104, 174, 59, 33],
+      "discriminator": [
+        11,
+        18,
+        104,
+        9,
+        104,
+        174,
+        59,
+        33
+      ],
       "accounts": [
         {
           "name": "zoku",
@@ -47,7 +372,16 @@
     },
     {
       "name": "initialize",
-      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
       "accounts": [
         {
           "name": "payer",
@@ -67,8 +401,491 @@
       "args": []
     },
     {
+      "name": "publish_episode",
+      "discriminator": [
+        134,
+        57,
+        21,
+        61,
+        92,
+        30,
+        33,
+        238
+      ],
+      "accounts": [
+        {
+          "name": "channel_info_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  110,
+                  110,
+                  101,
+                  108,
+                  95,
+                  118,
+                  49
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "args.channel_title"
+              },
+              {
+                "kind": "arg",
+                "path": "args.channel_create_at"
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "EpisodeArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "release_channel_nft",
+      "discriminator": [
+        6,
+        253,
+        192,
+        162,
+        171,
+        249,
+        165,
+        76
+      ],
+      "accounts": [
+        {
+          "name": "channel_mint_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  110,
+                  110,
+                  101,
+                  108,
+                  95,
+                  118,
+                  49
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "channel_info_account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "stake_pool_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  116,
+                  97,
+                  107,
+                  101,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108,
+                  95,
+                  118,
+                  49
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "channel_mint_account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "program_receipt_nft_ata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "stake_pool_account"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "channel_mint_account"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "nft_manager",
+          "docs": [
+            "It is validated through seeds and bump, and its ownership is checked.",
+            "The PDA is derived using the seeds and bump, ensuring it is the correct account."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  110,
+                  102,
+                  116,
+                  95,
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "channel_mint_account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "master_edition_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "token_metadata_program"
+              },
+              {
+                "kind": "account",
+                "path": "channel_mint_account"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  100,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "token_metadata_program"
+            }
+          }
+        },
+        {
+          "name": "metadata_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "token_metadata_program"
+              },
+              {
+                "kind": "account",
+                "path": "channel_mint_account"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "token_metadata_program"
+            }
+          }
+        },
+        {
+          "name": "channel_info_account",
+          "writable": true
+        },
+        {
+          "name": "creator_ata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "authority"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "channel_mint_account"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "token_metadata_program",
+          "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "ChannelArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "set",
-      "discriminator": [198, 51, 53, 241, 116, 29, 126, 194],
+      "discriminator": [
+        198,
+        51,
+        53,
+        241,
+        116,
+        29,
+        126,
+        194
+      ],
       "accounts": [
         {
           "name": "zoku",
@@ -85,11 +902,448 @@
   ],
   "accounts": [
     {
+      "name": "ChannelInfo",
+      "discriminator": [
+        146,
+        113,
+        106,
+        43,
+        179,
+        176,
+        35,
+        241
+      ]
+    },
+    {
+      "name": "ProfileInfo",
+      "discriminator": [
+        255,
+        38,
+        155,
+        69,
+        208,
+        33,
+        72,
+        247
+      ]
+    },
+    {
+      "name": "StakePool",
+      "discriminator": [
+        121,
+        34,
+        206,
+        21,
+        79,
+        127,
+        255,
+        28
+      ]
+    },
+    {
       "name": "Zoku",
-      "discriminator": [255, 176, 4, 245, 188, 253, 124, 25]
+      "discriminator": [
+        204,
+        108,
+        254,
+        39,
+        86,
+        117,
+        246,
+        171
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NoEnoughBalance",
+      "msg": "Create fail! There isn't enough solana. The minimum required is 0.03 sol!"
+    },
+    {
+      "code": 6001,
+      "name": "NoChannel",
+      "msg": "Subscribe fail! This channel doesn't exist!"
+    },
+    {
+      "code": 6002,
+      "name": "MetadataAccountNotInitialized",
+      "msg": "Metadata account not initialized."
+    },
+    {
+      "code": 6003,
+      "name": "MasterEditionAccountNotInitialized",
+      "msg": "Master edition account not initialized."
+    },
+    {
+      "code": 6004,
+      "name": "NoPayEnoughSol",
+      "msg": "Please pay the full amount of solana."
+    },
+    {
+      "code": 6005,
+      "name": "NoNft",
+      "msg": "The staker does not have enough NFTs."
+    },
+    {
+      "code": 6006,
+      "name": "NoStake",
+      "msg": "No stake NFTs."
     }
   ],
   "types": [
+    {
+      "name": "ChannelArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "channel_title",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "channel_sub_type",
+            "type": "i32"
+          },
+          {
+            "name": "channel_type",
+            "type": "i32"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "channel_create_at",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ChannelInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "channel_sub_type",
+            "type": "i32"
+          },
+          {
+            "name": "channel_type",
+            "type": "i32"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "follow",
+            "type": "i64"
+          },
+          {
+            "name": "create_at",
+            "type": "u64"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "episode_count",
+            "type": "u64"
+          },
+          {
+            "name": "last_update",
+            "type": "u64"
+          },
+          {
+            "name": "episode_list",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "EpisodeInfo"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "EpisodeArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "channel_title",
+            "type": "string"
+          },
+          {
+            "name": "channel_create_at",
+            "type": "u64"
+          },
+          {
+            "name": "episode_create_at",
+            "type": "u64"
+          },
+          {
+            "name": "episode_title",
+            "type": "string"
+          },
+          {
+            "name": "image_cid",
+            "type": "string"
+          },
+          {
+            "name": "cid",
+            "type": "string"
+          },
+          {
+            "name": "descripe",
+            "type": "string"
+          },
+          {
+            "name": "play_type",
+            "type": "u8"
+          },
+          {
+            "name": "visible_range",
+            "type": "u8"
+          },
+          {
+            "name": "publish_at_type",
+            "type": "u8"
+          },
+          {
+            "name": "platform",
+            "type": "bytes"
+          },
+          {
+            "name": "is_publish",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EpisodeInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "publish_at",
+            "type": "u64"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "image_cid",
+            "type": "string"
+          },
+          {
+            "name": "cid",
+            "type": "string"
+          },
+          {
+            "name": "income",
+            "type": "u64"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "descripe",
+            "type": "string"
+          },
+          {
+            "name": "play_type",
+            "type": "u8"
+          },
+          {
+            "name": "visible_range",
+            "type": "u8"
+          },
+          {
+            "name": "publish_at_type",
+            "type": "u8"
+          },
+          {
+            "name": "platform",
+            "type": "bytes"
+          },
+          {
+            "name": "is_publish",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProfileArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "profile_picture",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "website_url",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "emil",
+            "type": "string"
+          },
+          {
+            "name": "x_url",
+            "type": "string"
+          },
+          {
+            "name": "wrapcast_url",
+            "type": "string"
+          },
+          {
+            "name": "magic_eden_url",
+            "type": "string"
+          },
+          {
+            "name": "leams_url",
+            "type": "string"
+          },
+          {
+            "name": "discord_url",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProfileInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "profile_picture",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "website_url",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "emil",
+            "type": "string"
+          },
+          {
+            "name": "x_url",
+            "type": "string"
+          },
+          {
+            "name": "wrapcast_url",
+            "type": "string"
+          },
+          {
+            "name": "magic_eden_url",
+            "type": "string"
+          },
+          {
+            "name": "leams_url",
+            "type": "string"
+          },
+          {
+            "name": "discord_url",
+            "type": "string"
+          },
+          {
+            "name": "channel_count",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakeInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "staker",
+            "type": "pubkey"
+          },
+          {
+            "name": "nft_mint_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "staked_at",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakePool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "stake_count",
+            "type": "u64"
+          },
+          {
+            "name": "nft_mint_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "stake_list",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "StakeInfo"
+                }
+              }
+            }
+          },
+          {
+            "name": "staked_pool_at",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "Zoku",
       "type": {

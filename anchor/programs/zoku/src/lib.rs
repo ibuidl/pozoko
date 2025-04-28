@@ -49,8 +49,8 @@ pub mod zoku {
   }
 
   //user subscribe channel
-  pub fn channel_subscribe(ctx: Context<ChannelSbscribe>, args:SubscribeArgs) ->Result<()>{
-    instructions::channel_subscribe::channel_subscribe(ctx, args);
+  pub fn channel_subscribe(ctx: Context<ChannelSbscribe>) ->Result<()>{
+    instructions::channel_subscribe::channel_subscribe(ctx);
     Ok(())
   }
 
@@ -63,12 +63,6 @@ pub mod zoku {
   //release channel nft
   pub fn release_channel_nft(ctx: Context<ReleaseChannelnft>, args: ChannelArgs) -> Result<()>{
     instructions::release_channel_nft::release_channel_nft(ctx, args);
-    Ok(())
-  }
-
-  //user mint record create
-  pub fn listener_mint_record(ctx: Context<ListenerMintRecordCreate>, args:ListenerMintArgs) ->Result<()>{
-    instructions::listener_mint_record::listener_trans_record(ctx, args);
     Ok(())
   }
 

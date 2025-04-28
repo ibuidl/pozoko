@@ -1,21 +1,20 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, metadata::{mpl_token_metadata::{accounts::Metadata as MPLMetadata, types::{Creator, DataV2}}, update_metadata_accounts_v2, Metadata, UpdateMetadataAccountsV2}, token::{mint_to, transfer, Mint, MintTo, Token, TokenAccount, Transfer}};
 
-use crate::{state::StakeInfo, PodCastError};
+use crate::{state::StakeInfo, PodCastError, StakePool};
 
-pub fn stake(ctx:Context<NftUnStake>)->Result<()>{
-    let nft_amount = ctx.accounts.stake_info_account.amount;
+pub fn unStake(ctx:Context<NftUnStake>)->Result<()>{
+    let mut stake_list = ctx.accounts.stake_pool_account.stake_list.clone();
     require!(
-        nft_amount >= 1,
+        stake_list.iter().any(|x| x.staker == ctx.accounts.user.key()),
         PodCastError::NoStake,
     );
     let channel_mint_account = ctx.accounts.channel_mint_account.key();
     let user = ctx.accounts.user.key();
     let singer_seeds: &[&[&[u8]]] = &[&[
-        StakeInfo::SEED_PREFIX.as_bytes(),
+        StakePool::SEED_PREFIX.as_bytes(),
         channel_mint_account.as_ref(),
-        user.as_ref(),
-        &[ctx.bumps.stake_info_account],
+        &[ctx.bumps.stake_pool_account],
     ]];
     //unstake mint
     transfer(
@@ -24,16 +23,12 @@ pub fn stake(ctx:Context<NftUnStake>)->Result<()>{
             Transfer{
                 from: ctx.accounts.program_receipt_nft_ata.to_account_info(),
                 to: ctx.accounts.user_ata.to_account_info(),
-                authority: ctx.accounts.stake_info_account.to_account_info(),
+                authority: ctx.accounts.stake_pool_account.to_account_info(),
             },
             singer_seeds,
         ),
         1,
     )?;
-
-    let stakeInfo = StakeInfo::new(ctx.accounts.user.key()
-    , ctx.accounts.channel_mint_account.key());
-    ctx.accounts.stake_info_account.set_inner(stakeInfo);
 
     // get metadata account
     let metadata_account = &ctx.accounts.metadata_account.to_account_info();
@@ -81,6 +76,10 @@ pub fn stake(ctx:Context<NftUnStake>)->Result<()>{
         None,
     )?;
 
+    //remove staker from stake pool
+    stake_list.retain(|x| x.staker != ctx.accounts.user.key());
+    ctx.accounts.stake_pool_account.stake_list = stake_list;
+
     Ok(())
 }
 
@@ -93,6 +92,9 @@ pub struct NftUnStake<'info>{
             channel_mint_account.key().as_ref()],
         bump,
     )]
+    /// CHECK: This account is a PDA used to manage NFT-related operations.
+    /// It is validated through seeds and bump, and its ownership is checked.
+    /// The PDA is derived using the seeds and bump, ensuring it is the correct account.
     pub nft_manager: AccountInfo<'info>,
 
     #[account(
@@ -111,19 +113,15 @@ pub struct NftUnStake<'info>{
     #[account(
         mut,
         seeds = [
-            StakeInfo::SEED_PREFIX.as_bytes(),
+            StakePool::SEED_PREFIX.as_bytes(),
             channel_mint_account.key().as_ref(),
-            user.key().as_ref(),
         ],
         bump,
     )]
-    pub stake_info_account: Box<Account<'info, StakeInfo>>,
+    pub stake_pool_account: Box<Account<'info, StakePool>>,
 
     #[account(
-        init_if_needed,
-        payer=user,
-        associated_token::mint = channel_mint_account,
-        associated_token::authority = stake_info_account,
+        mut,
     )]
     pub program_receipt_nft_ata: Box<Account<'info, TokenAccount>>,
 

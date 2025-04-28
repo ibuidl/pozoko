@@ -9,7 +9,13 @@ use crate::{ChannelInfo, EpisodeArgs, EpisodeInfo};
 pub fn episode_create(ctx: Context<EpisodeCreate>, args:EpisodeArgs) -> Result<()>{
     let episode = args.create_episode_info();
     let channel_info_account = &mut ctx.accounts.channel_info_account;
+    if episode.is_publish == 1{
+        let clock = Clock::get().unwrap();
+        let last_at = clock.epoch;
+        channel_info_account.last_update = last_at;
+    }
     channel_info_account.episode_list.push(episode);
+    channel_info_account.episode_count +=1;
     Ok(())
 }
 

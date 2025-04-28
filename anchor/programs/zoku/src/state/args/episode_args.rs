@@ -18,11 +18,22 @@ pub struct EpisodeArgs{
     //episode title
     pub episode_title: String,
 
-    //episode image
-    pub image: String,
+    pub image_cid: String,
 
     //episode cover image
-    pub url: String,
+    pub cid: String,
+
+    pub descripe: String,
+
+    pub play_type: u8,
+
+    pub visible_range: u8,
+
+    pub publish_at_type: u8,
+
+    pub platform: Vec<u8>,
+
+    pub is_publish: u8,
 }
 
 impl EpisodeArgs{
@@ -30,12 +41,18 @@ impl EpisodeArgs{
     pub fn create_episode_info(self)->EpisodeInfo{
         
         EpisodeInfo{
-            create_at:self.episode_create_at,
+            publish_at:self.episode_create_at,
             title:self.episode_title,
-            image: self.image,
-            url:self.url,
+            image_cid: self.image_cid,
+            cid:self.cid,
             income:0,
             price:EpisodeInfo::MIN_BALANCE,
+            descripe: self.descripe,
+            play_type: self.play_type,
+            visible_range: self.visible_range,
+            publish_at_type: self.publish_at_type,
+            platform: self.platform,
+            is_publish: self.is_publish,
         }
 
     } 

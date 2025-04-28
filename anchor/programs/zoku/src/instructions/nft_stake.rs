@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, metadata::{mpl_token_metadata::{accounts::Metadata as MPLMetadata, types::{Creator, DataV2}}, update_metadata_accounts_v2, Metadata, UpdateMetadataAccountsV2}, token::{mint_to, transfer, Mint, MintTo, Token, TokenAccount, Transfer}};
 
-use crate::{state::StakeInfo, PodCastError};
+use crate::{state::StakeInfo, PodCastError, StakePool};
 
 pub fn stake(ctx:Context<NftStake>)->Result<()>{
     let nft_amount = ctx.accounts.user_ata.amount;
@@ -24,7 +24,8 @@ pub fn stake(ctx:Context<NftStake>)->Result<()>{
 
     let stakeInfo = StakeInfo::new(ctx.accounts.user.key()
     , ctx.accounts.channel_mint_account.key());
-    ctx.accounts.stake_info_account.set_inner(stakeInfo);
+    ctx.accounts.stake_pool_account.stake_list.push(stakeInfo);
+    ctx.accounts.stake_pool_account.stake_count += 1;
 
     // get metadata account
     let metadata_account = &ctx.accounts.metadata_account.to_account_info();
@@ -89,6 +90,9 @@ pub struct NftStake<'info>{
             channel_mint_account.key().as_ref()],
         bump,
     )]
+    /// CHECK: This account is a PDA used to manage NFT-related operations.
+    /// It is validated through seeds and bump, and its ownership is checked.
+    /// The PDA is derived using the seeds and bump, ensuring it is the correct account.
     pub nft_manager: AccountInfo<'info>,
 
     #[account(
@@ -101,27 +105,21 @@ pub struct NftStake<'info>{
         bump,
         seeds::program = token_metadata_program.key()
     )]
-    ///CHECK
+    /// CHECK:
     pub metadata_account: UncheckedAccount<'info>,
 
     #[account(
-        init_if_needed,
-        payer = user,
-        space = 8 + StakeInfo::INIT_SPACE,
+        mut,
         seeds = [
-            StakeInfo::SEED_PREFIX.as_bytes(),
+            StakePool::SEED_PREFIX.as_bytes(),
             channel_mint_account.key().as_ref(),
-            user.key().as_ref(),
         ],
         bump,
     )]
-    pub stake_info_account: Box<Account<'info, StakeInfo>>,
+    pub stake_pool_account: Box<Account<'info, StakePool>>,
 
     #[account(
-        init_if_needed,
-        payer=user,
-        associated_token::mint = channel_mint_account,
-        associated_token::authority = stake_info_account,
+        mut,
     )]
     pub program_receipt_nft_ata: Box<Account<'info, TokenAccount>>,
 

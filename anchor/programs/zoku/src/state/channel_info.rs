@@ -11,7 +11,7 @@ pub struct ChannelInfo{
     pub title: String,
 
     //channel cover image
-    #[max_len(10000)]
+    #[max_len(100)]
     pub image: String,
 
     //channel subscribe type(free or pay)
@@ -29,11 +29,15 @@ pub struct ChannelInfo{
     pub create_at: u64,
 
     //channel description
-    #[max_len(500)]
+    #[max_len(100)]
     pub description: String,
+
+    pub episode_count: u64,
+
+    pub last_update: u64,
     
     //episode list
-    #[max_len(1000)]
+    #[max_len(30)]
     pub episode_list: Vec<EpisodeInfo>,
 }
 
