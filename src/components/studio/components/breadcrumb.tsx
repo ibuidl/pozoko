@@ -20,7 +20,7 @@ export function Breadcrumb() {
   });
 
   return (
-    <div className="flex items-center gap-2 text-lg font-medium mb-6">
+    <div className="flex items-center gap-2 text-sm font-medium mb-6">
       {breadcrumbs.map((item, index) => (
         <div key={item.path} className="flex items-center">
           {index > 0 && <ChevronRight className="w-4 h-4 text-gray-400 mx-2" />}

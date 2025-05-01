@@ -23,7 +23,7 @@ export function StudioLayout({ children }: StudioLayoutProps) {
     <div className="min-h-screen bg-white">
       <TopNav />
       <StudioTabs
-        tabs={STUDIO_TABS}
+        tabs={STUDIO_TABS as any}
         activeTab={currentTab}
         onTabChange={(tab) => router.push(`/studio/${tab}`)}
       >

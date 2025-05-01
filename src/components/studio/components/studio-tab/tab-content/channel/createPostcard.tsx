@@ -33,9 +33,9 @@ export const CreatePodcastPage = () => {
   };
 
   return (
-    <div className="flex-1 min-h-screen bg-[#F6F6F6]">
-      <div className="min-h-screen p-[12px] pb-20 relative">
-        <div className="min-h-screen">
+    <div className="flex flex-col justify-between   bg-[#F6F6F6]">
+      <div className=" p-[12px] pb-20 relative">
+        <div className="">
           <Breadcrumb />
           <form
             id="podcast-form"
@@ -151,24 +151,23 @@ export const CreatePodcastPage = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_0_10px_rgba(0,0,0,0.05)] z-10">
+      <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.05)] z-10 fixed bottom-0 left-[260px] right-0">
         <div className="max-w-[1200px] mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center space-x-6">
-            <div>
-              <h3 className="text-sm font-medium">Payment Required</h3>
-              <p className="text-xs text-gray-500">Available after payment</p>
-            </div>
-            <div className="text-right">
-              <div className="text-lg font-medium">0.03 SOL</div>
-            </div>
+          <div className="">
+            <p className="text-xs text-gray-500 py-[10px]">
+              Payment Required Available after payment 0.03 SOL
+            </p>
+            <Button
+              type="submit"
+              form="podcast-form"
+              className=" bg-black text-white hover:bg-black/90"
+            >
+              Pay and Continue
+            </Button>
+            <Button className="ml-[10px] bg-white text-black hover:bg-white/90 border border-black">
+              Cancel
+            </Button>
           </div>
-          <Button
-            type="submit"
-            form="podcast-form"
-            className="w-[200px] bg-black text-white hover:bg-black/90"
-          >
-            Pay and Continue
-          </Button>
         </div>
       </div>
     </div>
