@@ -1,5 +1,5 @@
 import { ExploreCarousel } from '@/components/client/explore-carousel';
-import { NftCountTable } from '@/components/client/ranking-table';
+import { RankingTableTabs } from '@/components/client/ranking-table';
 import { IncomeCard } from '@/components/client/revenue-card';
 import {
   HotCard,
@@ -8,22 +8,13 @@ import {
 } from '@/components/client/spotlight-card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const ExplorePage = () => {
   return (
     <div className="my-6 px-6 flex flex-col gap-6">
       <ExploreCarousel />
       <div className="flex gap-6">
-        <Tabs defaultValue="nftCount" className="flex-grow">
-          <TabsList>
-            <TabsTrigger value="nftCount">PASS Qty.</TabsTrigger>
-            <TabsTrigger value="nftRevenue">Listener Earns.</TabsTrigger>
-          </TabsList>
-          <TabsContent value="nftCount" className="mt-6">
-            <NftCountTable />
-          </TabsContent>
-        </Tabs>
+        <RankingTableTabs />
         <div>
           <Button variant="secondary" className="mb-6">
             NFT INCOME

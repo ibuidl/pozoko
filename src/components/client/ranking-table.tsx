@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 
 export type TableItem = {
   index: number;
@@ -93,6 +94,20 @@ const data = [
     revenue: 'testRevenue',
   },
 ];
+
+export const RankingTableTabs = () => {
+  return (
+    <Tabs defaultValue="nftCount" className="flex-grow">
+      <TabsList>
+        <TabsTrigger value="nftCount">PASS Qty.</TabsTrigger>
+        <TabsTrigger value="nftRevenue">Listener Earns.</TabsTrigger>
+      </TabsList>
+      <TabsContent value="nftCount" className="mt-6">
+        <NftCountTable />
+      </TabsContent>
+    </Tabs>
+  );
+};
 
 export const NftCountTable = () => {
   const table = useReactTable({
