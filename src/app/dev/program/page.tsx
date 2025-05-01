@@ -6,7 +6,7 @@ import { ZokuProgramCreate, ZokuProgramList } from '@/components/dev/program';
 import { WalletButton } from '@/provider';
 import { ellipsify } from '@/utils/string';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useZokuProgram } from '../../../hooks/dev/program';
+import { useZokuProgram } from '../../../hooks/program';
 
 export default function ProgramPage() {
   const { publicKey } = useWallet();
