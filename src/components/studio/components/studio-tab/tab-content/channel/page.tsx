@@ -1,9 +1,10 @@
 'use client';
 
-import { Button } from '@/components/studio/components/ui/button';
-import { Input } from '@/components/studio/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface PodcastCard {
@@ -47,6 +48,7 @@ const PodcastCard = ({
 );
 
 export const ChannelPage = () => {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
 
   const podcasts: PodcastCard[] = [
@@ -89,6 +91,7 @@ export const ChannelPage = () => {
         <Button
           variant="default"
           className="bg-black text-white hover:bg-black/90"
+          onClick={() => router.push('/studio/channel/createPostcard')}
         >
           Create a podcast
         </Button>

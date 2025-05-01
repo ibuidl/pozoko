@@ -29,7 +29,9 @@ export default function StudioUi() {
   return (
     <div className="min-h-screen bg-white">
       <TopNav />
-      <StudioTabs tabs={STUDIO_TABS} />
+      <StudioTabs tabs={STUDIO_TABS}>
+        {STUDIO_TABS.map((tab) => tab.component)}
+      </StudioTabs>
     </div>
   );
 }

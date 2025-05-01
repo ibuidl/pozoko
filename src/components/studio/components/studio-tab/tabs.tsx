@@ -6,23 +6,28 @@ import { Avatar, Tabs } from 'radix-ui';
 interface TabItem {
   label: string;
   value: string;
-  component: React.ReactNode;
 }
 
 interface StudioTabsProps {
   tabs: TabItem[];
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
+  children: React.ReactNode;
 }
 
-export default function StudioTabs({ tabs }: StudioTabsProps) {
+export default function StudioTabs({
+  tabs,
+  activeTab,
+  onTabChange,
+  children,
+}: StudioTabsProps) {
   const { publicKey } = useWallet();
 
-  // if (publicKey) {
-  //   return redirect(`/dev/account/${publicKey.toString()}`);
-  // }
   return (
     <div className="">
       <Tabs.Root
-        defaultValue={tabs[0]?.value || 'tab1'}
+        defaultValue={activeTab || tabs[0]?.value || 'channel'}
+        onValueChange={onTabChange}
         orientation="horizontal"
         className="flex min-h-[calc(100vh-100px)]"
       >
@@ -40,7 +45,7 @@ export default function StudioTabs({ tabs }: StudioTabsProps) {
             <div className="mt-[6px]">nickname</div>
           </div>
           <Tabs.List
-            className="flex flex-col  text-xs"
+            className="flex flex-col text-xs"
             aria-label="tabs example"
           >
             {tabs.map((tab) => (
@@ -54,13 +59,7 @@ export default function StudioTabs({ tabs }: StudioTabsProps) {
             ))}
           </Tabs.List>
         </div>
-        <div className="flex-1 w-full bg-[#F6F6F6]">
-          {tabs.map((tab) => (
-            <Tabs.Content key={tab.value} value={tab.value}>
-              {tab.component}
-            </Tabs.Content>
-          ))}
-        </div>
+        <div className="flex-1 w-full bg-[#F6F6F6]">{children}</div>
       </Tabs.Root>
     </div>
   );

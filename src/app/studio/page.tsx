@@ -1,8 +1,7 @@
-// studio page is used by creators to upload and edit podcasts
-import StudioUi from '@/components/studio/studio-ui';
+'use client';
 
-const StudioPage = () => {
-  return <StudioUi />;
-};
+import { redirect } from 'next/navigation';
 
-export default StudioPage;
+export default function StudioPage() {
+  redirect('/studio/channel');
+}
