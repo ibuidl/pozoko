@@ -5,7 +5,7 @@
     "source.addMissingImports": "always",
     "source.sortImports": "always"
   },
-  "cSpell.words": ["Blockhash", "ellipsify", "tabler", "Zoku"],
+  "cSpell.words": ["Blockhash", "ellipsify", "Pozoku", "tabler", "Zoku"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true
 }

@@ -106,7 +106,6 @@ pnpm build
 ├── components                # Custom components
 ├── hooks                     # Custom hooks
 ├── provider                  # Global context provider
-├── public                    # Static assets like site icons
 ├── style                     # Base CSS
 └── utils                     # Common utility function
 ```

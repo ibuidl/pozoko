@@ -1,9 +1,9 @@
 'use client';
 
-import { AccountChecker } from '@/components/dev/account/account-checker';
-import { ClusterChecker } from '@/components/dev/cluster/cluster-checker';
-import { ClusterUiSelect } from '@/components/dev/cluster/cluster-select';
+import { AccountChecker } from '@/components/dev/account';
+import { ClusterChecker, ClusterUiSelect } from '@/components/dev/cluster';
 import { WalletButton } from '@/provider';
+import '@/style/dev.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode, Suspense } from 'react';
