@@ -6,14 +6,22 @@ import { usePathname } from 'next/navigation';
 
 export function Breadcrumb() {
   const pathname = usePathname();
-  const pathSegments = pathname.split('/').filter(Boolean);
+  let pathSegments = pathname.split('/').filter(Boolean);
+  // 跳过第一个 'studio' 路由
+  if (pathSegments[0] === 'studio') {
+    pathSegments = pathSegments.slice(1);
+  }
 
   const breadcrumbs = pathSegments.map((segment, index) => {
-    const path = `/${pathSegments.slice(0, index + 1).join('/')}`;
+    // 路径拼接时补回 studio
+    const path = `/studio/${pathSegments.slice(0, index + 1).join('/')}`;
     const isLast = index === pathSegments.length - 1;
 
+    // 如果段落以 'detail' 开头，显示 'Detail' 而不是实际的参数值
+    const displayName = segment.startsWith('detail') ? 'Detail' : segment;
+
     return {
-      name: segment,
+      name: displayName,
       path,
       isLast,
     };

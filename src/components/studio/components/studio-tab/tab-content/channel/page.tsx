@@ -7,22 +7,18 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-interface PodcastCard {
-  title: string;
-  description: string;
-  coverImage: string;
-  nftInfo?: string;
-  lastUpdated: string;
-}
-
 const PodcastCard = ({
   title,
   description,
   coverImage,
   nftInfo,
   lastUpdated,
+  onClick,
 }: PodcastCard) => (
-  <div className="flex h-[160px] bg-white rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+  <div
+    className="flex h-[160px] bg-white rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+    onClick={onClick}
+  >
     <div className="relative w-[160px] h-full flex-shrink-0">
       <Image
         src={coverImage}
@@ -109,7 +105,11 @@ export const ChannelPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredPodcasts.map((podcast, index) => (
-          <PodcastCard key={index} {...podcast} />
+          <PodcastCard
+            key={index}
+            {...podcast}
+            onClick={() => router.push(`/studio/channel/detail${index}`)}
+          />
         ))}
       </div>
       {filteredPodcasts.length === 0 && (
@@ -118,3 +118,12 @@ export const ChannelPage = () => {
     </div>
   );
 };
+
+interface PodcastCard {
+  title: string;
+  description: string;
+  coverImage: string;
+  nftInfo?: string;
+  lastUpdated: string;
+  onClick?: () => void;
+}

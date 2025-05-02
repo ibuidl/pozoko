@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Breadcrumb } from '../../../breadcrumb';
 
 export const CreatePodcastPage = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -30,6 +32,10 @@ export const CreatePodcastPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // TODO: Implement payment and form submission logic
+  };
+
+  const handleCancel = () => {
+    router.push('/studio/channel');
   };
 
   return (
@@ -151,8 +157,8 @@ export const CreatePodcastPage = () => {
         </div>
       </div>
 
-      <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.05)] z-10 fixed bottom-0 left-[260px] right-0">
-        <div className="max-w-[1200px] mx-auto px-4 py-3 flex justify-between items-center">
+      <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.05)] z-10 fixed bottom-0 w-full">
+        <div className=" px-4 py-3 flex justify-between items-center">
           <div className="">
             <p className="text-xs text-gray-500 py-[10px]">
               Payment Required Available after payment 0.03 SOL
@@ -160,11 +166,15 @@ export const CreatePodcastPage = () => {
             <Button
               type="submit"
               form="podcast-form"
-              className=" bg-black text-white hover:bg-black/90"
+              className="bg-black text-white hover:bg-black/90"
             >
               Pay and Continue
             </Button>
-            <Button className="ml-[10px] bg-white text-black hover:bg-white/90 border border-black">
+            <Button
+              type="button"
+              onClick={handleCancel}
+              className="ml-[10px] bg-white text-black hover:bg-white/90 border border-black"
+            >
               Cancel
             </Button>
           </div>

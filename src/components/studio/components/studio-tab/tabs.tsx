@@ -29,7 +29,7 @@ export default function StudioTabs({
         defaultValue={activeTab || tabs[0]?.value || 'channel'}
         onValueChange={onTabChange}
         orientation="horizontal"
-        className="flex min-h-[calc(100vh-100px)]"
+        className="flex min-h-[calc(100vh-64px)]"
       >
         <div className="w-[260px]">
           <div className="w-[200px] mx-auto text-sm text-center my-[20px]">

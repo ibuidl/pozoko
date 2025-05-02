@@ -27,7 +27,7 @@ export default function StudioUi() {
   //   return redirect(`/dev/account/${publicKey.toString()}`);
   // }
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white ">
       <TopNav />
       <StudioTabs tabs={STUDIO_TABS}>
         {STUDIO_TABS.map((tab) => tab.component)}
