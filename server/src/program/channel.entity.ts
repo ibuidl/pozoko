@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { CreatorInfo } from './creator.entity';
 import { EpisodeInfo } from './episode.entity';
+import { AudenceInfo } from './audience.entity';
 
 enum TypeOfCost {
   Free = 0,

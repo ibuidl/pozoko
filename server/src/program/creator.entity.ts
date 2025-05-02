@@ -11,7 +11,7 @@ import { EpisodeInfo } from './episode.entity';
 
 @Entity('creator_info')
 @Unique(['public_key'])
-@Index('idx_creator_name', ['name'])
+@Index('idx_creator_name', ['nickname'])
 export class CreatorInfo {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,14 +23,20 @@ export class CreatorInfo {
   owner: string;
 
   @Index()
-  @Column('varchar', { length: 50 })
-  name: string;
+  @Column('varchar', { length: 20 })
+  nickname: string;
 
   @Column('varchar', { length: 200, nullable: true })
   description: string;
 
   @Column('varchar', { length: 200 })
   avatar: string;
+
+  @Column()
+  is_frozen: boolean;
+
+  @Column()
+  total_viewers: number;
 
   @OneToMany(() => ChannelInfo, (channelInfo) => channelInfo.main_creator)
   channels: ChannelInfo[];

@@ -1,12 +1,4 @@
 import { Module } from '@nestjs/common';
-<<<<<<< Updated upstream
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ScheduleModule } from '@nestjs/schedule';
-import { ConfigModule } from '@nestjs/config';
-import { TasksModule } from './tasks/tasks.module';
-import { ProgramModule } from './program/program.module';
-=======
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,7 +6,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProgramModule } from './program/program.module';
 import { TasksModule } from './tasks/tasks.module';
->>>>>>> Stashed changes
 
 @Module({
   imports: [
@@ -22,8 +13,6 @@ import { TasksModule } from './tasks/tasks.module';
     ConfigModule.forRoot({
       envFilePath: ['.env.pro', '.env.local', '.env'],
       isGlobal: true,
-<<<<<<< Updated upstream
-=======
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -37,8 +26,7 @@ import { TasksModule } from './tasks/tasks.module';
       entities: [],
       autoLoadEntities: true,
       synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
-      logging: true,
->>>>>>> Stashed changes
+      logging: false,
     }),
     TasksModule,
     ProgramModule,

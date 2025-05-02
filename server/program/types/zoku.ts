@@ -2,10 +2,10 @@
  * Program IDL in camelCase format in order to be used in JS/TS.
  *
  * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/zoku.json`.
+ * IDL can be found at `target/idl/pozoko_test.json`.
  */
 export type Zoku = {
-  address: '3y53pS9zx5fLA6sSVsiwYJMot9FgEE1g9s8UnywjnU9s';
+  address: 'APH75LKJvdLzkgfPZaxh67Xzk3BNYLyqBAFEfVLZ8HZM';
   metadata: {
     name: 'zoku';
     version: '0.1.0';
@@ -291,62 +291,9 @@ export type Zoku = {
       ];
     },
     {
-      name: 'close';
-      discriminator: [98, 165, 201, 177, 108, 65, 206, 96];
-      accounts: [
-        {
-          name: 'payer';
-          writable: true;
-          signer: true;
-        },
-        {
-          name: 'zoku';
-          writable: true;
-        },
-      ];
-      args: [];
-    },
-    {
-      name: 'decrement';
-      discriminator: [106, 227, 168, 59, 248, 27, 150, 101];
-      accounts: [
-        {
-          name: 'zoku';
-          writable: true;
-        },
-      ];
-      args: [];
-    },
-    {
-      name: 'increment';
-      discriminator: [11, 18, 104, 9, 104, 174, 59, 33];
-      accounts: [
-        {
-          name: 'zoku';
-          writable: true;
-        },
-      ];
-      args: [];
-    },
-    {
       name: 'initialize';
       discriminator: [175, 175, 109, 31, 13, 152, 155, 237];
-      accounts: [
-        {
-          name: 'payer';
-          writable: true;
-          signer: true;
-        },
-        {
-          name: 'zoku';
-          writable: true;
-          signer: true;
-        },
-        {
-          name: 'systemProgram';
-          address: '11111111111111111111111111111111';
-        },
-      ];
+      accounts: [];
       args: [];
     },
     {
@@ -409,18 +356,31 @@ export type Zoku = {
       ];
     },
     {
-      name: 'set';
-      discriminator: [198, 51, 53, 241, 116, 29, 126, 194];
+      name: 'initializeEp';
+      discriminator: [28, 141, 147, 2, 7, 187, 205, 114];
       accounts: [
         {
-          name: 'zoku';
+          name: 'channelInfo';
           writable: true;
+        },
+        {
+          name: 'creator';
+          writable: true;
+          signer: true;
+        },
+        {
+          name: 'systemProgram';
+          address: '11111111111111111111111111111111';
         },
       ];
       args: [
         {
-          name: 'value';
-          type: 'u8';
+          name: 'args';
+          type: {
+            defined: {
+              name: 'episodeArgs';
+            };
+          };
         },
       ];
     },
@@ -434,10 +394,6 @@ export type Zoku = {
       name: 'creatorAccount';
       discriminator: [222, 163, 32, 169, 204, 8, 200, 32];
     },
-    {
-      name: 'zoku';
-      discriminator: [204, 108, 254, 39, 86, 117, 246, 171];
-    },
   ];
   events: [
     {
@@ -447,6 +403,10 @@ export type Zoku = {
     {
       name: 'channelNftMintEvent';
       discriminator: [118, 151, 211, 238, 99, 87, 172, 101];
+    },
+    {
+      name: 'episodeCreatedEvent';
+      discriminator: [80, 62, 7, 30, 107, 29, 208, 31];
     },
     {
       name: 'userInitialized';
@@ -499,20 +459,16 @@ export type Zoku = {
         kind: 'struct';
         fields: [
           {
-            name: 'mintAccount';
+            name: 'nftMintAccount';
             type: 'pubkey';
           },
           {
-            name: 'mintNum';
+            name: 'nftMintAmount';
             type: 'u64';
           },
           {
             name: 'isEnabled';
             type: 'bool';
-          },
-          {
-            name: 'like';
-            type: 'u64';
           },
           {
             name: 'numOfSubscribers';
@@ -535,6 +491,14 @@ export type Zoku = {
             };
           },
           {
+            name: 'name';
+            type: 'string';
+          },
+          {
+            name: 'symbol';
+            type: 'string';
+          },
+          {
             name: 'description';
             type: 'string';
           },
@@ -549,8 +513,18 @@ export type Zoku = {
             };
           },
           {
-            name: 'ipfsHash';
+            name: 'avatar';
             type: 'string';
+          },
+          {
+            name: 'episodes';
+            type: {
+              vec: {
+                defined: {
+                  name: 'episodeInfo';
+                };
+              };
+            };
           },
         ];
       };
@@ -587,7 +561,7 @@ export type Zoku = {
             };
           },
           {
-            name: 'ipfsHash';
+            name: 'avatar';
             type: 'string';
           },
           {
@@ -688,6 +662,98 @@ export type Zoku = {
       };
     },
     {
+      name: 'episodeArgs';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'isPublished';
+            type: 'bool';
+          },
+          {
+            name: 'name';
+            type: 'string';
+          },
+          {
+            name: 'symbol';
+            type: 'string';
+          },
+          {
+            name: 'metadataCid';
+            type: 'string';
+          },
+        ];
+      };
+    },
+    {
+      name: 'episodeCreatedEvent';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'episodeName';
+            type: 'string';
+          },
+          {
+            name: 'episodeSymbol';
+            type: 'string';
+          },
+          {
+            name: 'channel';
+            type: 'pubkey';
+          },
+          {
+            name: 'creator';
+            type: 'pubkey';
+          },
+          {
+            name: 'metadataCid';
+            type: 'string';
+          },
+          {
+            name: 'createdAt';
+            type: 'i64';
+          },
+        ];
+      };
+    },
+    {
+      name: 'episodeInfo';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'channel';
+            type: 'pubkey';
+          },
+          {
+            name: 'createdAt';
+            type: 'i64';
+          },
+          {
+            name: 'isPublished';
+            type: 'bool';
+          },
+          {
+            name: 'rewards';
+            type: 'u64';
+          },
+          {
+            name: 'name';
+            type: 'string';
+          },
+          {
+            name: 'symbol';
+            type: 'string';
+          },
+          {
+            name: 'metadataCid';
+            type: 'string';
+          },
+        ];
+      };
+    },
+    {
       name: 'typeOfCost';
       type: {
         kind: 'enum';
@@ -717,18 +783,6 @@ export type Zoku = {
           {
             name: 'createdAt';
             type: 'i64';
-          },
-        ];
-      };
-    },
-    {
-      name: 'zoku';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'count';
-            type: 'u8';
           },
         ];
       };

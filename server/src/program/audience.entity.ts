@@ -2,35 +2,43 @@ import {
   Column,
   Entity,
   Index,
-  OneToMany,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { ChannelInfo } from './channel.entity';
-import { EpisodeInfo } from './episode.entity';
 
-@Entity('user_info')
+@Entity()
 @Unique(['public_key'])
-export class UserInfo {
+@Index('idx_creator_name', ['nickname'])
+export class AudenceInfo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('varchar', { length: 44 })
+  @Column()
+  nickname: string;
+
+  @Column()
   public_key: string;
 
-  @Index()
-  @Column('varchar', { length: 50 })
-  name: string;
+  @Column()
+  owner: string;
 
-  @Column('varchar', { length: 200, nullable: true })
-  description: string;
+  @Column()
+  create_at: number;
 
-  @Column('varchar', { length: 200, nullable: true })
+  @Column()
+  is_frozen: boolean;
+
+  @ManyToMany(() => ChannelInfo)
+  @JoinTable()
+  likers: ChannelInfo[];
+
+  @ManyToMany(() => ChannelInfo)
+  @JoinTable()
+  subscribers: ChannelInfo[];
+
+  @Column('varchar', { length: 200 })
   avatar: string;
-
-  @OneToMany(() => ChannelInfo, (channelInfo) => channelInfo.creator)
-  channels: ChannelInfo[];
-
-  @OneToMany(() => EpisodeInfo, (episodeInfo) => episodeInfo.creator)
-  episodes: EpisodeInfo[];
 }

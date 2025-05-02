@@ -32,7 +32,7 @@ export class TasksService {
           {
             public_key: channelinfo.publicKey.toString(),
             name: channelinfo.account.name,
-            symbol: asset.metadata.symbol,
+            symbol: channelinfo.account.symbol,
             image: st.image ?? '',
             description: channelinfo.account.description,
             main_creator: channelinfo.account.creators[0].toString(),
