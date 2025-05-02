@@ -11,7 +11,7 @@ const mockChannel = {
     'This podcast episode discusses the current development limitations and future trends in the AI field, as well as how AI entrepreneurs should seize opportunities and meet challenges.',
 };
 
-export const ChannelHeader = () => {
+export const ChannelBanner = () => {
   return (
     <div className="flex flex-col gap-0 p-0 shadow-none border-0 overflow-visible">
       <div className="flex flex-row items-center gap-8">

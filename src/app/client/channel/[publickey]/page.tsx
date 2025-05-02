@@ -1,7 +1,7 @@
 'use client';
 
 import { ChannelAbout } from '@/components/client/channel-about';
-import { ChannelHeader } from '@/components/client/channel-header';
+import { ChannelBanner } from '@/components/client/channel-banner';
 import {
   EpisodeList,
   EpisodeListSearch,
@@ -11,10 +11,10 @@ interface Props {
   params: { publickey: string };
 }
 
-export default function ChannelPage({ params }: Props) {
+const ChannelPage = () => {
   return (
     <div className="mx-auto px-8 py-8 flex flex-col gap-8">
-      <ChannelHeader />
+      <ChannelBanner />
       <EpisodeListSearch />
       <div className="flex gap-8">
         <EpisodeList />
@@ -22,4 +22,6 @@ export default function ChannelPage({ params }: Props) {
       </div>
     </div>
   );
-}
+};
+
+export default ChannelPage;
