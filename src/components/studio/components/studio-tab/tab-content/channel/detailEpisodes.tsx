@@ -49,7 +49,7 @@ const DetailCard = ({
   </div>
 );
 
-export default function DetailPostcard() {
+export default function DetailEpisodes() {
   const { id } = useParams();
   const [tab, setTab] = useState<'published' | 'draft'>('published');
   const [searchValue, setSearchValue] = useState('');
@@ -116,19 +116,21 @@ export default function DetailPostcard() {
       );
   }
 
+  const actionBarProps = {
+    tab,
+    publishedData,
+    draftData,
+    onTabChange: setTab,
+    onCreate: handleCreate,
+    onSearch: handleSearch,
+    searchValue,
+  };
+
   return (
     <div className="p-[12px]">
       <Breadcrumb />
       <DetailCard {...data} />
-      <ActionBar
-        tab={tab}
-        publishedData={publishedData}
-        draftData={draftData}
-        onTabChange={setTab}
-        onCreate={handleCreate}
-        onSearch={handleSearch}
-        searchValue={searchValue}
-      />
+      <ActionBar {...actionBarProps} />
       <div>{content}</div>
     </div>
   );

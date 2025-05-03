@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Breadcrumb } from '../../../breadcrumb';
 
-export const CreatePodcastPage = () => {
+export default function CreatePodcastPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     title: '',
@@ -49,7 +49,7 @@ export const CreatePodcastPage = () => {
             className="flex flex-col space-y-4"
           >
             <div className="flex-1 bg-white rounded-lg p-6">
-              <h2 className="text-lg font-medium mb-6">Create Podcast</h2>
+              <p className="text-sm font-bold mb-[20px]">Create Podcast</p>
 
               <div className="space-y-8">
                 <div className="flex items-center">
@@ -130,7 +130,7 @@ export const CreatePodcastPage = () => {
             </div>
 
             <div className="bg-white pt-8 p-6 rounded-lg">
-              <h2 className="text-lg font-medium mb-6">Price Settings</h2>
+              <p className="text-sm font-bold mb-[20px]">Price Settings</p>
 
               <div className="flex-1">
                 <div className="flex items-center space-x-4">
@@ -182,6 +182,4 @@ export const CreatePodcastPage = () => {
       </div>
     </div>
   );
-};
-
-export default CreatePodcastPage;
+}

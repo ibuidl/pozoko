@@ -31,7 +31,7 @@ export default function StudioTabs({
         orientation="horizontal"
         className="flex min-h-[calc(100vh-64px)]"
       >
-        <div className="w-[260px]">
+        <div className="min-w-[260px]">
           <div className="w-[200px] mx-auto text-sm text-center my-[20px]">
             <div>
               <Avatar.Root className="inline-flex size-[112px] select-none items-center justify-center overflow-hidden rounded-full bg-blackA1 align-middle">
