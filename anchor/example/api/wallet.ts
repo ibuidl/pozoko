@@ -9,7 +9,7 @@ const program = anchor.workspace.Zoku as Program<Zoku>;
 const wallet = provider.wallet as anchor.Wallet;
 const connection = provider.connection;
 
-export { provider, connection };
+export { program, provider, connection };
 
 export function useDefaultWallet() {
   return anchor.Wallet.local();

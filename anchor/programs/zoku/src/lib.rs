@@ -1,41 +1,96 @@
+#![allow(clippy::result_large_err)]
+
+pub mod error;
+pub mod instructions;
+pub mod states;
+
 use anchor_lang::prelude::*;
 use instructions::*;
-use state::*;
-use errors::*;
 
-declare_id!("11111111111111111111111111111111"); 
-
-pub mod instructions {
-    pub mod create_podcast;
-    pub mod update_podcast_metadata;
-    pub mod add_episode;
-    pub mod remove_episode;
-}
-
-pub mod state {
-    pub mod podcast;
-    pub mod episode;
-}
-
-pub mod errors;
+declare_id!("3y53pS9zx5fLA6sSVsiwYJMot9FgEE1g9s8UnywjnU9s");
 
 #[program]
-pub mod podcast_platform {
+pub mod zoku {
+
     use super::*;
 
-    pub fn create_podcast(ctx: Context<instructions::create_podcast::CreatePodcast>, name: String, description: String, link: String, language: String, category: String, image_url: String, /* explicit: bool */) -> Result<()> {
-        instructions::create_podcast::handler(ctx, name, description, link, language, category, image_url/*, explicit*/)
+    pub fn close(_ctx: Context<CloseZoku>) -> Result<()> {
+        Ok(())
     }
 
-    pub fn update_podcast_metadata(ctx: Context<instructions::update_podcast_metadata::UpdatePodcastMetadata>, name: Option<String>, description: Option<String>, link: Option<String>, language: Option<String>, category: Option<String>, image_url: Option<String>, /* explicit: Option<bool> */) -> Result<()> {
-        instructions::update_podcast_metadata::handler(ctx, name, description, link, language, category, image_url/*, explicit*/)
+    pub fn decrement(ctx: Context<Update>) -> Result<()> {
+        ctx.accounts.zoku.count = ctx.accounts.zoku.count.checked_sub(1).unwrap();
+        Ok(())
     }
 
-    pub fn add_episode(ctx: Context<instructions::add_episode::AddEpisode>, title: String, audio_ipfs_cid: String, audio_url_fallback: String, publication_date: i64, description: String, duration: String, episode_guid: String, image_url: Option<String>, is_free: bool) -> Result<()> {
-        instructions::add_episode::handler(ctx, title, audio_ipfs_cid, audio_url_fallback, publication_date, description, duration, episode_guid, image_url, is_free)
+    pub fn increment(ctx: Context<Update>) -> Result<()> {
+        ctx.accounts.zoku.count = ctx.accounts.zoku.count.checked_add(1).unwrap();
+        Ok(())
     }
 
-    pub fn remove_episode(ctx: Context<instructions::remove_episode::RemoveEpisode>, index: u32) -> Result<()> {
-        instructions::remove_episode::handler(ctx, index)
+    pub fn initialize(_ctx: Context<InitializeZoku>) -> Result<()> {
+        Ok(())
     }
+
+    pub fn set(ctx: Context<Update>, value: u8) -> Result<()> {
+        ctx.accounts.zoku.count = value.clone();
+        Ok(())
+    }
+
+    pub fn initialize_creator(
+        ctx: Context<CreatorCreate>,
+        nickname: String,
+        avatar: String,
+    ) -> Result<()> {
+        instructions::initialize_creator(ctx, nickname, avatar)
+    }
+
+    pub fn channel_nft_create(ctx: Context<ChannelNFTCreate>, args: ChannelNftArgs) -> Result<()> {
+        instructions::channel_nft_create(ctx, args)
+    }
+
+    pub fn channel_nft_mint(ctx: Context<ChannelNftMint>, amount: u64) -> Result<()> {
+        instructions::channel_nft_mint(ctx, amount)
+    }
+
+    pub fn initialize_ep(ctx: Context<EpCreate>, args: EpisodeArgs) -> Result<()> {
+        instructions::initialize_ep(ctx, args)
+    }
+}
+
+#[derive(Accounts)]
+pub struct InitializeZoku<'info> {
+    #[account(mut)]
+    pub payer: Signer<'info>,
+
+    #[account(
+  init,
+  space = 8 + Zoku::INIT_SPACE,
+  payer = payer
+  )]
+    pub zoku: Account<'info, Zoku>,
+    pub system_program: Program<'info, System>,
+}
+#[derive(Accounts)]
+pub struct CloseZoku<'info> {
+    #[account(mut)]
+    pub payer: Signer<'info>,
+
+    #[account(
+  mut,
+  close = payer, // close account and return lamports to payer
+  )]
+    pub zoku: Account<'info, Zoku>,
+}
+
+#[derive(Accounts)]
+pub struct Update<'info> {
+    #[account(mut)]
+    pub zoku: Account<'info, Zoku>,
+}
+
+#[account]
+#[derive(InitSpace)]
+pub struct Zoku {
+    count: u8,
 }

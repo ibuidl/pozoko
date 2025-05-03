@@ -1,20 +1,29 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ScheduleModule } from '@nestjs/schedule';
-import { ConfigModule } from '@nestjs/config';
-import { TasksModule } from './tasks/tasks.module';
-import { ProgramModule } from './program/program.module';
+import { ChannelInfo } from './database/channel.entity';
+import { EpisodeInfo } from './database/episode.entity';
+import { UserInfo } from './database/user.entity';
+import { PodcastModule } from './podcast/podcast.module';
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
-      envFilePath: ['.env.pro', '.env.local', '.env'],
-      isGlobal: true,
+      envFilePath: ['.env.local', '.env.development'],
     }),
-    TasksModule,
-    ProgramModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DATABASE_HOST,
+      port: Number(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_DATABASE,
+      entities: [ChannelInfo, EpisodeInfo, UserInfo],
+      synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
+    }),
+    PodcastModule,
   ],
   controllers: [AppController],
   providers: [AppService],
