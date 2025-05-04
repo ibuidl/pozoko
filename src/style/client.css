@@ -1,0 +1,15 @@
+.wallet-adapter-button-trigger {
+  width: 160px;
+  height: 36px;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  border-radius: 6px;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  justify-content: center;
+}
+
+.wallet-adapter-dropdown-list,
+.wallet-adapter-button {
+  font-family: inherit !important;
+}
