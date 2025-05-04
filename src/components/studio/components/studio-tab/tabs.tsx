@@ -59,7 +59,7 @@ export default function StudioTabs({
             ))}
           </Tabs.List>
         </div>
-        <div className="flex-1 w-full bg-[#F6F6F6]">{children}</div>
+        <div className="flex-1 w-full  bg-[#F6F6F6]">{children}</div>
       </Tabs.Root>
     </div>
   );

@@ -2,12 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Breadcrumb } from '../../../breadcrumb';
 import ActionBar from './actionBar';
+import DraftBoxList from './draftBoxList';
 import EmptyEpisodesPlaceholder from './emptyEpisodesPlaceholder';
-import PublishedEpisodes from './PublishedEpisodes';
+import PublishedEpisodes from './publishedEpisodes';
 
 const DetailCard = ({
   title,
@@ -51,10 +52,11 @@ const DetailCard = ({
 
 export default function DetailEpisodes() {
   const { id } = useParams();
+  const router = useRouter();
   const [tab, setTab] = useState<'published' | 'draft'>('published');
   const [searchValue, setSearchValue] = useState('');
 
-  const publishedData: any[] = [
+  const draftData: any[] = [
     {
       id: 1,
       title: 'Episode Title 1',
@@ -71,8 +73,8 @@ export default function DetailEpisodes() {
       description: 'This is the description for episode 3.',
     },
   ];
-  // const publishedData: any[] = [];
-  const draftData: any[] = [];
+  const publishedData: any[] = [];
+  // const draftData: any[] = [];
 
   const data = {
     title: 'titletitletitletitle',
@@ -89,8 +91,7 @@ export default function DetailEpisodes() {
 
   // 创建按钮事件
   const handleCreate = () => {
-    // TODO: 实现创建逻辑
-    alert('Create Episode');
+    router.push('/studio/channel/detail/createEpisode');
   };
 
   // 搜索事件
@@ -112,7 +113,7 @@ export default function DetailEpisodes() {
       draftData.length === 0 ? (
         <EmptyEpisodesPlaceholder />
       ) : (
-        <div>draftEpisodes</div>
+        <DraftBoxList drafts={draftData} />
       );
   }
 
@@ -127,7 +128,7 @@ export default function DetailEpisodes() {
   };
 
   return (
-    <div className="p-[12px]">
+    <div className="p-[12px] ">
       <Breadcrumb />
       <DetailCard {...data} />
       <ActionBar {...actionBarProps} />

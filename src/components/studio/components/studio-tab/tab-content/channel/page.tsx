@@ -82,7 +82,7 @@ export const ChannelPage = () => {
   );
 
   return (
-    <div className="p-[20px] mx-auto">
+    <div className="p-[20px] mx-auto h-full">
       <div className="flex justify-between items-center mb-6">
         <Button
           variant="default"
