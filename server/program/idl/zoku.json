@@ -1,5 +1,5 @@
 {
-  "address": "3y53pS9zx5fLA6sSVsiwYJMot9FgEE1g9s8UnywjnU9s",
+  "address": "APH75LKJvdLzkgfPZaxh67Xzk3BNYLyqBAFEfVLZ8HZM",
   "metadata": {
     "name": "zoku",
     "version": "0.1.0",
@@ -312,71 +312,6 @@
       ]
     },
     {
-      "name": "close",
-      "discriminator": [
-        98,
-        165,
-        201,
-        177,
-        108,
-        65,
-        206,
-        96
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "zoku",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "decrement",
-      "discriminator": [
-        106,
-        227,
-        168,
-        59,
-        248,
-        27,
-        150,
-        101
-      ],
-      "accounts": [
-        {
-          "name": "zoku",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "increment",
-      "discriminator": [
-        11,
-        18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
-      ],
-      "accounts": [
-        {
-          "name": "zoku",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "initialize",
       "discriminator": [
         175,
@@ -388,22 +323,7 @@
         155,
         237
       ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "zoku",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
+      "accounts": [],
       "args": []
     },
     {
@@ -475,27 +395,40 @@
       ]
     },
     {
-      "name": "set",
+      "name": "initialize_ep",
       "discriminator": [
-        198,
-        51,
-        53,
-        241,
-        116,
-        29,
-        126,
-        194
+        28,
+        141,
+        147,
+        2,
+        7,
+        187,
+        205,
+        114
       ],
       "accounts": [
         {
-          "name": "zoku",
+          "name": "channel_info",
           "writable": true
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "value",
-          "type": "u8"
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "EpisodeArgs"
+            }
+          }
         }
       ]
     }
@@ -526,19 +459,6 @@
         200,
         32
       ]
-    },
-    {
-      "name": "Zoku",
-      "discriminator": [
-        204,
-        108,
-        254,
-        39,
-        86,
-        117,
-        246,
-        171
-      ]
     }
   ],
   "events": [
@@ -566,6 +486,19 @@
         87,
         172,
         101
+      ]
+    },
+    {
+      "name": "EpisodeCreatedEvent",
+      "discriminator": [
+        80,
+        62,
+        7,
+        30,
+        107,
+        29,
+        208,
+        31
       ]
     },
     {
@@ -628,20 +561,16 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "mint_account",
+            "name": "nft_mint_account",
             "type": "pubkey"
           },
           {
-            "name": "mint_num",
+            "name": "nft_mint_amount",
             "type": "u64"
           },
           {
             "name": "is_enabled",
             "type": "bool"
-          },
-          {
-            "name": "like",
-            "type": "u64"
           },
           {
             "name": "num_of_subscribers",
@@ -664,6 +593,14 @@
             }
           },
           {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
             "name": "description",
             "type": "string"
           },
@@ -678,8 +615,18 @@
             }
           },
           {
-            "name": "ipfs_hash",
+            "name": "avatar",
             "type": "string"
+          },
+          {
+            "name": "episodes",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "EpisodeInfo"
+                }
+              }
+            }
           }
         ]
       }
@@ -716,7 +663,7 @@
             }
           },
           {
-            "name": "ipfs_hash",
+            "name": "avatar",
             "type": "string"
           },
           {
@@ -820,6 +767,98 @@
       }
     },
     {
+      "name": "EpisodeArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "is_published",
+            "type": "bool"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "metadata_cid",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EpisodeCreatedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "episode_name",
+            "type": "string"
+          },
+          {
+            "name": "episode_symbol",
+            "type": "string"
+          },
+          {
+            "name": "channel",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "metadata_cid",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EpisodeInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "channel",
+            "type": "pubkey"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "is_published",
+            "type": "bool"
+          },
+          {
+            "name": "rewards",
+            "type": "u64"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "metadata_cid",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
       "name": "TypeOfCost",
       "type": {
         "kind": "enum",
@@ -849,18 +888,6 @@
           {
             "name": "created_at",
             "type": "i64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "Zoku",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "count",
-            "type": "u8"
           }
         ]
       }
