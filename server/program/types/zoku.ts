@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/pozoko_test.json`.
  */
 export type Zoku = {
-  address: 'APH75LKJvdLzkgfPZaxh67Xzk3BNYLyqBAFEfVLZ8HZM';
+  address: '34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB';
   metadata: {
     name: 'zoku';
     version: '0.1.0';
@@ -297,23 +297,49 @@ export type Zoku = {
       args: [];
     },
     {
-      name: 'initializeCreator';
-      discriminator: [29, 153, 44, 99, 52, 172, 81, 115];
+      name: 'initializeEp';
+      discriminator: [28, 141, 147, 2, 7, 187, 205, 114];
       accounts: [
         {
-          name: 'creatorAccount';
+          name: 'channelInfo';
+          writable: true;
+        },
+        {
+          name: 'creator';
+          writable: true;
+          signer: true;
+        },
+        {
+          name: 'systemProgram';
+          address: '11111111111111111111111111111111';
+        },
+      ];
+      args: [
+        {
+          name: 'args';
+          type: {
+            defined: {
+              name: 'episodeArgs';
+            };
+          };
+        },
+      ];
+    },
+    {
+      name: 'initializeUser';
+      discriminator: [111, 17, 185, 250, 60, 122, 38, 254];
+      accounts: [
+        {
+          name: 'userAccount';
           writable: true;
           pda: {
             seeds: [
               {
                 kind: 'const';
                 value: [
-                  99,
-                  114,
+                  117,
+                  115,
                   101,
-                  97,
-                  116,
-                  111,
                   114,
                   65,
                   99,
@@ -355,35 +381,6 @@ export type Zoku = {
         },
       ];
     },
-    {
-      name: 'initializeEp';
-      discriminator: [28, 141, 147, 2, 7, 187, 205, 114];
-      accounts: [
-        {
-          name: 'channelInfo';
-          writable: true;
-        },
-        {
-          name: 'creator';
-          writable: true;
-          signer: true;
-        },
-        {
-          name: 'systemProgram';
-          address: '11111111111111111111111111111111';
-        },
-      ];
-      args: [
-        {
-          name: 'args';
-          type: {
-            defined: {
-              name: 'episodeArgs';
-            };
-          };
-        },
-      ];
-    },
   ];
   accounts: [
     {
@@ -391,8 +388,8 @@ export type Zoku = {
       discriminator: [146, 113, 106, 43, 179, 176, 35, 241];
     },
     {
-      name: 'creatorAccount';
-      discriminator: [222, 163, 32, 169, 204, 8, 200, 32];
+      name: 'userAccount';
+      discriminator: [211, 33, 136, 16, 186, 110, 242, 127];
     },
   ];
   events: [
@@ -428,6 +425,11 @@ export type Zoku = {
       code: 6002;
       name: 'invalidAmount';
       msg: 'Invalid amount';
+    },
+    {
+      code: 6003;
+      name: 'creatorsEmpty';
+      msg: 'Creators Empty';
     },
   ];
   types: [
@@ -469,10 +471,6 @@ export type Zoku = {
           {
             name: 'isEnabled';
             type: 'bool';
-          },
-          {
-            name: 'numOfSubscribers';
-            type: 'u64';
           },
           {
             name: 'numOfAudios';
@@ -624,44 +622,6 @@ export type Zoku = {
       };
     },
     {
-      name: 'creatorAccount';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'owner';
-            type: 'pubkey';
-          },
-          {
-            name: 'isFrozen';
-            type: 'bool';
-          },
-          {
-            name: 'createdAt';
-            type: 'i64';
-          },
-          {
-            name: 'totalViewers';
-            type: 'u64';
-          },
-          {
-            name: 'nickname';
-            type: 'string';
-          },
-          {
-            name: 'avatar';
-            type: 'string';
-          },
-          {
-            name: 'padding';
-            type: {
-              array: ['u64', 10];
-            };
-          },
-        ];
-      };
-    },
-    {
       name: 'episodeArgs';
       type: {
         kind: 'struct';
@@ -768,12 +728,46 @@ export type Zoku = {
       };
     },
     {
+      name: 'userAccount';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'owner';
+            type: 'pubkey';
+          },
+          {
+            name: 'isFrozen';
+            type: 'bool';
+          },
+          {
+            name: 'createdAt';
+            type: 'i64';
+          },
+          {
+            name: 'nickname';
+            type: 'string';
+          },
+          {
+            name: 'avatar';
+            type: 'string';
+          },
+          {
+            name: 'padding';
+            type: {
+              array: ['u64', 10];
+            };
+          },
+        ];
+      };
+    },
+    {
       name: 'userInitialized';
       type: {
         kind: 'struct';
         fields: [
           {
-            name: 'creator';
+            name: 'user';
             type: 'pubkey';
           },
           {

@@ -1,5 +1,5 @@
 {
-  "address": "APH75LKJvdLzkgfPZaxh67Xzk3BNYLyqBAFEfVLZ8HZM",
+  "address": "34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB",
   "metadata": {
     "name": "zoku",
     "version": "0.1.0",
@@ -327,32 +327,67 @@
       "args": []
     },
     {
-      "name": "initialize_creator",
+      "name": "initialize_ep",
       "discriminator": [
-        29,
-        153,
-        44,
-        99,
-        52,
-        172,
-        81,
-        115
+        28,
+        141,
+        147,
+        2,
+        7,
+        187,
+        205,
+        114
       ],
       "accounts": [
         {
-          "name": "creator_account",
+          "name": "channel_info",
+          "writable": true
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "EpisodeArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "initialize_user",
+      "discriminator": [
+        111,
+        17,
+        185,
+        250,
+        60,
+        122,
+        38,
+        254
+      ],
+      "accounts": [
+        {
+          "name": "user_account",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  99,
-                  114,
+                  117,
+                  115,
                   101,
-                  97,
-                  116,
-                  111,
                   114,
                   65,
                   99,
@@ -393,44 +428,6 @@
           "type": "string"
         }
       ]
-    },
-    {
-      "name": "initialize_ep",
-      "discriminator": [
-        28,
-        141,
-        147,
-        2,
-        7,
-        187,
-        205,
-        114
-      ],
-      "accounts": [
-        {
-          "name": "channel_info",
-          "writable": true
-        },
-        {
-          "name": "creator",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "EpisodeArgs"
-            }
-          }
-        }
-      ]
     }
   ],
   "accounts": [
@@ -448,16 +445,16 @@
       ]
     },
     {
-      "name": "CreatorAccount",
+      "name": "UserAccount",
       "discriminator": [
-        222,
-        163,
-        32,
-        169,
-        204,
-        8,
-        200,
-        32
+        211,
+        33,
+        136,
+        16,
+        186,
+        110,
+        242,
+        127
       ]
     }
   ],
@@ -530,6 +527,11 @@
       "code": 6002,
       "name": "InvalidAmount",
       "msg": "Invalid amount"
+    },
+    {
+      "code": 6003,
+      "name": "CreatorsEmpty",
+      "msg": "Creators Empty"
     }
   ],
   "types": [
@@ -571,10 +573,6 @@
           {
             "name": "is_enabled",
             "type": "bool"
-          },
-          {
-            "name": "num_of_subscribers",
-            "type": "u64"
           },
           {
             "name": "num_of_audios",
@@ -726,47 +724,6 @@
       }
     },
     {
-      "name": "CreatorAccount",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "owner",
-            "type": "pubkey"
-          },
-          {
-            "name": "is_frozen",
-            "type": "bool"
-          },
-          {
-            "name": "created_at",
-            "type": "i64"
-          },
-          {
-            "name": "total_viewers",
-            "type": "u64"
-          },
-          {
-            "name": "nickname",
-            "type": "string"
-          },
-          {
-            "name": "avatar",
-            "type": "string"
-          },
-          {
-            "name": "padding",
-            "type": {
-              "array": [
-                "u64",
-                10
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
       "name": "EpisodeArgs",
       "type": {
         "kind": "struct",
@@ -873,12 +830,49 @@
       }
     },
     {
+      "name": "UserAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "is_frozen",
+            "type": "bool"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "nickname",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u64",
+                10
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "UserInitialized",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "creator",
+            "name": "user",
             "type": "pubkey"
           },
           {
