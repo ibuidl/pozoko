@@ -28,7 +28,7 @@ impl EpisodeArgs {
         }
     }
 }
-pub fn initialize_ep(ctx: Context<EpCreate>, args: EpisodeArgs) -> Result<()> {
+pub fn update_ep(ctx: Context<EpCreate>, args: EpisodeArgs) -> Result<()> {
     let channel_address = ctx.accounts.channel_info.key();
     let channel_info = ctx.accounts.channel_info.deref_mut();
 
@@ -55,7 +55,6 @@ pub fn initialize_ep(ctx: Context<EpCreate>, args: EpisodeArgs) -> Result<()> {
 }
 
 #[derive(Accounts)]
-#[instruction(metadata_cid:String)]
 pub struct EpCreate<'info> {
     #[account(mut)]
     pub channel_info: Account<'info, ChannelInfo>,
