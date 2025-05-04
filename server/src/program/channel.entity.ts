@@ -9,9 +9,8 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { CreatorInfo } from './creator.entity';
+import { UserInfo } from './user.entity';
 import { EpisodeInfo } from './episode.entity';
-import { AudenceInfo } from './audience.entity';
 
 enum TypeOfCost {
   Free = 0,
@@ -51,34 +50,40 @@ export class ChannelInfo {
   nft_mint_account: string;
 
   @Column()
-  create_at: number;
+  created_at: number;
 
-  @Column()
+  @Column({ default: 0 })
   num_of_audios: number;
 
-  @Column()
+  @Column({ default: false })
   is_enabled: boolean;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: TypeOfCost,
+  })
   type_of_cost: TypeOfCost;
 
-  @Column()
+  @Column({ default: 0 })
   nft_mint_amount: number;
 
   @OneToMany(() => EpisodeInfo, (episodeInfo) => episodeInfo.channel)
   episodes: EpisodeInfo[];
 
-  @ManyToOne(() => CreatorInfo, (creatorInfo) => creatorInfo.channels)
-  main_creator: CreatorInfo;
+  @ManyToOne(() => UserInfo, (userInfo) => userInfo.channels)
+  main_creator: UserInfo;
+
+  @Column({ nullable: true })
+  main_creator_id: number;
 
   @Column('simple-json')
   creators: Creators[];
 
-  @ManyToMany(() => AudenceInfo)
+  @ManyToMany(() => UserInfo)
   @JoinTable()
-  likers: AudenceInfo[];
+  likers: UserInfo[];
 
-  @ManyToMany(() => AudenceInfo)
+  @ManyToMany(() => UserInfo)
   @JoinTable()
-  subscribers: AudenceInfo[];
+  subscribers: UserInfo[];
 }

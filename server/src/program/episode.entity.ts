@@ -8,9 +8,8 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { AudenceInfo } from './audience.entity';
 import { ChannelInfo } from './channel.entity';
-import { CreatorInfo } from './creator.entity';
+import { UserInfo } from './user.entity';
 
 @Entity('ep_info')
 @Unique('uni_metadata_cid', ['metadata_cid'])
@@ -30,25 +29,28 @@ export class EpisodeInfo {
   metadata_cid: string;
 
   @Column()
-  create_at: number;
+  created_at: number;
 
-  @Column()
-  tip: number;
+  @Column({ default: 0 })
+  reward: number;
 
-  @Column()
+  @Column({ default: false })
   is_published: boolean;
 
   @ManyToOne(() => ChannelInfo, (channelInfo) => channelInfo.episodes)
   channel: ChannelInfo;
 
-  @ManyToOne(() => CreatorInfo, (creatorInfo) => creatorInfo.channels)
-  creator: CreatorInfo;
+  @Column({ nullable: false })
+  channel_id: number;
 
-  @ManyToMany(() => AudenceInfo)
-  @JoinTable()
-  likers: AudenceInfo[];
+  @ManyToOne(() => UserInfo, (userInfo) => userInfo.channels)
+  creator: UserInfo;
 
-  @ManyToMany(() => AudenceInfo)
+  @ManyToMany(() => UserInfo)
   @JoinTable()
-  subscribers: AudenceInfo[];
+  likers: UserInfo[];
+
+  @ManyToMany(() => UserInfo)
+  @JoinTable()
+  subscribers: UserInfo[];
 }
