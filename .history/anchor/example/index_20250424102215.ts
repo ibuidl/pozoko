@@ -3,7 +3,6 @@ import { ChannelNftMint, initChannelNft } from "./api/channel";
 import { initCreator } from "./api/creator";
 import { useDefaultWallet, useVisitorWallet } from "./api/wallet";
 import BN from "bn.js";
-import { updateEp } from "./api/ep";
 
 (async () => {
   const defaultWallet = useDefaultWallet();
@@ -43,22 +42,4 @@ import { updateEp } from "./api/ep";
   // );
   // const r3 = await ChannelNftMint(defaultWallet, mint_address, new BN(1000));
   // console.log(r3);
-
-  // const r4 = await GetChannelInfo(
-  //   defaultWallet,
-  //   new PublicKey("77o7UtFUASNPBqep7zUh1jHUoDADLqEwqwT9dkm6Bw3n")
-  // );
-  // console.log(r4);
-
-  const EpArgs = {
-    name: "My Ep",
-    symbol: "ME",
-    isPublished: true,
-    metadataCid: "https://example.com/avatar.png",
-  };
-  const channelAddress = new PublicKey(
-    "DDkgxBHxjEXMz7Xy6dWNEu9o2zrL3w4449FQcLPoZJAb"
-  );
-  const r5 = await updateEp(defaultWallet, EpArgs, channelAddress);
-  console.log(r5);
 })();
