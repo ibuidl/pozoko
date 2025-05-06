@@ -7,7 +7,6 @@ pub struct UserInitialized {
     pub user: Pubkey,
     pub nickname: String,
     pub created_at: i64,
-    pub owner: Pubkey,
 }
 
 #[event]

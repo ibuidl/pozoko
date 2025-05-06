@@ -8,7 +8,7 @@ use anchor_spl::{
 };
 
 
-use crate::states::{  ChannelInfo, ChannelNftCreateEvent, Creator, TypeOfCost};
+use crate::states::{ ChannelEtfCreateEvent, ChannelInfo, Creator,  TypeOfCost};
 use crate::error::ErrorCode;
 
 
@@ -97,7 +97,7 @@ pub fn channel_nft_create(ctx: Context<ChannelNFTCreate>, args: ChannelNftArgs) 
         ctx.accounts.channel_mint_account.key(),
     ));
 
-    emit!(ChannelNftCreateEvent {
+    emit!(ChannelEtfCreateEvent {
         channel_nft_mint: ctx.accounts.channel_mint_account.key(),
         main_creator: ctx.accounts.channel_info.creators[0].clone(),
         channel_info_address: ctx.accounts.channel_info.key(),

@@ -8,7 +8,7 @@ use anchor_spl::{
 };
 
 
-use crate::states::{  ChannelInfo, ChannelNftCreateEvent, Creator, TypeOfCost};
+use crate::states::{ ChannelEtfCreateEvent, ChannelInfo, Creator,  TypeOfCost};
 use crate::error::ErrorCode;
 
 
