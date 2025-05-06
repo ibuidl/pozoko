@@ -36,15 +36,15 @@ export class SearchService {
   }
 
   async searchUsers(dto: SearchDto) {
-    const { keyword, page, limit } = dto;
+    const { keyword, limit, offset } = dto;
 
     const [items, total] = await this.userRepository.findAndCount({
       where: [
         { nickname: Like(`%${keyword}%`) },
         { public_key: Like(`%${keyword}%`) },
       ],
-      skip: (page - 1) * limit,
       take: limit,
+      skip: offset,
     });
 
     return {
@@ -54,7 +54,7 @@ export class SearchService {
   }
 
   async searchChannels(dto: SearchDto) {
-    const { keyword, page, limit } = dto;
+    const { keyword, limit, offset } = dto;
 
     const [items, total] = await this.channelRepository.findAndCount({
       where: [
@@ -62,8 +62,8 @@ export class SearchService {
         { symbol: Like(`%${keyword}%`) },
         { public_key: Like(`%${keyword}%`) },
       ],
-      skip: (page - 1) * limit,
       take: limit,
+      skip: offset,
     });
 
     return {
@@ -73,12 +73,12 @@ export class SearchService {
   }
 
   async searchEpisodes(dto: SearchDto) {
-    const { keyword, page, limit } = dto;
+    const { keyword, limit, offset } = dto;
 
     const [items, total] = await this.episodeRepository.findAndCount({
       where: [{ name: Like(`%${keyword}%`) }, { symbol: Like(`%${keyword}%`) }],
-      skip: (page - 1) * limit,
       take: limit,
+      skip: offset,
     });
 
     return {

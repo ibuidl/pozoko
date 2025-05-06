@@ -6,11 +6,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProgramModule } from './program/program.module';
 import { TasksModule } from './tasks/tasks.module';
+import { RankModule } from './rank/rank.module';
 import { SearchModule } from './search/search.module';
 import { ApiModule } from './api/api.module';
 
 @Module({
   imports: [
+    RankModule,
     SearchModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
