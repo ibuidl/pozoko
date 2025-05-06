@@ -89,6 +89,10 @@ export class EpisodeInfo {
   @Column('varchar', { name: 'creator_id', length: 36, nullable: false })
   creator_id: string;
 
+  @ManyToOne(() => RssFeed, (rss_feed) => rss_feed.episodes)
+  @JoinColumn({ name: 'rss_feed_id' })
+  rss_feed: RssFeed;
+
   @ManyToMany(() => UserInfo)
   @JoinTable()
   likers: UserInfo[];

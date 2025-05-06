@@ -47,9 +47,7 @@ export class UserService {
           created_at: event.created_at,
           owner: event.owner.toString(),
         },
-        {
-          conflictPaths: ['metadata_cid'],
-        },
+        conflictPaths:['public_key'],
       );
       return { success: true };
     } catch (error) {

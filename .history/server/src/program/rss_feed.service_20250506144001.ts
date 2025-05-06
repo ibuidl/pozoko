@@ -23,18 +23,16 @@ export class RssFeedService {
     }
 
     const publishedEpisodes = channel.episodes.filter((ep) => ep.is_published);
-    const env_feed_url = process.env.RSS_FEED_URL;
-    const env_site_url = process.env.SITE_URL;
-    const env_ep_url = process.env.EP_URL;
-    const env_ep_audio_url = process.env.EP_AUDIO_URL;
+    const feed_url = process.env.RSS_FEED_URL;
+    const site_url = process.env.SITE_URL;
 
     const rss = new RSS({
       title: channel.name,
       description: channel.description || '',
-      feed_url: `${env_feed_url}/${channel.id}`,
-      site_url: env_site_url,
+      feed_url: `${channel.id}`,
+      site_url: site_url,
       language: channel.language || 'en',
-      pubDate: channel.created_at,
+      pubDate: new Date().toUTCString(),
       itunesAuthor: channel.main_creator.nickname,
       itunesSummary: channel.description,
       itunesOwner: {
@@ -60,17 +58,11 @@ export class RssFeedService {
       rss.item({
         title: episode.name,
         description: episode.description || '',
-        url: `${env_ep_url}/${episode.id}`,
+        url: `https://your-domain.com/api/episodes/${episode.id}`,
         guid: episode.id,
         date: new Date(episode.pubDate || episode.created_at).toUTCString(),
-        custom_elements: [
-          { 'echo3:episodeId': episode.id },
-          { 'echo3:channelId': channel.id },
-          { 'echo3:duration': episode.duration },
-          { 'echo3:fileSize': episode.fileSize },
-        ],
         enclosure: {
-          url: `${env_ep_audio_url}/${episode.metadata_cid}`,
+          url: `https://your-domain.com/audio/${episode.metadata_cid}`,
           size: episode.fileSize || 0,
           type: episode.mimeType || 'audio/mpeg',
         },

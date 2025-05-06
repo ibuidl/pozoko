@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { UserService } from 'src/program/user.service';
 import { ChannelService } from 'src/program/channel.service';
 import { EpisodeService } from 'src/program/episode.service';

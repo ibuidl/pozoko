@@ -14,7 +14,7 @@ import { RssFeedService } from './rss_feed.service';
 @Module({
   imports: [
     HttpModule,
-    TypeOrmModule.forFeature([ChannelInfo, EpisodeInfo, UserInfo]),
+    TypeOrmModule.forFeature([ChannelInfo, EpisodeInfo, UserInfo, RssFeed]),
   ],
   providers: [
     ProgramService,

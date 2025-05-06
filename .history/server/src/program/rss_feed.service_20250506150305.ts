@@ -63,12 +63,6 @@ export class RssFeedService {
         url: `${env_ep_url}/${episode.id}`,
         guid: episode.id,
         date: new Date(episode.pubDate || episode.created_at).toUTCString(),
-        custom_elements: [
-          { 'echo3:episodeId': episode.id },
-          { 'echo3:channelId': channel.id },
-          { 'echo3:duration': episode.duration },
-          { 'echo3:fileSize': episode.fileSize },
-        ],
         enclosure: {
           url: `${env_ep_audio_url}/${episode.metadata_cid}`,
           size: episode.fileSize || 0,

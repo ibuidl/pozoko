@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { UserService } from 'src/program/user.service';
 import { ChannelService } from 'src/program/channel.service';
 import { EpisodeService } from 'src/program/episode.service';
@@ -62,9 +62,9 @@ export class ApiController {
     });
   }
 
-  @Get('rss/get_xml')
-  @Header('Content-Type', 'application/rss+xml')
+  @Get('rss/get-xml')
   async getRssFeed(@Query('channelId') channelId: string) {
-    return this.rssFeedService.generateRssFeed(channelId);
+    const xml = await this.rssFeedService.generateRssFeed(channelId);
+    return xml;
   }
 }
