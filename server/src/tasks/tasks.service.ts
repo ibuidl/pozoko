@@ -39,7 +39,7 @@ export class TasksService {
           where: { public_key: publicKey },
         });
         const userData = {
-          ...(existingUser?.id ? { id: existingUser.id } : {}),
+          id: existingUser?.id,
           public_key: publicKey,
           owner: userAccount.account.owner.toString(),
           nickname: userAccount.account.nickname,
@@ -75,7 +75,7 @@ export class TasksService {
           where: { public_key: channelPublicKey },
         });
         const channelData = {
-          ...(existingChannel?.id ? { id: existingChannel.id } : {}),
+          id: existingChannel?.id,
           public_key: channelPublicKey,
           name: channelinfo.account.name,
           symbol: channelinfo.account.symbol,
@@ -152,7 +152,7 @@ export class TasksService {
                 });
 
                 const episodeData = {
-                  ...(existingEpisode?.id ? { id: existingEpisode.id } : {}),
+                  id: existingEpisode?.id,
                   metadata_cid: episode.metadataCid,
                   name: episode.name,
                   symbol: episode.symbol,
@@ -161,6 +161,8 @@ export class TasksService {
                   reward: episode.rewards.toNumber(),
                   channel: channelEntity,
                   channel_id: channelEntity.id,
+                  creator_id: channelEntity.main_creator_id,
+                  rss_feed_id: null,
                 };
 
                 const savedEpisode = await manager.save(
