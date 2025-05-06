@@ -6,9 +6,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProgramModule } from './program/program.module';
 import { TasksModule } from './tasks/tasks.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
+    SearchModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       envFilePath: ['.env.pro', '.env.local', '.env'],
