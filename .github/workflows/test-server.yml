@@ -3,7 +3,7 @@ name: Build and Deploy via Docker Buildx to Harbor (HTTPS)
 on:
   push:
     branches:
-      - qishen
+      - main
 
 jobs:
   build-deploy:
