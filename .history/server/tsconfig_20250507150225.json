@@ -18,10 +18,5 @@
     "esModuleInterop": true,
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
-    "paths": {
-      "src/*": [ 
-        "server/src/*" 
-      ]
-    }
   }
 }
