@@ -110,4 +110,44 @@ export class EpisodeService {
   //       order: { created_at: 'DESC' },
   //     });
   //   }
+
+  async likeEpisode(episodeId: string, userId: string) {
+    await this.episodeRepository
+      .createQueryBuilder()
+      .relation(EpisodeInfo, 'likers')
+      .of(episodeId)
+      .add(userId);
+
+    return { success: true, action: 'like', episodeId, userId };
+  }
+
+  async unlikeEpisode(episodeId: string, userId: string) {
+    await this.episodeRepository
+      .createQueryBuilder()
+      .relation(EpisodeInfo, 'likers')
+      .of(episodeId)
+      .remove(userId);
+
+    return { success: true, action: 'unlike', episodeId, userId };
+  }
+
+  async subscribeEpisode(episodeId: string, userId: string) {
+    await this.episodeRepository
+      .createQueryBuilder()
+      .relation(EpisodeInfo, 'subscribers')
+      .of(episodeId)
+      .add(userId);
+
+    return { success: true, action: 'subscribe', episodeId, userId };
+  }
+
+  async unsubscribeEpisode(episodeId: string, userId: string) {
+    await this.episodeRepository
+      .createQueryBuilder()
+      .relation(EpisodeInfo, 'subscribers')
+      .of(episodeId)
+      .remove(userId);
+
+    return { success: true, action: 'unsubscribe', episodeId, userId };
+  }
 }
