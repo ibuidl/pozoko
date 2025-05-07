@@ -8,7 +8,6 @@ RUN corepack enable
 
 COPY ./pnpm-lock.yaml ./ 
 COPY ./server/package.json ./
-COPY ./pnpm-workspace.yaml ./
 
 RUN cat /app/package.json
 RUN pnpm install
