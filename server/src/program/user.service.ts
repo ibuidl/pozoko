@@ -75,4 +75,12 @@ export class UserService {
       order: { created_at: 'DESC' },
     });
   }
+
+  async getUserInfo(id: string) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    return user;
+  }
 }

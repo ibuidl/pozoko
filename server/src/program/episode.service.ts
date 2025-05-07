@@ -111,6 +111,16 @@ export class EpisodeService {
   //     });
   //   }
 
+  async getChannelEpisodes(channelId: string, page: number, limit: number) {
+    const episodes = await this.episodeRepository.find({
+      where: { channel_id: channelId },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return episodes;
+  }
+
   async likeEpisode(episodeId: string, userId: string) {
     await this.episodeRepository
       .createQueryBuilder()

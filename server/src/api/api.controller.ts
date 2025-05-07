@@ -27,6 +27,11 @@ export class ApiController {
     });
   }
 
+  @Get('user/info')
+  async getUserInfo(@Query('id') id: string) {
+    return this.userService.getUserInfo(id);
+  }
+
   @Post('channel/complete')
   async completeChannel(
     @Query('txHash') txHash: string,
@@ -41,6 +46,20 @@ export class ApiController {
       category,
       subcategory,
     });
+  }
+
+  @Get('channel/info')
+  async getChannelInfo(@Query('id') id: string) {
+    return this.ChannelService.getChannelInfo(id);
+  }
+
+  @Get('user/channels')
+  async getUserChannels(
+    @Query('userId') userId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return this.ChannelService.getUserChannels(userId, page, limit);
   }
 
   @Post('channel/like')
@@ -93,6 +112,15 @@ export class ApiController {
       is_published,
       pubDate,
     });
+  }
+
+  @Get('channel/episodes')
+  async getChannelEpisodes(
+    @Query('channelId') channelId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return this.episodeService.getChannelEpisodes(channelId, page, limit);
   }
 
   @Post('episode/like')
