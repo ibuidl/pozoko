@@ -3,6 +3,7 @@ import { ProgramService } from './program.service';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChannelInfo, TypeOfCost } from './channel.entity';
+import { check_transaction } from 'src/common/check_transaction';
 
 @Injectable()
 export class ChannelService {
@@ -22,18 +23,9 @@ export class ChannelService {
     },
   ): Promise<{ success: boolean; error?: string }> {
     // check transaction
-    const tx =
-      await this.programService.program.provider.connection.getParsedTransaction(
-        txHash,
-        {
-          commitment: 'confirmed',
-          maxSupportedTransactionVersion: 0,
-        },
-      );
-    if (!tx) throw new Error('Transaction not found');
-    console.log('Events:', tx.meta?.logMessages);
+    const tx = await check_transaction(txHash, this.programService);
 
-    const event = this.programService.parseChannelNftCreateEventEvent(
+    const event = this.programService.parseChannelNftCreateEvent(
       tx.meta.logMessages,
     );
     if (!event) throw new Error('User creation not found in transaction');

@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AudioMimeType, EpisodeInfo } from './episode.entity';
 import { ChannelInfo } from './channel.entity';
+import { check_transaction } from 'src/common/check_transaction';
+import { RssFeedService } from './rss_feed.service';
 
 @Injectable()
 export class EpisodeService {
@@ -13,6 +15,7 @@ export class EpisodeService {
     private episodeRepository: Repository<EpisodeInfo>,
     @InjectRepository(ChannelInfo)
     private channelRepository: Repository<ChannelInfo>,
+    private rssFeedService: RssFeedService,
   ) {}
 
   async verifyAndCompleteEpisode(
@@ -26,19 +29,9 @@ export class EpisodeService {
       pubDate?: number;
     },
   ): Promise<{ success: boolean; error?: string }> {
-    // check transaction
-    const tx =
-      await this.programService.program.provider.connection.getParsedTransaction(
-        txHash,
-        {
-          commitment: 'confirmed',
-          maxSupportedTransactionVersion: 0,
-        },
-      );
-    if (!tx) throw new Error('Transaction not found');
-    console.log('Events:', tx.meta?.logMessages);
+    const tx = await check_transaction(txHash, this.programService);
 
-    const event = this.programService.parseEpisodeCreateEventEvent(
+    const event = this.programService.parseEpisodeCreateEvent(
       tx.meta.logMessages,
     );
     if (!event) throw new Error('User creation not found in transaction');
@@ -70,6 +63,20 @@ export class EpisodeService {
           conflictPaths: ['metadata_cid'],
         },
       );
+
+      // if (supplementalData.is_published) {
+      //   const updatedEpisode = await this.episodeRepository.findOne({
+      //     where: { metadata_cid: event.metadata_cid },
+      //     relations: ['channel'],
+      //   });
+      //   if (updatedEpisode) {
+
+      //       this.rssFeedService.generateRssFeed(
+      //         updatedEpisode.channel,
+      //       ),
+      //     }
+
+      // }
       return { success: true };
     } catch (error) {
       const errorMessage =

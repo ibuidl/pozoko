@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChannelInfo } from './channel.entity';
+
 import RSS from 'rss';
+import { BN } from '@coral-xyz/anchor';
 
 @Injectable()
 export class RssFeedService {
@@ -10,9 +12,7 @@ export class RssFeedService {
     @InjectRepository(ChannelInfo)
     private channelRepository: Repository<ChannelInfo>,
   ) {}
-
-  async generateRssFeed(channelId: string): Promise<string> {
-    console.log('generateRssFeed', channelId);
+  async getChannel(channelId: string) {
     const channel = await this.channelRepository.findOne({
       where: { id: channelId },
       relations: ['episodes', 'main_creator'],
@@ -21,12 +21,22 @@ export class RssFeedService {
     if (!channel) {
       throw new Error('channel is not found');
     }
+    return channel;
+  }
 
+  async generateRssFeed(channel: ChannelInfo): Promise<string> {
     const publishedEpisodes = channel.episodes.filter((ep) => ep.is_published);
     const env_feed_url = process.env.RSS_FEED_URL;
     const env_site_url = process.env.SITE_URL;
     const env_ep_url = process.env.EP_URL;
     const env_ep_audio_url = process.env.EP_AUDIO_URL;
+
+    const getTimestamp = (time: BN | number): number => {
+      if (time instanceof BN) {
+        return time.toNumber();
+      }
+      return time as number;
+    };
 
     const rss = new RSS({
       title: channel.name,
@@ -34,7 +44,7 @@ export class RssFeedService {
       feed_url: `${env_feed_url}/${channel.id}`,
       site_url: env_site_url,
       language: channel.language || 'en',
-      pubDate: channel.created_at,
+      pubDate: new Date(getTimestamp(channel.created_at) * 1000).toUTCString(),
       itunesAuthor: channel.main_creator.nickname,
       itunesSummary: channel.description,
       itunesOwner: {

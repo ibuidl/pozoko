@@ -138,7 +138,7 @@ export class ProgramService {
     }
   }
 
-  parseChannelNftCreateEventEvent(logs: string[]) {
+  parseChannelNftCreateEvent(logs: string[]) {
     const hasInitialize = logs.some((l) =>
       l.includes('Instruction: ChannelNftCreate'),
     );
@@ -169,7 +169,7 @@ export class ProgramService {
     }
   }
 
-  parseEpisodeCreateEventEvent(logs: string[]) {
+  parseEpisodeCreateEvent(logs: string[]) {
     const hasInitialize = logs.some((l) => l.includes('Instruction: UpdateEp'));
     if (!hasInitialize) return null;
 

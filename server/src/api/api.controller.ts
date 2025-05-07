@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Header, Post, Query } from '@nestjs/common';
 import { UserService } from 'src/program/user.service';
 import { ChannelService } from 'src/program/channel.service';
 import { EpisodeService } from 'src/program/episode.service';
@@ -64,7 +64,9 @@ export class ApiController {
 
   @Get('rss/get_xml')
   @Header('Content-Type', 'application/rss+xml')
+  @Header('Cache-Control', 'max-age=300')
   async getRssFeed(@Query('channelId') channelId: string) {
-    return this.rssFeedService.generateRssFeed(channelId);
+    const channel = await this.rssFeedService.getChannel(channelId);
+    return await this.rssFeedService.generateRssFeed(channel);
   }
 }

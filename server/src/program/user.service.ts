@@ -3,6 +3,7 @@ import { ProgramService } from './program.service';
 import { UserInfo, UserRole } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { check_transaction } from 'src/common/check_transaction';
 @Injectable()
 export class UserService {
   constructor(
@@ -19,17 +20,7 @@ export class UserService {
       description?: string;
     },
   ): Promise<{ success: boolean; error?: string }> {
-    // check transaction
-    const tx =
-      await this.programService.program.provider.connection.getParsedTransaction(
-        txHash,
-        {
-          commitment: 'confirmed',
-          maxSupportedTransactionVersion: 0,
-        },
-      );
-    if (!tx) throw new Error('Transaction not found');
-    console.log('Events:', tx.meta?.logMessages);
+    const tx = await check_transaction(txHash, this.programService);
 
     const event = this.programService.parseUserInitializedEvent(
       tx.meta.logMessages,

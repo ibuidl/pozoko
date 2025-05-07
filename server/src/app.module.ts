@@ -32,6 +32,10 @@ import { ApiModule } from './api/api.module';
       autoLoadEntities: true,
       synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
       logging: false,
+      ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true,
+      },
     }),
     TasksModule,
     ProgramModule,
