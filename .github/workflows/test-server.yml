@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - qishen
+  workflow_dispatch:
 
 jobs:
   build-deploy:
