@@ -10,11 +10,16 @@ COPY ./pnpm-lock.yaml ./
 COPY ./server/package.json ./
 COPY ./pnpm-workspace.yaml ./
 
+RUN cat /app/package.json
 RUN pnpm install
+
 
 COPY ./server/ ./server/
 
 WORKDIR /app/server
+
+RUN cat /app/server/package.json
+
 
 # Build the NestJS application
 RUN /app/node_modules/.bin/nest build
