@@ -5,7 +5,7 @@ FROM node:20
 WORKDIR /usr/src/app
 
 RUN corepack enable
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json pnpm-lock.yaml* .
 RUN pnpm install --frozen-lockfile
 # Copy the rest of the application files
 COPY . .
