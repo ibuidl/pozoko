@@ -10,7 +10,7 @@ COPY ./server/package.json ./
 RUN cat /app/package.json
 RUN pnpm install
 
-COPY ./server/ ./server/
+COPY ./server/ ./
 
 WORKDIR /app/server
 
