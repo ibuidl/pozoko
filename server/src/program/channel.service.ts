@@ -89,4 +89,44 @@ export class ChannelService {
   //       order: { created_at: 'DESC' },
   //     });
   //   }
+
+  async likeChannel(channelId: string, userId: string) {
+    await this.channelRepository
+      .createQueryBuilder()
+      .relation(ChannelInfo, 'likers')
+      .of(channelId)
+      .add(userId);
+
+    return { success: true, action: 'like', channelId, userId };
+  }
+
+  async unlikeChannel(channelId: string, userId: string) {
+    await this.channelRepository
+      .createQueryBuilder()
+      .relation(ChannelInfo, 'likers')
+      .of(channelId)
+      .remove(userId);
+
+    return { success: true, action: 'unlike', channelId, userId };
+  }
+
+  async subscribeChannel(channelId: string, userId: string) {
+    await this.channelRepository
+      .createQueryBuilder()
+      .relation(ChannelInfo, 'subscribers')
+      .of(channelId)
+      .add(userId);
+
+    return { success: true, action: 'subscribe', channelId, userId };
+  }
+
+  async unsubscribeChannel(channelId: string, userId: string) {
+    await this.channelRepository
+      .createQueryBuilder()
+      .relation(ChannelInfo, 'subscribers')
+      .of(channelId)
+      .remove(userId);
+
+    return { success: true, action: 'unsubscribe', channelId, userId };
+  }
 }

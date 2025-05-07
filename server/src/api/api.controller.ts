@@ -42,6 +42,39 @@ export class ApiController {
       subcategory,
     });
   }
+
+  @Post('channel/like')
+  async likeChannel(
+    @Query('channelId') channelId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.ChannelService.likeChannel(channelId, userId);
+  }
+
+  @Post('channel/unlike')
+  async unlikeChannel(
+    @Query('channelId') channelId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.ChannelService.unlikeChannel(channelId, userId);
+  }
+
+  @Post('channel/subscribe')
+  async subscribeChannel(
+    @Query('channelId') channelId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.ChannelService.subscribeChannel(channelId, userId);
+  }
+
+  @Post('channel/unsubscribe')
+  async unsubscribeChannel(
+    @Query('channelId') channelId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.ChannelService.unsubscribeChannel(channelId, userId);
+  }
+
   @Post('episode/complete')
   async completeEpisode(
     @Query('txHash') txHash: string,
@@ -60,6 +93,38 @@ export class ApiController {
       is_published,
       pubDate,
     });
+  }
+
+  @Post('episode/like')
+  async likeEpisode(
+    @Query('episodeId') episodeId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.episodeService.likeEpisode(episodeId, userId);
+  }
+
+  @Post('episode/unlike')
+  async unlikeEpisode(
+    @Query('episodeId') episodeId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.episodeService.unlikeEpisode(episodeId, userId);
+  }
+
+  @Post('episode/subscribe')
+  async subscribeEpisode(
+    @Query('episodeId') episodeId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.episodeService.subscribeEpisode(episodeId, userId);
+  }
+
+  @Post('episode/unsubscribe')
+  async unsubscribeEpisode(
+    @Query('episodeId') episodeId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.episodeService.unsubscribeEpisode(episodeId, userId);
   }
 
   @Get('rss/get_xml')
