@@ -39,9 +39,10 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" 
             mkdir -p ~/deploy/pozoko_server
             docker login -u admin -p ${{ secrets.HARBOR_PASSWORD }} ibuidl-harbor.duckdns.org:8443
-            echo "${{ secrets.ENV_PRO_BASE64 }}" | base64 --decode > ~/deploy/pozoko/.env.pro
+            echo "${{ secrets.ENV_PRO_BASE64 }}" | base64 --decode > ~/deploy/pozoko_server/.env.pro
 
 
             cat << 'EOF' > ~/deploy/pozoko_server/docker-compose.yml
