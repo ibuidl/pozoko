@@ -15,4 +15,14 @@ export class RankController {
   async getNftRewardRank(@Query() dto: RankDto) {
     return this.rankService.getNftRewardRank(dto);
   }
+
+  @Get('hottest-channel')
+  async getHottestChannelRank(@Query() dto: RankDto) {
+    return this.rankService.getHottestChannelRank(dto);
+  }
+
+  @Get('classic-hot-channel')
+  async getClassicHotChannelRank(@Query() dto: RankDto) {
+    return this.rankService.getClassicHotChannelRank(dto);
+  }
 }

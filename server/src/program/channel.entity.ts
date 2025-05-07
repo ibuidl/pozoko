@@ -105,4 +105,10 @@ export class ChannelInfo {
   @ManyToMany(() => UserInfo)
   @JoinTable()
   subscribers: UserInfo[];
+
+  @Column({
+    type: 'bigint',
+    default: 0,
+  })
+  play_count: number;
 }
