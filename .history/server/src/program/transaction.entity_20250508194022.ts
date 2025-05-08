@@ -5,8 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserInfo } from '../user/user.entity';
-import { EpisodeInfo } from '../episode/episode.entity';
+import { UserInfo } from './user.entity';
+import { EpisodeInfo } from './episode.entity';
 
 export abstract class BaseTransactionRecord {
   @PrimaryGeneratedColumn('uuid')
