@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ProgramService } from './program.service';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChannelInfo, TypeOfCost } from './channel.entity';
+import { ChannelInfo, TypeOfCost } from '../channel/channel.entity';
 import { check_transaction } from 'src/common/check_transaction';
 
 @Injectable()
@@ -63,32 +63,6 @@ export class ChannelService {
       return { success: false, error: errorMessage };
     }
   }
-
-  //   async findByPublicKey(publicKey: string): Promise<UserInfo | null> {
-  //     return this.channelRepository.findOne({
-  //       where: { public_key: publicKey },
-  //     });
-  //   }
-
-  //   async findByEmail(email: string): Promise<UserInfo | null> {
-  //     return this.channelRepository.findOne({
-  //       where: { email },
-  //     });
-  //   }
-
-  //   async findAll(options?: {
-  //     role?: UserRole;
-  //     skip?: number;
-  //     take?: number;
-  //   }): Promise<[UserInfo[], number]> {
-  //     const where = options?.role ? { role: options.role } : {};
-  //     return this.channelRepository.findAndCount({
-  //       where,
-  //       skip: options?.skip || 0,
-  //       take: options?.take || 10,
-  //       order: { created_at: 'DESC' },
-  //     });
-  //   }
 
   async getUserChannels(userId: string, page: number, limit: number) {
     const channel = await this.channelRepository.find({

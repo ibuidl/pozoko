@@ -10,8 +10,8 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { UserInfo } from './user.entity';
-import { EpisodeInfo } from './episode.entity';
+import { UserInfo } from '../user/user.entity';
+import { EpisodeInfo } from '../episode/episode.entity';
 
 export enum TypeOfCost {
   Free = 0,

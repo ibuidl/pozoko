@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { ProgramService } from './program.service';
+import { ProgramService } from '../program/program.service';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AudioMimeType, EpisodeInfo } from './episode.entity';
-import { ChannelInfo } from './channel.entity';
+import { ChannelInfo } from '../channel/channel.entity';
 import { check_transaction } from 'src/common/check_transaction';
-import { RssFeedService } from './rss_feed.service';
 
 @Injectable()
 export class EpisodeService {
   constructor(
-    private programService: ProgramService,
+    private readonly programService: ProgramService,
     @InjectRepository(EpisodeInfo)
-    private episodeRepository: Repository<EpisodeInfo>,
+    private readonly episodeRepository: Repository<EpisodeInfo>,
     @InjectRepository(ChannelInfo)
-    private channelRepository: Repository<ChannelInfo>,
-    private rssFeedService: RssFeedService,
+    private readonly channelRepository: Repository<ChannelInfo>,
   ) {}
 
   async verifyAndCompleteEpisode(
@@ -64,19 +62,6 @@ export class EpisodeService {
         },
       );
 
-      // if (supplementalData.is_published) {
-      //   const updatedEpisode = await this.episodeRepository.findOne({
-      //     where: { metadata_cid: event.metadata_cid },
-      //     relations: ['channel'],
-      //   });
-      //   if (updatedEpisode) {
-
-      //       this.rssFeedService.generateRssFeed(
-      //         updatedEpisode.channel,
-      //       ),
-      //     }
-
-      // }
       return { success: true };
     } catch (error) {
       const errorMessage =
@@ -84,32 +69,6 @@ export class EpisodeService {
       return { success: false, error: errorMessage };
     }
   }
-
-  //   async findByPublicKey(publicKey: string): Promise<UserInfo | null> {
-  //     return this.channelRepository.findOne({
-  //       where: { public_key: publicKey },
-  //     });
-  //   }
-
-  //   async findByEmail(email: string): Promise<UserInfo | null> {
-  //     return this.channelRepository.findOne({
-  //       where: { email },
-  //     });
-  //   }
-
-  //   async findAll(options?: {
-  //     role?: UserRole;
-  //     skip?: number;
-  //     take?: number;
-  //   }): Promise<[UserInfo[], number]> {
-  //     const where = options?.role ? { role: options.role } : {};
-  //     return this.channelRepository.findAndCount({
-  //       where,
-  //       skip: options?.skip || 0,
-  //       take: options?.take || 10,
-  //       order: { created_at: 'DESC' },
-  //     });
-  //   }
 
   async getChannelEpisodes(channelId: string, page: number, limit: number) {
     const episodes = await this.episodeRepository.find({

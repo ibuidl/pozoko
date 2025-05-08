@@ -9,8 +9,8 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { ChannelInfo } from './channel.entity';
-import { UserInfo } from './user.entity';
+import { ChannelInfo } from '../channel/channel.entity';
+import { UserInfo } from '../user/user.entity';
 
 export enum AudioMimeType {
   MP3 = 'audio/mpeg',

@@ -39,7 +39,7 @@ export class UserService {
           owner: event.owner.toString(),
         },
         {
-          conflictPaths: ['metadata_cid'],
+          conflictPaths: ['public_key'],
         },
       );
       return { success: true };
