@@ -27,9 +27,9 @@ export class ApiController {
     });
   }
 
-  @Get('user/info')
-  async getUserInfo(@Query('id') id: string) {
-    return this.userService.getUserInfo(id);
+  @Get('user')
+  async findUserById(@Query('id') id: string) {
+    return this.userService.findById(id);
   }
 
   @Post('channel/complete')
@@ -48,18 +48,18 @@ export class ApiController {
     });
   }
 
-  @Get('channel/info')
-  async getChannelInfo(@Query('id') id: string) {
-    return this.ChannelService.getChannelInfo(id);
+  @Get('channel')
+  async findChannelById(@Query('id') id: string) {
+    return this.ChannelService.findById(id);
   }
 
-  @Get('user/channels')
-  async getUserChannels(
+  @Get('channels')
+  async findChannelsByUserId(
     @Query('userId') userId: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
-    return this.ChannelService.getUserChannels(userId, page, limit);
+    return this.ChannelService.findByUserId(userId, page, limit);
   }
 
   @Post('channel/like')
@@ -114,13 +114,13 @@ export class ApiController {
     });
   }
 
-  @Get('channel/episodes')
-  async getChannelEpisodes(
+  @Get('episodes')
+  async findEpisodesByChannelId(
     @Query('channelId') channelId: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
-    return this.episodeService.getChannelEpisodes(channelId, page, limit);
+    return this.episodeService.findByChannelId(channelId, page, limit);
   }
 
   @Post('episode/like')

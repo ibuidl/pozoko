@@ -90,22 +90,18 @@ export class ChannelService {
   //     });
   //   }
 
-  async getUserChannels(userId: string, page: number, limit: number) {
-    const channel = await this.channelRepository.find({
+  async findById(id: string) {
+    return this.channelRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async findByUserId(userId: string, page: number, limit: number) {
+    return this.channelRepository.find({
       where: { main_creator_id: userId },
       skip: (page - 1) * limit,
       take: limit,
     });
-
-    return channel;
-  }
-
-  async getChannelInfo(id: string) {
-    const channel = await this.channelRepository.findOne({
-      where: { id },
-    });
-
-    return channel;
   }
 
   async likeChannel(channelId: string, userId: string) {

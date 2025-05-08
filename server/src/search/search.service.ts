@@ -28,10 +28,6 @@ export class SearchService {
       users,
       channels,
       episodes,
-      pagination: {
-        page: dto.page,
-        limit: dto.limit,
-      },
     };
   }
 
@@ -50,6 +46,10 @@ export class SearchService {
     return {
       items,
       total,
+      pagination: {
+        limit,
+        offset,
+      },
     };
   }
 
@@ -69,6 +69,10 @@ export class SearchService {
     return {
       items,
       total,
+      pagination: {
+        limit,
+        offset,
+      },
     };
   }
 
@@ -84,6 +88,10 @@ export class SearchService {
     return {
       items,
       total,
+      pagination: {
+        limit,
+        offset,
+      },
     };
   }
 }

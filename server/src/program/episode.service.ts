@@ -119,7 +119,7 @@ export class EpisodeService {
   //     });
   //   }
 
-  async getChannelEpisodes(channelId: string, page: number, limit: number) {
+  async findByChannelId(channelId: string, page: number, limit: number) {
     const episodes = await this.episodeRepository.find({
       where: { channel_id: channelId },
       skip: (page - 1) * limit,
