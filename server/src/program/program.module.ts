@@ -9,12 +9,19 @@ import { UserService } from './user.service';
 import { ChannelService } from './channel.service';
 import { EpisodeService } from './episode.service';
 import { RssFeedService } from './rss_feed.service';
+import { EpisodeTipRecord, EpisodePurchaseRecord } from './transaction.entity';
 
 @Global()
 @Module({
   imports: [
     HttpModule,
-    TypeOrmModule.forFeature([ChannelInfo, EpisodeInfo, UserInfo]),
+    TypeOrmModule.forFeature([
+      ChannelInfo,
+      EpisodeInfo,
+      UserInfo,
+      EpisodeTipRecord,
+      EpisodePurchaseRecord,
+    ]),
   ],
   providers: [
     ProgramService,

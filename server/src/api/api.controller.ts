@@ -155,6 +155,24 @@ export class ApiController {
     return this.episodeService.unsubscribeEpisode(episodeId, userId);
   }
 
+  @Post('episode/verify_tip')
+  async verifyTipEpisode(
+    @Query('txHash') txHash: string,
+    @Query('episodeId') episodeId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.episodeService.verifyTipEpisode(txHash, episodeId, userId);
+  }
+
+  @Post('episode/verify_purchase')
+  async verifyPurchaseEpisode(
+    @Query('txHash') txHash: string,
+    @Query('episodeId') episodeId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.episodeService.verifyPurchaseEpisode(txHash, episodeId, userId);
+  }
+
   @Get('rss/get_xml')
   @Header('Content-Type', 'application/rss+xml')
   @Header('Cache-Control', 'max-age=300')
