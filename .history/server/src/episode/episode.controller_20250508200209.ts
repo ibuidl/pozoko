@@ -1,9 +1,9 @@
-import { Controller, Post, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { EpisodeService } from './episode.service';
 import { AudioMimeType } from './episode.entity';
 
 @Controller('api/episode')
-export class EpisodeController {
+export class AppController {
   constructor(private readonly episodeService: EpisodeService) {}
 
   @Post('init')

@@ -1,13 +1,9 @@
 import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ChannelService } from './channel.service';
-import { EpisodeService } from 'src/episode/episode.service';
 
 @Controller('api/channel')
-export class ChannelController {
-  constructor(
-    private readonly channelService: ChannelService,
-    private readonly episodeService: EpisodeService,
-  ) {}
+export class AppController {
+  constructor(private readonly channelService: ChannelService) {}
 
   @Post('init')
   async completeChannel(

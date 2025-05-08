@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { ChannelService } from 'src/channel/channel.service';
 
 @Controller('api/user')
-export class UserController {
+export class AppController {
   constructor(
     private readonly userService: UserService,
     private readonly channelService: ChannelService,

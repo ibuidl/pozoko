@@ -2,14 +2,14 @@ import { Controller, Get, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ChannelService } from 'src/channel/channel.service';
 
-@Controller('api/user')
-export class UserController {
+@Controller('api')
+export class AppController {
   constructor(
     private readonly userService: UserService,
     private readonly channelService: ChannelService,
   ) {}
 
-  @Post('init')
+  @Post('user/init')
   async completeUser(
     @Query('txHash') txHash: string,
     @Query('email') email: string,
@@ -23,12 +23,12 @@ export class UserController {
     });
   }
 
-  @Get('info')
+  @Get('user/info')
   async getUserInfo(@Query('id') id: string) {
     return this.userService.getUserInfo(id);
   }
 
-  @Get('channels')
+  @Get('user/channels')
   async getUserChannels(
     @Query('userId') userId: string,
     @Query('page') page: number = 1,

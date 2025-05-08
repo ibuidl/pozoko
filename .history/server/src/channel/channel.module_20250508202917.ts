@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ChannelService } from './channel.service';
-import { ChannelController } from './channel.controller';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  controllers: [ChannelController],
+  controllers: [RssController],
+
   providers: [ChannelService],
 })
 export class ChannelModule {}

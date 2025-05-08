@@ -1,9 +1,9 @@
-import { Controller, Post, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { EpisodeService } from './episode.service';
 import { AudioMimeType } from './episode.entity';
 
 @Controller('api/episode')
-export class EpisodeController {
+export class AppController {
   constructor(private readonly episodeService: EpisodeService) {}
 
   @Post('init')
@@ -56,5 +56,13 @@ export class EpisodeController {
     @Query('userId') userId: string,
   ) {
     return this.episodeService.unsubscribeEpisode(episodeId, userId);
+  }
+  @Get('channel/episodes')
+  async getChannelEpisodes(
+    @Query('channelId') channelId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return this.episodeService.getChannelEpisodes(channelId, page, limit);
   }
 }

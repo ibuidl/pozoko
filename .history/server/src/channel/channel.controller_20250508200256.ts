@@ -1,9 +1,8 @@
 import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ChannelService } from './channel.service';
-import { EpisodeService } from 'src/episode/episode.service';
 
 @Controller('api/channel')
-export class ChannelController {
+export class AppController {
   constructor(
     private readonly channelService: ChannelService,
     private readonly episodeService: EpisodeService,

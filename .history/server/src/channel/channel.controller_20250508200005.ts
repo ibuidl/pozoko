@@ -1,13 +1,9 @@
 import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ChannelService } from './channel.service';
-import { EpisodeService } from 'src/episode/episode.service';
 
 @Controller('api/channel')
-export class ChannelController {
-  constructor(
-    private readonly channelService: ChannelService,
-    private readonly episodeService: EpisodeService,
-  ) {}
+export class AppController {
+  constructor(private readonly channelService: ChannelService) {}
 
   @Post('init')
   async completeChannel(
@@ -54,15 +50,6 @@ export class ChannelController {
     @Query('userId') userId: string,
   ) {
     return this.channelService.unsubscribeChannel(channelId, userId);
-  }
-
-  @Get('episodes')
-  async getChannelEpisodes(
-    @Query('channelId') channelId: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-  ) {
-    return this.episodeService.getChannelEpisodes(channelId, page, limit);
   }
   @Get('info')
   async getChannelInfo(@Query('id') id: string) {
