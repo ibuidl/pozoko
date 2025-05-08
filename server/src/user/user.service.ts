@@ -62,6 +62,12 @@ export class UserService {
     });
   }
 
+  async findById(id: string) {
+    return this.userRepository.findOne({
+      where: { id },
+    });
+  }
+
   async findAll(options?: {
     role?: UserRole;
     skip?: number;
@@ -74,13 +80,5 @@ export class UserService {
       take: options?.take || 10,
       order: { created_at: 'DESC' },
     });
-  }
-
-  async getUserInfo(id: string) {
-    const user = await this.userRepository.findOne({
-      where: { id },
-    });
-
-    return user;
   }
 }

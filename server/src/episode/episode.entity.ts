@@ -6,11 +6,16 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { ChannelInfo } from '../channel/channel.entity';
 import { UserInfo } from '../user/user.entity';
+import {
+  EpisodeTipRecord,
+  EpisodePurchaseRecord,
+} from '../program/transaction.entity';
 
 export enum AudioMimeType {
   MP3 = 'audio/mpeg',
@@ -102,4 +107,24 @@ export class EpisodeInfo {
     default: 0,
   })
   play_count: number;
+
+  @Column({
+    type: 'bigint',
+    default: 0,
+    comment: 'Total SOL tips received',
+  })
+  tip_amount: number;
+
+  @Column({
+    type: 'int',
+    default: 0,
+    comment: 'Number of tips received',
+  })
+  tip_count: number;
+
+  @OneToMany(() => EpisodeTipRecord, (record) => record.episode)
+  tip_records: EpisodeTipRecord[];
+
+  @OneToMany(() => EpisodePurchaseRecord, (record) => record.episode)
+  purchase_records: EpisodePurchaseRecord[];
 }

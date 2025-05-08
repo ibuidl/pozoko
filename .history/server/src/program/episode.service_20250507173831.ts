@@ -4,8 +4,12 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AudioMimeType, EpisodeInfo } from './episode.entity';
 import { ChannelInfo } from './channel.entity';
-import { check_transaction } from 'src/common/check_transaction';
+import {
+  check_transaction,
+  getTransferAmountAndTokenType,
+} from 'src/common/check_transaction';
 import { RssFeedService } from './rss_feed.service';
+import { EpisodeTipRecord, EpisodePurchaseRecord } from './transaction.entity';
 
 @Injectable()
 export class EpisodeService {
@@ -15,6 +19,10 @@ export class EpisodeService {
     private episodeRepository: Repository<EpisodeInfo>,
     @InjectRepository(ChannelInfo)
     private channelRepository: Repository<ChannelInfo>,
+    @InjectRepository(EpisodeTipRecord)
+    private tipRecordRepository: Repository<EpisodeTipRecord>,
+    @InjectRepository(EpisodePurchaseRecord)
+    private purchaseRecordRepository: Repository<EpisodePurchaseRecord>,
     private rssFeedService: RssFeedService,
   ) {}
 
@@ -98,7 +106,7 @@ export class EpisodeService {
   //     });
   //   }
 
-  async getChannelEpisodes(channelId: string, page: number, limit: number) {
+  async findByChannelId(channelId: string, page: number, limit: number) {
     const episodes = await this.episodeRepository.find({
       where: { channel_id: channelId },
       skip: (page - 1) * limit,
@@ -146,5 +154,89 @@ export class EpisodeService {
       .remove(userId);
 
     return { success: true, action: 'unsubscribe', episodeId, userId };
+  }
+
+  async verifyTipEpisode(txHash: string, episodeId: string, userId: string) {
+    const tx = await check_transaction(txHash, this.programService);
+    const transferDetails = getTransferAmountAndTokenType(tx);
+
+    const solTransferred = transferDetails.find(
+      (detail) => detail.type === 'SOL',
+    );
+
+    const tipRecord = await this.tipRecordRepository.save({
+      episode_id: episodeId,
+      user_id: userId,
+      tx_hash: txHash,
+      amount: solTransferred.amount,
+      created_at: Math.floor(Date.now() / 1000),
+    });
+
+    await this.episodeRepository.update(
+      { id: episodeId },
+      {
+        tip_amount: () => `tip_amount + ${solTransferred.amount}`,
+        tip_count: () => 'tip_count + 1',
+      },
+    );
+
+    const updatedEpisode = await this.episodeRepository.findOne({
+      where: { id: episodeId },
+      select: ['id', 'tip_amount', 'tip_count'],
+    });
+
+    return {
+      success: true,
+      data: {
+        tipRecord,
+        updatedEpisode,
+      },
+    };
+  }
+
+  async verifyPurchaseEpisode(
+    txHash: string,
+    episodeId: string,
+    userId: string,
+  ) {
+    const hasPurchased = await this.purchaseRecordRepository.findOne({
+      where: {
+        episode_id: episodeId,
+        user_id: userId,
+      },
+    });
+
+    if (hasPurchased) {
+      return {
+        success: false,
+        message: 'User has already purchased this episode',
+      };
+    }
+
+    const tx = await check_transaction(txHash, this.programService);
+    const transferDetails = getTransferAmountAndTokenType(tx);
+
+    const solTransferred = transferDetails.find(
+      (detail) => detail.type === 'SOL',
+    );
+
+    if (!solTransferred) {
+      return { success: false, error: 'No SOL transfer found in transaction' };
+    }
+
+    const purchaseRecord = await this.purchaseRecordRepository.save({
+      episode_id: episodeId,
+      user_id: userId,
+      tx_hash: txHash,
+      amount: solTransferred.amount,
+      created_at: Math.floor(Date.now() / 1000),
+    });
+
+    return {
+      success: true,
+      data: {
+        purchaseRecord,
+      },
+    };
   }
 }

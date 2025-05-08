@@ -6,9 +6,5 @@ import { AudioMimeType } from 'src/episode/episode.entity';
 
 @Controller('api')
 export class ApiController {
-  constructor(
-    private userService: UserService,
-    private ChannelService: ChannelService,
-    private episodeService: EpisodeService,
-  ) {}
+  constructor() {}
 }
