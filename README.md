@@ -95,6 +95,21 @@ Build the web app
 pnpm build
 ```
 
+#### Directory Structure Overview
+
+```
+├── api                       # Handle server or blockchain APIs
+├── app
+│   ├── client                # Listener client
+│   ├── dev                   # Solana program debugging page
+│   └── studio                # Creator studio
+├── components                # Custom components
+├── hooks                     # Custom hooks
+├── provider                  # Global context provider
+├── style                     # Base CSS
+└── utils                     # Common utility function
+```
+
 ### server
 
 back-end server

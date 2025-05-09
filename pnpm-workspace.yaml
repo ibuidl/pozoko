@@ -1,9 +1,7 @@
+packages:
+  - server
+
 ignoredBuiltDependencies:
   - bigint-buffer
   - bufferutil
   - utf-8-validate
-
-packages:
-  - "anchor"
-  - "."
-  - "server"
