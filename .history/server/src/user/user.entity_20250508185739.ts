@@ -8,8 +8,8 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { ChannelInfo } from './channel.entity';
-import { EpisodeInfo } from './episode.entity';
+import { ChannelInfo } from '../channel/channel.entity';
+import { EpisodeInfo } from '../program/episode.entity';
 
 export enum UserRole {
   Creator = 0,
@@ -21,8 +21,8 @@ export enum UserRole {
 @Unique(['public_key'])
 @Index('idx_usertor_name', ['nickname'])
 export class UserInfo {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column('varchar', { length: 44 })
   public_key: string;
@@ -37,8 +37,16 @@ export class UserInfo {
   @Column('varchar', { length: 200, nullable: true })
   description: string;
 
-  @Column('varchar', { length: 200 })
+  @Column('varchar', { length: 200, nullable: true })
   avatar: string;
+
+  @Column({
+    type: 'bigint',
+  })
+  created_at: number;
+
+  @Column('varchar', { length: 100, nullable: true, default: null })
+  email: string;
 
   @Column({ default: false })
   is_frozen: boolean;

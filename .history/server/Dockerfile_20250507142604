@@ -1,0 +1,27 @@
+# Use the official Node.js image as the base image
+FROM node:20
+
+# Set the working directory inside the container
+WORKDIR /app
+
+RUN corepack enable
+COPY ./pnpm-lock.yaml ./ 
+COPY ./server/package.json ./
+RUN cat /app/package.json
+RUN pnpm install
+
+WORKDIR /app/server
+
+COPY ./server/ ./
+RUN cat /app/server/package.json
+
+
+
+# Build the NestJS application
+RUN pnpm run build
+
+# Expose the application port
+EXPOSE 3000
+
+# Command to run the application
+CMD ["node", "dist/src/main"]

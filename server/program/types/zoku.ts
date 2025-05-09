@@ -297,35 +297,6 @@ export type Zoku = {
       args: [];
     },
     {
-      name: 'initializeEp';
-      discriminator: [28, 141, 147, 2, 7, 187, 205, 114];
-      accounts: [
-        {
-          name: 'channelInfo';
-          writable: true;
-        },
-        {
-          name: 'creator';
-          writable: true;
-          signer: true;
-        },
-        {
-          name: 'systemProgram';
-          address: '11111111111111111111111111111111';
-        },
-      ];
-      args: [
-        {
-          name: 'args';
-          type: {
-            defined: {
-              name: 'episodeArgs';
-            };
-          };
-        },
-      ];
-    },
-    {
       name: 'initializeUser';
       discriminator: [111, 17, 185, 250, 60, 122, 38, 254];
       accounts: [
@@ -381,6 +352,35 @@ export type Zoku = {
         },
       ];
     },
+    {
+      name: 'updateEp';
+      discriminator: [144, 193, 119, 155, 125, 56, 250, 239];
+      accounts: [
+        {
+          name: 'channelInfo';
+          writable: true;
+        },
+        {
+          name: 'creator';
+          writable: true;
+          signer: true;
+        },
+        {
+          name: 'systemProgram';
+          address: '11111111111111111111111111111111';
+        },
+      ];
+      args: [
+        {
+          name: 'args';
+          type: {
+            defined: {
+              name: 'episodeArgs';
+            };
+          };
+        },
+      ];
+    },
   ];
   accounts: [
     {
@@ -394,8 +394,8 @@ export type Zoku = {
   ];
   events: [
     {
-      name: 'channelEtfCreateEvent';
-      discriminator: [6, 193, 185, 58, 61, 234, 121, 154];
+      name: 'channelNftCreateEvent';
+      discriminator: [251, 47, 98, 156, 31, 13, 138, 221];
     },
     {
       name: 'channelNftMintEvent';
@@ -433,28 +433,6 @@ export type Zoku = {
     },
   ];
   types: [
-    {
-      name: 'channelEtfCreateEvent';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'channelEtfMint';
-            type: 'pubkey';
-          },
-          {
-            name: 'creators';
-            type: {
-              vec: {
-                defined: {
-                  name: 'creator';
-                };
-              };
-            };
-          },
-        ];
-      };
-    },
     {
       name: 'channelInfo';
       type: {
@@ -577,6 +555,44 @@ export type Zoku = {
           {
             name: 'sellerFeeBasisPoints';
             type: 'u16';
+          },
+        ];
+      };
+    },
+    {
+      name: 'channelNftCreateEvent';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'channelNftMint';
+            type: 'pubkey';
+          },
+          {
+            name: 'creators';
+            type: {
+              vec: {
+                defined: {
+                  name: 'creator';
+                };
+              };
+            };
+          },
+          {
+            name: 'channelInfoAddress';
+            type: 'pubkey';
+          },
+          {
+            name: 'channelName';
+            type: 'string';
+          },
+          {
+            name: 'channelSymbol';
+            type: 'string';
+          },
+          {
+            name: 'createdAt';
+            type: 'i64';
           },
         ];
       };
@@ -777,6 +793,10 @@ export type Zoku = {
           {
             name: 'createdAt';
             type: 'i64';
+          },
+          {
+            name: 'owner';
+            type: 'pubkey';
           },
         ];
       };
