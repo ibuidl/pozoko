@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { check_transaction } from 'src/common/check_transaction';
 import { UpdateEpisodeDto } from 'src/dto/update_ep_dto';
-import { RssService } from 'src/rss/rss.service';
 import { Repository } from 'typeorm';
 import { ChannelInfo } from '../channel/channel.entity';
 import { ProgramService } from '../program/program.service';
@@ -16,7 +15,6 @@ export class EpisodeService {
     private readonly episodeRepository: Repository<EpisodeInfo>,
     @InjectRepository(ChannelInfo)
     private readonly channelRepository: Repository<ChannelInfo>,
-    private readonly rssService: RssService,
   ) {}
 
   async verifyAndCompleteEpisode(
@@ -123,21 +121,14 @@ export class EpisodeService {
     return { success: true, action: 'unsubscribe', episodeId, userId };
   }
 
-  async updateEpisode(
-    metadata_cid: string,
-    updateData: UpdateEpisodeDto,
-    userId: string,
-  ) {
+  async updateEpisode(metadata_cid: string, updateData: UpdateEpisodeDto) {
     try {
       const episode = await this.episodeRepository.findOne({
         where: { metadata_cid },
       });
 
       if (!episode) {
-        throw new NotFoundException('EP is not found');
-      }
-      if (episode.creator_id !== userId) {
-        throw new Error('User is not EP Creator');
+        throw new NotFoundException('节目不存在');
       }
 
       const result = await this.episodeRepository.upsert(
@@ -149,6 +140,16 @@ export class EpisodeService {
           conflictPaths: ['metadata_cid'],
         },
       );
+      if (updateData.is_published) {
+        const updatedEpisode = await this.episodeRepository.findOne({
+          where: { metadata_cid },
+          relations: ['channel'],
+        });
+
+        if (updatedEpisode) {
+          await this.rssFeedService.generateRssFeed(updatedEpisode.channel);
+        }
+      }
 
       return {
         success: true,
@@ -157,7 +158,7 @@ export class EpisodeService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'update failed ',
+        error: error instanceof Error ? error.message : '更新失败',
       };
     }
   }

@@ -123,7 +123,7 @@ export class UserService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'update failed',
+        error: error instanceof Error ? error.message : 'update false',
       };
     }
   }

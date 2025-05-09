@@ -6,7 +6,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { check_transaction } from 'src/common/check_transaction';
 import { UpdateChannelDto } from 'src/dto/update_channel_dto';
-import { RssService } from 'src/rss/rss.service';
 import { Repository } from 'typeorm';
 import { ProgramService } from '../program/program.service';
 import { ChannelInfo, TypeOfCost } from './channel.entity';
@@ -17,7 +16,6 @@ export class ChannelService {
     private readonly programService: ProgramService,
     @InjectRepository(ChannelInfo)
     private readonly channelRepository: Repository<ChannelInfo>,
-    private readonly rssService: RssService,
   ) {}
 
   async verifyAndCompleteChannel(
@@ -132,7 +130,7 @@ export class ChannelService {
   async updateChannel(
     public_key: string,
     updateData: UpdateChannelDto,
-    main_creator: string,
+    walletAddress: string,
   ) {
     try {
       const channel = await this.channelRepository.findOne({
@@ -141,31 +139,39 @@ export class ChannelService {
       });
 
       if (!channel) {
-        throw new NotFoundException('channel is not found');
+        throw new NotFoundException('频道不存在');
       }
 
-      if (channel.main_creator.public_key !== main_creator) {
-        throw new UnauthorizedException(
-          'only channel main creator can update,but you are not',
-        );
+      // 验证操作者是否是频道主创作者
+      if (channel.main_creator.owner !== walletAddress) {
+        throw new UnauthorizedException('只有主创作者可以更新频道信息');
       }
-      await this.channelRepository.upsert(
+      const result = await this.channelRepository.upsert(
         {
           ...channel,
           ...updateData,
+          // 保持关键字段不变
+          public_key: channel.public_key,
+          main_creator_id: channel.main_creator_id,
         },
         {
           conflictPaths: ['public_key'],
         },
       );
 
+      if (result.generatedMaps[0]) {
+        // 更新 RSS Feed
+        await this.rssFeedService.generateRssFeed(result.generatedMaps[0]);
+      }
+
       return {
         success: true,
+        data: result.generatedMaps[0],
       };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'update failed',
+        error: error instanceof Error ? error.message : '更新失败',
       };
     }
   }

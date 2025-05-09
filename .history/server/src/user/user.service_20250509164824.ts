@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { check_transaction } from 'src/common/check_transaction';
 import { UpdateUserDto } from 'src/dto/update_user_dto';
@@ -89,41 +85,29 @@ export class UserService {
     return user;
   }
 
-  async updateUser(
-    public_key: string,
-    updateData: UpdateUserDto,
-    walletAddress: string,
-  ) {
+  async updateUser(id: string, updateData: UpdateUserDto) {
     try {
       const user = await this.userRepository.findOne({
-        where: { public_key },
+        where: { id },
       });
 
       if (!user) {
         throw new NotFoundException('user is not found');
       }
 
-      if (user.owner !== walletAddress) {
-        throw new UnauthorizedException('walletAddress is not user owner');
-      }
-
-      await this.userRepository.upsert(
-        {
-          ...user,
-          ...updateData,
-        },
-        {
-          conflictPaths: ['public_key'],
-        },
-      );
+      const updatedUser = await this.userRepository.save({
+        ...user,
+        ...updateData,
+      });
 
       return {
         success: true,
+        data: updatedUser,
       };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'update failed',
+        error: error instanceof Error ? error.message : '更新失败',
       };
     }
   }

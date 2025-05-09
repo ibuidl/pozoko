@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Headers,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Post, Put, Query } from '@nestjs/common';
 import { UpdateEpisodeDto } from 'src/dto/update_ep_dto';
 import { AudioMimeType } from './episode.entity';
 import { EpisodeService } from './episode.service';
@@ -35,11 +27,11 @@ export class EpisodeController {
     });
   }
 
-  @Put('update/:metadataCid')
+  @Put('update')
   async updateEpisode(
-    @Param('metadataCid') metadataCid: string,
+    @Query('metadataCid') metadataCid: string,
+    @Query('userId') userId: string,
     @Body() updateData: UpdateEpisodeDto,
-    @Headers('userId') userId: string,
   ) {
     return this.episodeService.updateEpisode(metadataCid, updateData, userId);
   }

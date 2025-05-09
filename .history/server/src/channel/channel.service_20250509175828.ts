@@ -149,7 +149,7 @@ export class ChannelService {
           'only channel main creator can update,but you are not',
         );
       }
-      await this.channelRepository.upsert(
+      const result = await this.channelRepository.upsert(
         {
           ...channel,
           ...updateData,
@@ -158,6 +158,11 @@ export class ChannelService {
           conflictPaths: ['public_key'],
         },
       );
+
+      if (result.generatedMaps[0]) {
+        // 更新 RSS Feed
+        await this.rssService.generateRssFeed(result.generatedMaps[0]);
+      }
 
       return {
         success: true,

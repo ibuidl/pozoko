@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ChannelService } from 'src/channel/channel.service';
 import { UpdateUserDto } from 'src/dto/update_user_dto';
@@ -37,9 +38,14 @@ export class UserController {
   async updateUser(
     @Param('pubkey') pubkey: string,
     @Body() updateData: UpdateUserDto,
-    @Headers('walletAddress') walletAddress: string,
+    @Headers('owner') owner: string,
   ) {
-    return this.userService.updateUser(pubkey, updateData, walletAddress);
+    // 验证操作者是否是本人
+    if (pubkey !== owner) {
+      throw new UnauthorizedException('只能更新自己的信息');
+    }
+
+    return this.userService.updateUser(pubkey, updateData);
   }
 
   @Get('info')

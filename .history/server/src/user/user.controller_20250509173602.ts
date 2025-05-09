@@ -37,9 +37,9 @@ export class UserController {
   async updateUser(
     @Param('pubkey') pubkey: string,
     @Body() updateData: UpdateUserDto,
-    @Headers('walletAddress') walletAddress: string,
+    @Headers('owner') owner: string,
   ) {
-    return this.userService.updateUser(pubkey, updateData, walletAddress);
+    return this.userService.updateUser(pubkey, updateData);
   }
 
   @Get('info')

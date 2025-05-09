@@ -149,6 +149,16 @@ export class EpisodeService {
           conflictPaths: ['metadata_cid'],
         },
       );
+      if (updateData.is_published) {
+        const updatedEpisode = await this.episodeRepository.findOne({
+          where: { metadata_cid },
+          relations: ['channel'],
+        });
+
+        if (updatedEpisode) {
+          await this.rssService.generateRssFeed(updatedEpisode.channel);
+        }
+      }
 
       return {
         success: true,

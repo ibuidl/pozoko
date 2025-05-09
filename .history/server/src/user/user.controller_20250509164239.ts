@@ -1,15 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Headers,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
 import { ChannelService } from 'src/channel/channel.service';
-import { UpdateUserDto } from 'src/dto/update_user_dto';
 import { UserService } from './user.service';
 
 @Controller('api/user')
@@ -33,13 +23,19 @@ export class UserController {
     });
   }
 
-  @Put('update/:pubkey')
+  @Put('update')
   async updateUser(
-    @Param('pubkey') pubkey: string,
-    @Body() updateData: UpdateUserDto,
-    @Headers('walletAddress') walletAddress: string,
+    @Query('id') id: string,
+    @Body()
+    updateData: {
+      email?: string;
+      nickname?: string;
+      role?: number;
+      description?: string;
+      avatar?: string;
+    },
   ) {
-    return this.userService.updateUser(pubkey, updateData, walletAddress);
+    return this.userService.updateUser(id, updateData);
   }
 
   @Get('info')

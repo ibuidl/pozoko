@@ -104,7 +104,7 @@ export class UserService {
       }
 
       if (user.owner !== walletAddress) {
-        throw new UnauthorizedException('walletAddress is not user owner');
+        throw new UnauthorizedException('无权更新此用户信息');
       }
 
       await this.userRepository.upsert(
@@ -123,7 +123,7 @@ export class UserService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'update failed',
+        error: error instanceof Error ? error.message : 'update false',
       };
     }
   }
