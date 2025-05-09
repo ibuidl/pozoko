@@ -135,7 +135,10 @@ export class RssService {
         itunesImage: `${requiredEnvVars.EP_AUDIO_URL}/${episode.metadata_cid}`,
         itunesExplicit: false,
         itunesEpisodeType: 'full',
-        customElements: [{ 'content:encoded': episode.description }],
+        customElements: [
+          { 'content:encoded': episode.description },
+          { 'dc:creator': channel.main_creator.nickname },
+        ],
       });
     });
 

@@ -53,7 +53,6 @@ export class ChannelService {
           created_at: event.created_at.toNumber(),
           category: supplementalData.category || '',
           subcategory: supplementalData.subcategory || '',
-          itunesExplicit: supplementalData.itunesExplicit,
           num_of_audios: 0,
           is_enabled: false,
           type_of_cost: TypeOfCost.Free,

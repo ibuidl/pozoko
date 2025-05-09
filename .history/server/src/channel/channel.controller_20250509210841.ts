@@ -33,14 +33,13 @@ export class ChannelController {
     @Query('category') category?: string,
     @Query('itunesType') itunesType?: FeedItunesType,
     @Query('subcategory') subcategory?: string,
-    @Query('itunesExplicit') itunesExplicit?: boolean,
+    @Query('itunesExplicit') itunesExplicit?: string,
   ) {
     return this.channelService.verifyAndCompleteChannel(txHash, {
       language,
       itunesType,
       category,
       subcategory,
-      itunesExplicit,
     });
   }
 

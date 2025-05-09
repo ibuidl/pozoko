@@ -19,8 +19,6 @@ export class RssController {
 
     return {
       feedUrl: `${process.env.RSS_FEED_URL}/${channel.id}`,
-      channelName: channel.name,
-      description: channel.description,
     };
   }
 }

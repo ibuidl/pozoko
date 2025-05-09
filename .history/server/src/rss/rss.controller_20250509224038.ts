@@ -15,10 +15,12 @@ export class RssController {
 
   @Get('feed_url')
   async getFeedUrl(@Query('channelId') channelId: string) {
+    // 验证频道是否存在
     const channel = await this.rssService.getChannel(channelId);
 
     return {
       feedUrl: `${process.env.RSS_FEED_URL}/${channel.id}`,
+      // 可选:返回更多信息
       channelName: channel.name,
       description: channel.description,
     };

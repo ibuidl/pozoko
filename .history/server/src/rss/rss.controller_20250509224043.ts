@@ -19,6 +19,7 @@ export class RssController {
 
     return {
       feedUrl: `${process.env.RSS_FEED_URL}/${channel.id}`,
+      // 可选:返回更多信息
       channelName: channel.name,
       description: channel.description,
     };
