@@ -539,6 +539,44 @@ export type Zoku = {
           }
         }
       ]
+    },
+    {
+      "name": "updateUser",
+      "discriminator": [
+        9,
+        2,
+        160,
+        169,
+        118,
+        12,
+        207,
+        84
+      ],
+      "accounts": [
+        {
+          "name": "userAccount",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "nickname",
+          "type": "string"
+        },
+        {
+          "name": "avatar",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
