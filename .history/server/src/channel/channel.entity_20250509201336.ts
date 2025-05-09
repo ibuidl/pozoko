@@ -60,13 +60,7 @@ export class ChannelInfo {
   language: string;
 
   @Column({ default: 'episodic' })
-  itunesType: FeedItunesType;
-
-  @Column({
-    type: 'boolean',
-    default: false,
-  })
-  itunesExplicit: boolean;
+  itunesType: string;
 
   @Column({
     type: 'bigint',

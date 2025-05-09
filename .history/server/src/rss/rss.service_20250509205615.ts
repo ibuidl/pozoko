@@ -129,7 +129,7 @@ export class RssService {
           type: episode.mimeType || 'audio/mpeg',
         },
         itunesAuthor: channel.main_creator.nickname,
-        itunesSubtitle: episode.name.substring(0, 255),
+        itunesSubtitle: episode.name.substring(0, 255), // Apple's max length
         itunesSummary: episode.description,
         itunesDuration: formatDuration(episode.duration),
         itunesImage: `${requiredEnvVars.EP_AUDIO_URL}/${episode.metadata_cid}`,
@@ -142,6 +142,6 @@ export class RssService {
       });
     });
 
-    return feed.buildXml({ indent: '  ' });
+    return feed.buildXml('  '); // 2-space indentation
   }
 }

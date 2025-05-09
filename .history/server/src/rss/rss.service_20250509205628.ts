@@ -142,6 +142,6 @@ export class RssService {
       });
     });
 
-    return feed.buildXml({ indent: '  ' });
+    return feed.buildXml('  '); // 2-space indentation
   }
 }

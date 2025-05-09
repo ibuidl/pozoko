@@ -48,7 +48,7 @@ export class ChannelService {
           avatar: '',
           nft_mint_account: event.channel_nft_mint.toString(),
           language: supplementalData.language || 'en',
-          itunesType: supplementalData.itunesType,
+          itunesType: supplementalData.itunesType || 'episodic',
           created_at: event.created_at.toNumber(),
           category: supplementalData.category || '',
           subcategory: supplementalData.subcategory || '',

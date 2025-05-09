@@ -9,7 +9,7 @@ import { UpdateChannelDto } from 'src/dto/update_channel_dto';
 import { RssService } from 'src/rss/rss.service';
 import { Repository } from 'typeorm';
 import { ProgramService } from '../program/program.service';
-import { ChannelInfo, FeedItunesType, TypeOfCost } from './channel.entity';
+import { ChannelInfo, TypeOfCost } from './channel.entity';
 
 @Injectable()
 export class ChannelService {
@@ -24,7 +24,7 @@ export class ChannelService {
     txHash: string,
     supplementalData: {
       language: string;
-      itunesType: FeedItunesType;
+      itunesType: string;
       category: string;
       subcategory: string;
     },
@@ -48,7 +48,7 @@ export class ChannelService {
           avatar: '',
           nft_mint_account: event.channel_nft_mint.toString(),
           language: supplementalData.language || 'en',
-          itunesType: supplementalData.itunesType,
+          itunesType: supplementalData.itunesType || 'episodic',
           created_at: event.created_at.toNumber(),
           category: supplementalData.category || '',
           subcategory: supplementalData.subcategory || '',

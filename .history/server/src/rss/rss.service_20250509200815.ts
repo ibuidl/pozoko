@@ -83,7 +83,7 @@ export class RssService {
       managingEditor: channel.main_creator.email,
       webMaster: channel.main_creator.email,
       copyright: `© ${new Date().getFullYear()} ${channel.name}`,
-      language: channel.language.toLowerCase(),
+      language: channel.language.toLowerCase(), // Standardize to lowercase
       categories: [channel.category].concat(
         channel.subcategory ? [channel.subcategory] : [],
       ),
@@ -105,7 +105,7 @@ export class RssService {
         },
       ],
       itunesImage: channel.avatar,
-      itunesType: channel.itunesType,
+      itunesType: channel.itunesType || 'episodic', // Default to episodic
     });
 
     // Add episodes
@@ -126,15 +126,15 @@ export class RssService {
         enclosure: {
           url: `${requiredEnvVars.EP_AUDIO_URL}/${episode.metadata_cid}`,
           size: episode.fileSize,
-          type: episode.mimeType || 'audio/mpeg',
+          type: episode.mimeType || 'audio/mpeg', // Default MIME type
         },
         itunesAuthor: channel.main_creator.nickname,
-        itunesSubtitle: episode.name.substring(0, 255),
+        itunesSubtitle: episode.name.substring(0, 255), // Apple's max length
         itunesSummary: episode.description,
         itunesDuration: formatDuration(episode.duration),
         itunesImage: `${requiredEnvVars.EP_AUDIO_URL}/${episode.metadata_cid}`,
-        itunesExplicit: false,
-        itunesEpisodeType: 'full',
+        itunesExplicit: episode.itunesExplicit || false,
+        itunesEpisodeType: episode.itunesEpisodeType || 'full',
         customElements: [
           { 'content:encoded': episode.description },
           { 'dc:creator': channel.main_creator.nickname },
@@ -142,6 +142,6 @@ export class RssService {
       });
     });
 
-    return feed.buildXml({ indent: '  ' });
+    return feed.buildXml('  '); // 2-space indentation
   }
 }

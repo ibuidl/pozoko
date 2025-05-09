@@ -8,10 +8,9 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-
+import { FeedItunesType } from 'podcast';
 import { UpdateChannelDto } from 'src/dto/update_channel_dto';
 import { EpisodeService } from 'src/episode/episode.service';
-import { FeedItunesType } from './channel.entity';
 import { ChannelService } from './channel.service';
 
 @Controller('api/channel')

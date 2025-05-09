@@ -63,12 +63,6 @@ export class ChannelInfo {
   itunesType: FeedItunesType;
 
   @Column({
-    type: 'boolean',
-    default: false,
-  })
-  itunesExplicit: boolean;
-
-  @Column({
     type: 'bigint',
     default: 0,
   })

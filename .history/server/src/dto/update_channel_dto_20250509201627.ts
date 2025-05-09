@@ -1,5 +1,5 @@
 import { IsOptional, IsString } from 'class-validator';
-import { FeedItunesType } from 'src/channel/channel.entity';
+import { FeedItunesType } from 'podcast';
 
 export class UpdateChannelDto {
   @IsOptional()
@@ -15,5 +15,6 @@ export class UpdateChannelDto {
   subcategory?: string;
 
   @IsOptional()
+  @IsString()
   itunesType?: FeedItunesType;
 }

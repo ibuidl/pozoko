@@ -18,11 +18,6 @@ export enum TypeOfCost {
   Paid = 1,
 }
 
-export enum FeedItunesType {
-  Episodic = 'episodic',
-  Serial = 'serial',
-}
-
 export interface Creators {
   address: string;
   share: number;
@@ -60,13 +55,7 @@ export class ChannelInfo {
   language: string;
 
   @Column({ default: 'episodic' })
-  itunesType: FeedItunesType;
-
-  @Column({
-    type: 'boolean',
-    default: false,
-  })
-  itunesExplicit: boolean;
+  itunesType: string;
 
   @Column({
     type: 'bigint',
