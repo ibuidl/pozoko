@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { check_transaction } from 'src/common/check_transaction';
 import { UpdateUserDto } from 'src/dto/update_user_dto';
@@ -103,10 +99,6 @@ export class UserService {
         throw new NotFoundException('user is not found');
       }
 
-      if (user.owner !== walletAddress) {
-        throw new UnauthorizedException('walletAddress is not user owner');
-      }
-
       await this.userRepository.upsert(
         {
           ...user,
@@ -123,7 +115,7 @@ export class UserService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'update failed',
+        error: error instanceof Error ? error.message : 'update false',
       };
     }
   }

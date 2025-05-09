@@ -145,11 +145,9 @@ export class ChannelService {
       }
 
       if (channel.main_creator.public_key !== main_creator) {
-        throw new UnauthorizedException(
-          'only channel main creator can update,but you are not',
-        );
+        throw new UnauthorizedException('只有主创作者可以更新频道信息');
       }
-      await this.channelRepository.upsert(
+      const result = await this.channelRepository.upsert(
         {
           ...channel,
           ...updateData,
@@ -159,13 +157,19 @@ export class ChannelService {
         },
       );
 
+      if (result.generatedMaps[0]) {
+        // 更新 RSS Feed
+        await this.rssService.generateRssFeed(result.generatedMaps[0]);
+      }
+
       return {
         success: true,
+        data: result.generatedMaps[0],
       };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'update failed',
+        error: error instanceof Error ? error.message : '更新失败',
       };
     }
   }

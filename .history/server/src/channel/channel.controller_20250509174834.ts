@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Headers,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UpdateChannelDto } from 'src/dto/update_channel_dto';
 import { EpisodeService } from 'src/episode/episode.service';
 import { ChannelService } from './channel.service';
@@ -23,9 +14,9 @@ export class ChannelController {
   async updateChannel(
     @Param('pubkey') pubkey: string,
     @Body() updateData: UpdateChannelDto,
-    @Headers('main_creator') main_creator: string,
+    @Headers('wallet') walletAddress: string, // 操作者钱包地址
   ) {
-    return this.channelService.updateChannel(pubkey, updateData, main_creator);
+    return this.channelService.updateChannel(pubkey, updateData, walletAddress);
   }
 
   @Post('init')

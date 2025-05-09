@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Headers,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UpdateChannelDto } from 'src/dto/update_channel_dto';
 import { EpisodeService } from 'src/episode/episode.service';
 import { ChannelService } from './channel.service';

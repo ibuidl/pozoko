@@ -123,11 +123,7 @@ export class EpisodeService {
     return { success: true, action: 'unsubscribe', episodeId, userId };
   }
 
-  async updateEpisode(
-    metadata_cid: string,
-    updateData: UpdateEpisodeDto,
-    userId: string,
-  ) {
+  async updateEpisode(metadata_cid: string, updateData: UpdateEpisodeDto) {
     try {
       const episode = await this.episodeRepository.findOne({
         where: { metadata_cid },
@@ -135,9 +131,6 @@ export class EpisodeService {
 
       if (!episode) {
         throw new NotFoundException('EP is not found');
-      }
-      if (episode.creator_id !== userId) {
-        throw new Error('User is not EP Creator');
       }
 
       const result = await this.episodeRepository.upsert(
@@ -149,6 +142,16 @@ export class EpisodeService {
           conflictPaths: ['metadata_cid'],
         },
       );
+      if (updateData.is_published) {
+        const updatedEpisode = await this.episodeRepository.findOne({
+          where: { metadata_cid },
+          relations: ['channel'],
+        });
+
+        if (updatedEpisode) {
+          await this.rssFeedService.generateRssFeed(updatedEpisode.channel);
+        }
+      }
 
       return {
         success: true,
@@ -157,7 +160,7 @@ export class EpisodeService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'update failed ',
+        error: error instanceof Error ? error.message : '更新失败',
       };
     }
   }

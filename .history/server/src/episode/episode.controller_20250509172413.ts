@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Headers,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, Query } from '@nestjs/common';
 import { UpdateEpisodeDto } from 'src/dto/update_ep_dto';
 import { AudioMimeType } from './episode.entity';
 import { EpisodeService } from './episode.service';
@@ -39,7 +31,7 @@ export class EpisodeController {
   async updateEpisode(
     @Param('metadataCid') metadataCid: string,
     @Body() updateData: UpdateEpisodeDto,
-    @Headers('userId') userId: string,
+    @Headers('userId') userId: string, // 建议通过 header 传递用户身份
   ) {
     return this.episodeService.updateEpisode(metadataCid, updateData, userId);
   }

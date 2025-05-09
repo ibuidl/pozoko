@@ -1,15 +1,10 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ProgramService } from '../program/program.service';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ChannelInfo, TypeOfCost } from './channel.entity';
 import { check_transaction } from 'src/common/check_transaction';
 import { UpdateChannelDto } from 'src/dto/update_channel_dto';
-import { RssService } from 'src/rss/rss.service';
-import { Repository } from 'typeorm';
-import { ProgramService } from '../program/program.service';
-import { ChannelInfo, TypeOfCost } from './channel.entity';
 
 @Injectable()
 export class ChannelService {
@@ -17,7 +12,6 @@ export class ChannelService {
     private readonly programService: ProgramService,
     @InjectRepository(ChannelInfo)
     private readonly channelRepository: Repository<ChannelInfo>,
-    private readonly rssService: RssService,
   ) {}
 
   async verifyAndCompleteChannel(
@@ -130,9 +124,9 @@ export class ChannelService {
   }
 
   async updateChannel(
-    public_key: string,
-    updateData: UpdateChannelDto,
-    main_creator: string,
+    public_key: string, 
+    updateData: UpdateChannelDto, 
+    walletAddress: string
   ) {
     try {
       const channel = await this.channelRepository.findOne({
@@ -141,32 +135,11 @@ export class ChannelService {
       });
 
       if (!channel) {
-        throw new NotFoundException('channel is not found');
+        throw new NotFoundException('频道不存在');
       }
 
-      if (channel.main_creator.public_key !== main_creator) {
-        throw new UnauthorizedException(
-          'only channel main creator can update,but you are not',
-        );
+      // 验证操作者是否是频道主创作者
+      if (channel.main_creator.owner !== walletAddress) {
+        throw new UnauthorizedException('只有主创作者可以更新频道信息');
       }
-      await this.channelRepository.upsert(
-        {
-          ...channel,
-          ...updateData,
-        },
-        {
-          conflictPaths: ['public_key'],
-        },
-      );
-
-      return {
-        success: true,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'update failed',
-      };
-    }
-  }
 }
