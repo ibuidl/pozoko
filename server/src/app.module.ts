@@ -13,6 +13,8 @@ import { UserModule } from './user/user.module';
 import { ChannelModule } from './channel/channel.module';
 import { RssModule } from './rss/rss.module';
 import { EpisodeModule } from './episode/episode.module';
+import { EpisodeListenerModule } from './episode-listener/episode.module';
+import { ChannelListenerModule } from './channel-listener/channel.module';
 
 @Module({
   imports: [
@@ -44,8 +46,10 @@ import { EpisodeModule } from './episode/episode.module';
     ApiModule,
     UserModule,
     ChannelModule,
+    ChannelListenerModule,
     RssModule,
     EpisodeModule,
+    EpisodeListenerModule,
     RankModule,
     SearchModule,
   ],

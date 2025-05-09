@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Headers,
   Param,
   Post,
@@ -44,35 +45,17 @@ export class EpisodeController {
     return this.episodeService.updateEpisode(metadataCid, updateData, userId);
   }
 
-  @Post('like')
-  async likeEpisode(
-    @Query('episodeId') episodeId: string,
-    @Query('userId') userId: string,
-  ) {
-    return this.episodeService.likeEpisode(episodeId, userId);
+  @Get()
+  async findById(@Query('id') id: string) {
+    return this.episodeService.findById(id);
   }
 
-  @Post('unlike')
-  async unlikeEpisode(
-    @Query('episodeId') episodeId: string,
-    @Query('userId') userId: string,
+  @Get('list')
+  async findByChannelId(
+    @Query('channelId') channelId: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ) {
-    return this.episodeService.unlikeEpisode(episodeId, userId);
-  }
-
-  @Post('subscribe')
-  async subscribeEpisode(
-    @Query('episodeId') episodeId: string,
-    @Query('userId') userId: string,
-  ) {
-    return this.episodeService.subscribeEpisode(episodeId, userId);
-  }
-
-  @Post('unsubscribe')
-  async unsubscribeEpisode(
-    @Query('episodeId') episodeId: string,
-    @Query('userId') userId: string,
-  ) {
-    return this.episodeService.unsubscribeEpisode(episodeId, userId);
+    return this.episodeService.findByChannelId(channelId, page, limit);
   }
 }

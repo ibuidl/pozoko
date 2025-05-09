@@ -115,6 +115,10 @@ export class ChannelInfo {
 
   @ManyToMany(() => UserInfo)
   @JoinTable()
+  collectors: UserInfo[];
+
+  @ManyToMany(() => UserInfo)
+  @JoinTable()
   subscribers: UserInfo[];
 
   @Column({

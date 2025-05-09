@@ -73,56 +73,6 @@ export class EpisodeService {
     }
   }
 
-  async getChannelEpisodes(channelId: string, page: number, limit: number) {
-    const episodes = await this.episodeRepository.find({
-      where: { channel_id: channelId },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
-
-    return episodes;
-  }
-
-  async likeEpisode(episodeId: string, userId: string) {
-    await this.episodeRepository
-      .createQueryBuilder()
-      .relation(EpisodeInfo, 'likers')
-      .of(episodeId)
-      .add(userId);
-
-    return { success: true, action: 'like', episodeId, userId };
-  }
-
-  async unlikeEpisode(episodeId: string, userId: string) {
-    await this.episodeRepository
-      .createQueryBuilder()
-      .relation(EpisodeInfo, 'likers')
-      .of(episodeId)
-      .remove(userId);
-
-    return { success: true, action: 'unlike', episodeId, userId };
-  }
-
-  async subscribeEpisode(episodeId: string, userId: string) {
-    await this.episodeRepository
-      .createQueryBuilder()
-      .relation(EpisodeInfo, 'subscribers')
-      .of(episodeId)
-      .add(userId);
-
-    return { success: true, action: 'subscribe', episodeId, userId };
-  }
-
-  async unsubscribeEpisode(episodeId: string, userId: string) {
-    await this.episodeRepository
-      .createQueryBuilder()
-      .relation(EpisodeInfo, 'subscribers')
-      .of(episodeId)
-      .remove(userId);
-
-    return { success: true, action: 'unsubscribe', episodeId, userId };
-  }
-
   async updateEpisode(
     metadata_cid: string,
     updateData: UpdateEpisodeDto,
@@ -160,5 +110,19 @@ export class EpisodeService {
         error: error instanceof Error ? error.message : 'update failed ',
       };
     }
+  }
+
+  async findById(id: string) {
+    return this.episodeRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async findByChannelId(channelId: string, page: number, limit: number) {
+    return this.episodeRepository.find({
+      where: { channel_id: channelId },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
   }
 }

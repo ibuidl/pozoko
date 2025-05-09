@@ -71,64 +71,6 @@ export class ChannelService {
     }
   }
 
-  async getUserChannels(userId: string, page: number, limit: number) {
-    const channel = await this.channelRepository.find({
-      where: { main_creator_id: userId },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
-
-    return channel;
-  }
-
-  async getChannelInfo(id: string) {
-    const channel = await this.channelRepository.findOne({
-      where: { id },
-    });
-
-    return channel;
-  }
-
-  async likeChannel(channelId: string, userId: string) {
-    await this.channelRepository
-      .createQueryBuilder()
-      .relation(ChannelInfo, 'likers')
-      .of(channelId)
-      .add(userId);
-
-    return { success: true, action: 'like', channelId, userId };
-  }
-
-  async unlikeChannel(channelId: string, userId: string) {
-    await this.channelRepository
-      .createQueryBuilder()
-      .relation(ChannelInfo, 'likers')
-      .of(channelId)
-      .remove(userId);
-
-    return { success: true, action: 'unlike', channelId, userId };
-  }
-
-  async subscribeChannel(channelId: string, userId: string) {
-    await this.channelRepository
-      .createQueryBuilder()
-      .relation(ChannelInfo, 'subscribers')
-      .of(channelId)
-      .add(userId);
-
-    return { success: true, action: 'subscribe', channelId, userId };
-  }
-
-  async unsubscribeChannel(channelId: string, userId: string) {
-    await this.channelRepository
-      .createQueryBuilder()
-      .relation(ChannelInfo, 'subscribers')
-      .of(channelId)
-      .remove(userId);
-
-    return { success: true, action: 'unsubscribe', channelId, userId };
-  }
-
   async updateChannel(
     public_key: string,
     updateData: UpdateChannelDto,
@@ -168,5 +110,19 @@ export class ChannelService {
         error: error instanceof Error ? error.message : 'update failed',
       };
     }
+  }
+
+  async findById(id: string) {
+    return this.channelRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async findByUserId(userId: string, page: number, limit: number) {
+    return this.channelRepository.find({
+      where: { main_creator_id: userId },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
   }
 }
