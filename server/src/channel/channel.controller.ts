@@ -9,15 +9,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { UpdateChannelDto } from 'src/dto/update_channel_dto';
-import { EpisodeService } from 'src/episode/episode.service';
 import { ChannelService } from './channel.service';
 
 @Controller('api/channel')
 export class ChannelController {
-  constructor(
-    private readonly channelService: ChannelService,
-    private readonly episodeService: EpisodeService,
-  ) {}
+  constructor(private readonly channelService: ChannelService) {}
 
   @Put('update/:pubkey')
   async updateChannel(
@@ -43,48 +39,18 @@ export class ChannelController {
       subcategory,
     });
   }
-  @Post('like')
-  async likeChannel(
-    @Query('channelId') channelId: string,
-    @Query('userId') userId: string,
-  ) {
-    return this.channelService.likeChannel(channelId, userId);
+
+  @Get()
+  async findById(@Query('id') id: string) {
+    return this.channelService.findById(id);
   }
 
-  @Post('unlike')
-  async unlikeChannel(
-    @Query('channelId') channelId: string,
+  @Get('list')
+  async findByUserId(
     @Query('userId') userId: string,
-  ) {
-    return this.channelService.unlikeChannel(channelId, userId);
-  }
-
-  @Post('subscribe')
-  async subscribeChannel(
-    @Query('channelId') channelId: string,
-    @Query('userId') userId: string,
-  ) {
-    return this.channelService.subscribeChannel(channelId, userId);
-  }
-
-  @Post('unsubscribe')
-  async unsubscribeChannel(
-    @Query('channelId') channelId: string,
-    @Query('userId') userId: string,
-  ) {
-    return this.channelService.unsubscribeChannel(channelId, userId);
-  }
-
-  @Get('episodes')
-  async getChannelEpisodes(
-    @Query('channelId') channelId: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
-    return this.episodeService.getChannelEpisodes(channelId, page, limit);
-  }
-  @Get('info')
-  async getChannelInfo(@Query('id') id: string) {
-    return this.channelService.getChannelInfo(id);
+    return this.channelService.findByUserId(userId, page, limit);
   }
 }
