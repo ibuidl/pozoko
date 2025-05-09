@@ -42,17 +42,8 @@ export class UserController {
     return this.userService.updateUser(pubkey, updateData, walletAddress);
   }
 
-  @Get('info')
+  @Get()
   async getUserInfo(@Query('id') id: string) {
-    return this.userService.getUserInfo(id);
-  }
-
-  @Get('channels')
-  async getUserChannels(
-    @Query('userId') userId: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-  ) {
-    return this.channelService.getUserChannels(userId, page, limit);
+    return this.userService.findById(id);
   }
 }

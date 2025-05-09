@@ -80,9 +80,22 @@ export class UserInfo {
   liked_channels: ChannelInfo[];
 
   @ManyToMany(() => EpisodeInfo, (episode) => episode.likers)
+  @JoinTable()
   liked_episodes: EpisodeInfo[];
 
   @ManyToMany(() => ChannelInfo, (channel) => channel.subscribers)
   @JoinTable()
   subscribed_channels: ChannelInfo[];
+
+  @ManyToMany(() => EpisodeInfo, (episode) => episode.subscribers)
+  @JoinTable()
+  subscribed_episodes: EpisodeInfo[];
+
+  @ManyToMany(() => ChannelInfo, (channel) => channel.collectors)
+  @JoinTable()
+  collected_channels: ChannelInfo[];
+
+  @ManyToMany(() => EpisodeInfo, (episode) => episode.collectors)
+  @JoinTable()
+  collected_episodes: EpisodeInfo[];
 }

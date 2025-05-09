@@ -10,12 +10,17 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { UserInfo } from '../user/user.entity';
 import { EpisodeInfo } from '../episode/episode.entity';
+import { UserInfo } from '../user/user.entity';
 
 export enum TypeOfCost {
   Free = 0,
   Paid = 1,
+}
+
+export enum FeedItunesType {
+  Episodic = 'episodic',
+  Serial = 'serial',
 }
 
 export interface Creators {
@@ -51,11 +56,17 @@ export class ChannelInfo {
   @Column('varchar', { length: 44 })
   nft_mint_account: string;
 
-  @Column({ default: 'en' })
+  @Column({ default: 'en-us' })
   language: string;
 
   @Column({ default: 'episodic' })
-  itunesType: string;
+  itunesType: FeedItunesType;
+
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  itunesExplicit: boolean;
 
   @Column({
     type: 'bigint',
@@ -101,6 +112,10 @@ export class ChannelInfo {
   @ManyToMany(() => UserInfo)
   @JoinTable()
   likers: UserInfo[];
+
+  @ManyToMany(() => UserInfo)
+  @JoinTable()
+  collectors: UserInfo[];
 
   @ManyToMany(() => UserInfo)
   @JoinTable()

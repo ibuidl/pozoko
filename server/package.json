@@ -43,6 +43,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.15.6",
+    "podcast": "^2.0.1",
     "postgres": "^3.4.5",
     "reflect-metadata": "^0.2.0",
     "rss": "^1.2.2",
