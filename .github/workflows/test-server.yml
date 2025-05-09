@@ -37,13 +37,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "${{ secrets.SSH_PRIVATE_KEY }}" 
-            mkdir -p ~/deploy/pozoko_server
+            mkdir -p ~/deploy/pozoko_server_dev
             docker login -u admin -p ${{ secrets.HARBOR_PASSWORD }} ibuidl-harbor.duckdns.org:8443
-            echo "${{ secrets.ENV_PRO_BASE64 }}" | base64 --decode > ~/deploy/pozoko_server/.env.pro
+            echo "${{ secrets.ENV_PRO_BASE64 }}" | base64 --decode > ~/deploy/pozoko_server_dev/.env.pro
 
 
-            cat << 'EOF' > ~/deploy/pozoko_server/docker-compose.yml
-            ${{ vars.SERVER_DOCKER_COMPOSE_FILE }}
+            cat << 'EOF' > ~/deploy/pozoko_server_dev/docker-compose.yml
+            ${{ vars.DEV_SERVER_COMPOSE_FILE }}
             EOF
-            cd ~/deploy/pozoko_server
+            cd ~/deploy/pozoko_server_dev
             docker compose up -d --remove-orphans
