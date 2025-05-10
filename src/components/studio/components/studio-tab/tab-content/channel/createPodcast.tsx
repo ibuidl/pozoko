@@ -3,6 +3,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useTransferSol } from '@/hooks/account';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { PublicKey } from '@solana/web3.js';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -10,6 +13,9 @@ import { Breadcrumb } from '../../../breadcrumb';
 
 export default function CreatePodcastPage() {
   const router = useRouter();
+  const wallet = useWallet();
+  const DESTINATION_ADDRESS = '你的收款sol地址'; // TODO: 替换为实际收款地址
+  const transferSol = useTransferSol({ address: wallet.publicKey! });
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -31,7 +37,21 @@ export default function CreatePodcastPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Implement payment and form submission logic
+    if (!wallet.publicKey) {
+      alert('请先连接钱包');
+      return;
+    }
+    try {
+      await transferSol.mutateAsync({
+        destination: new PublicKey(DESTINATION_ADDRESS),
+        amount: parseFloat(formData.price || '0.03'), // 默认0.03
+      });
+      // 支付成功后，继续后续逻辑（如表单提交、跳转等）
+      alert('支付成功！');
+      // TODO: 这里可以继续你的表单提交逻辑
+    } catch (err: any) {
+      alert('支付失败: ' + (err?.message || err));
+    }
   };
 
   const handleCancel = () => {
