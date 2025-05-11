@@ -1,12 +1,17 @@
-import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // 允许所有来源跨域
   app.enableCors();
+  // app.enableCors({
+  //   origin: ['http://localhost:3000', 'http://localhost:5173'],
+  //   credentials: true,
+  // });
 
   app.useGlobalPipes(
     new ValidationPipe({

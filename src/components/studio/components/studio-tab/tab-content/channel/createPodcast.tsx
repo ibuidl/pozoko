@@ -1,37 +1,148 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import Image from 'next/image';
+import { useGetBalance, useTransferSol } from '@/hooks/account';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Breadcrumb } from '../../../breadcrumb';
+import { FooterActions } from './components/FooterActions';
+import { PodcastInfoForm } from './components/PodcastInfoForm';
+import { PriceSettingsForm } from './components/PriceSettingsForm';
+import { PodcastFormData } from './types';
+
+// Import utility functions
+import { initChannelNft, prepareChannelNftArgs } from './utils/channelApi';
+import {
+  generateSymbolFromTitle,
+  getPriceFromFormData,
+  validatePodcastForm,
+} from './utils/formUtils';
+import { uploadCoverImage } from './utils/imageUtils';
+import {
+  checkWalletBalance,
+  checkWalletConnection,
+  sendSolTransaction,
+} from './utils/walletUtils';
+
+// Constants
+const MIN_SOL_REQUIRED = 0.3;
+const DEFAULT_PAYMENT_AMOUNT = 0.03;
 
 export default function CreatePodcastPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
+  const wallet = useWallet();
+  const { connection } = useConnection();
+  const DESTINATION_ADDRESS = 'your_payment_sol_address'; // TODO: Replace with actual payment address
+  const transferSol = useTransferSol({ address: wallet.publicKey! });
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<PodcastFormData>({
     title: '',
     description: '',
-    coverImage: null as File | null,
+    coverImage: null,
     previewUrl: '',
-    price: '0',
+    price: '0.03', // Default price set to 0.03
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData({
-        ...formData,
-        coverImage: file,
-        previewUrl: URL.createObjectURL(file),
-      });
-    }
+  // Get user balance
+  const balanceQuery = useGetBalance({
+    address: wallet.publicKey!,
+  });
+
+  // Handle form data updates
+  const handleFormChange = (newData: Partial<PodcastFormData>) => {
+    setFormData((prev: PodcastFormData) => ({ ...prev, ...newData }));
   };
 
+  // Form submission handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Implement payment and form submission logic
+    setIsLoading(true);
+
+    try {
+      // 1. Check if wallet is connected
+      const isConnected = await checkWalletConnection(wallet);
+      if (!isConnected) {
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Check wallet balance
+      const hasEnoughBalance = await checkWalletBalance(
+        balanceQuery.data,
+        MIN_SOL_REQUIRED,
+      );
+      if (!hasEnoughBalance) {
+        setIsLoading(false);
+        return;
+      }
+
+      // 3. Validate form completion
+      const isFormValid = validatePodcastForm(formData);
+      if (!isFormValid) {
+        setIsLoading(false);
+        return;
+      }
+
+      // 4. Process payment
+      const paymentAmount = getPriceFromFormData(
+        formData.price,
+        DEFAULT_PAYMENT_AMOUNT,
+      );
+      const signature = await sendSolTransaction(
+        transferSol,
+        DESTINATION_ADDRESS,
+        paymentAmount,
+      );
+
+      if (!signature) {
+        setIsLoading(false);
+        return;
+      }
+
+      // 5. Call channel creation API
+      // Upload cover image to storage service, get URL
+      const coverImageUrl = await uploadCoverImage(formData.coverImage!);
+
+      // Generate symbol
+      const symbol = generateSymbolFromTitle(formData.title);
+
+      // Prepare channel creation parameters
+      const channelData = prepareChannelNftArgs(
+        formData.title,
+        symbol,
+        formData.description,
+        coverImageUrl,
+        wallet.publicKey!,
+        Math.round(paymentAmount * 100),
+      );
+
+      // Call API to create channel
+      try {
+        const channelNftResult = await initChannelNft(
+          wallet,
+          connection,
+          channelData,
+        );
+        console.log('Channel created successfully:', channelNftResult);
+        toast.success('Channel created successfully!');
+
+        // 6. After channel creation, redirect to channel management page
+        router.push('/studio/channel');
+      } catch (error: any) {
+        console.error('Failed to create channel:', error);
+        toast.error(
+          `Channel creation failed: ${error.message || 'Unknown error'}`,
+        );
+        setIsLoading(false);
+        return;
+      }
+    } catch (err: any) {
+      console.error('Operation failed:', err);
+      toast.error(`Operation failed: ${err?.message || 'Unknown error'}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -39,147 +150,31 @@ export default function CreatePodcastPage() {
   };
 
   return (
-    <div className="flex flex-col justify-between   bg-[#F6F6F6]">
-      <div className=" p-[12px] pb-20 relative">
-        <div className="">
+    <div className="flex flex-col justify-between bg-[#F6F6F6]">
+      <div className="p-[12px] pb-20 relative">
+        <div>
           <Breadcrumb />
           <form
             id="podcast-form"
             onSubmit={handleSubmit}
             className="flex flex-col space-y-4"
           >
-            <div className="flex-1 bg-white rounded-lg p-6">
-              <p className="text-sm font-bold mb-[20px]">Create Podcast</p>
+            <PodcastInfoForm formData={formData} onChange={handleFormChange} />
 
-              <div className="space-y-8">
-                <div className="flex items-center">
-                  <label className="block text-sm text-gray-600 w-[120px]">
-                    Title
-                  </label>
-                  <div className="w-[281px]">
-                    <Input
-                      required
-                      placeholder="Enter title"
-                      value={formData.title}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="flex">
-                  <label className="block text-sm text-gray-600 w-[120px] pt-2">
-                    Description
-                  </label>
-                  <div className="flex-1">
-                    <Textarea
-                      className="w-[581px] min-h-[80px]"
-                      required
-                      placeholder="Enter podcast description"
-                      value={formData.description}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          description: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="flex">
-                  <label className="block text-sm text-gray-600 w-[120px] pt-2">
-                    Cover Image
-                  </label>
-                  <div className="flex-1">
-                    <div className="flex items-end space-x-4">
-                      <div className="relative w-[120px] h-[120px] border-2 border-dashed border-gray-200 rounded-lg overflow-hidden">
-                        {formData.previewUrl ? (
-                          <Image
-                            src={formData.previewUrl}
-                            alt="Cover preview"
-                            fill
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-50">
-                            <span className="text-gray-400 text-sm">
-                              Click to upload
-                            </span>
-                          </div>
-                        )}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-500 mt-auto">
-                            Supports jpg, png format, file size up to 5M
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white pt-8 p-6 rounded-lg">
-              <p className="text-sm font-bold mb-[20px]">Price Settings</p>
-
-              <div className="flex-1">
-                <div className="flex items-center space-x-4">
-                  <label className="block text-sm text-gray-600">
-                    Channel Price
-                  </label>
-                  <div className="flex-1 max-w-[200px]">
-                    <Input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="Enter amount"
-                      value={formData.price}
-                      onChange={(e) =>
-                        setFormData({ ...formData, price: e.target.value })
-                      }
-                    />
-                  </div>
-                  <span className="text-sm text-gray-600">SOL</span>
-                </div>
-              </div>
-            </div>
+            <PriceSettingsForm
+              price={formData.price}
+              onChange={(price: string) => handleFormChange({ price })}
+            />
           </form>
         </div>
       </div>
 
-      <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.05)] z-10 fixed bottom-0 w-full">
-        <div className=" px-4 py-3 flex justify-between items-center">
-          <div className="">
-            <p className="text-xs text-gray-500 py-[10px]">
-              Payment Required Available after payment 0.03 SOL
-            </p>
-            <Button
-              type="submit"
-              form="podcast-form"
-              className="bg-black text-white hover:bg-black/90"
-            >
-              Pay and Continue
-            </Button>
-            <Button
-              type="button"
-              onClick={handleCancel}
-              className="ml-[10px] bg-white text-black hover:bg-white/90 border border-black"
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </div>
+      <FooterActions
+        price={formData.price}
+        defaultPrice={DEFAULT_PAYMENT_AMOUNT}
+        isLoading={isLoading}
+        onCancel={handleCancel}
+      />
     </div>
   );
 }

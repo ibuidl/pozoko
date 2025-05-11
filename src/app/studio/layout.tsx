@@ -15,9 +15,9 @@ export default function StudioLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const router = useRouter();
 
+  const pathname = usePathname();
   const currentTab = pathname.split('/')[2] || 'channel';
 
   return (

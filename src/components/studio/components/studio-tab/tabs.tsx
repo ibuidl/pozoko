@@ -1,6 +1,7 @@
 'use client';
 
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useUserInfo } from '@/api/studio/useUserInfo';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Avatar, Tabs } from 'radix-ui';
 
 interface TabItem {
@@ -21,7 +22,15 @@ export default function StudioTabs({
   onTabChange,
   children,
 }: StudioTabsProps) {
+  const { connection } = useConnection();
+  console.log('connection', connection);
   const { publicKey } = useWallet();
+  //todo 如果没登录，则不请求用户信息
+  const { data: userInfo } = useUserInfo({
+    id: publicKey?.toBase58() || '',
+  });
+
+  console.log('userInfo', userInfo);
 
   return (
     <div className="">
@@ -37,12 +46,15 @@ export default function StudioTabs({
               <Avatar.Root className="inline-flex size-[112px] select-none items-center justify-center overflow-hidden rounded-full bg-blackA1 align-middle">
                 <Avatar.Image
                   className="size-full rounded-[inherit] object-cover"
-                  src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
-                  alt="Colm Tuite"
+                  src={
+                    userInfo?.avatar ||
+                    'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80'
+                  }
+                  alt={userInfo?.nickname || 'User Avatar'}
                 />
               </Avatar.Root>
             </div>
-            <div className="mt-[6px]">nickname</div>
+            <div className="mt-[6px]">{userInfo?.nickname || '未登录'}</div>
           </div>
           <Tabs.List
             className="flex flex-col text-xs"
