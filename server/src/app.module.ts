@@ -6,6 +6,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProgramModule } from './program/program.module';
 import { TasksModule } from './tasks/tasks.module';
+import { RankModule } from './rank/rank.module';
+import { SearchModule } from './search/search.module';
+import { ApiModule } from './api/api.module';
+import { UserModule } from './user/user.module';
+import { ChannelModule } from './channel/channel.module';
+import { RssModule } from './rss/rss.module';
+import { EpisodeModule } from './episode/episode.module';
+import { EpisodeListenerModule } from './episode-listener/episode.module';
+import { ChannelListenerModule } from './channel-listener/channel.module';
 
 @Module({
   imports: [
@@ -27,9 +36,22 @@ import { TasksModule } from './tasks/tasks.module';
       autoLoadEntities: true,
       synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
       logging: false,
+      ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true,
+      },
     }),
     TasksModule,
     ProgramModule,
+    ApiModule,
+    UserModule,
+    ChannelModule,
+    ChannelListenerModule,
+    RssModule,
+    EpisodeModule,
+    EpisodeListenerModule,
+    RankModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],

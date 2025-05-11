@@ -15,15 +15,9 @@ import { PodcastFormData } from './types';
 import { initChannelNft, prepareChannelNftArgs } from './utils/channelApi';
 import {
   generateSymbolFromTitle,
-  getPriceFromFormData,
   validatePodcastForm,
 } from './utils/formUtils';
-import { uploadCoverImage } from './utils/imageUtils';
-import {
-  checkWalletBalance,
-  checkWalletConnection,
-  sendSolTransaction,
-} from './utils/walletUtils';
+import { checkWalletBalance, checkWalletConnection } from './utils/walletUtils';
 
 // Constants
 const MIN_SOL_REQUIRED = 0.3;
@@ -63,6 +57,7 @@ export default function CreatePodcastPage() {
       // 1. Check if wallet is connected
       const isConnected = await checkWalletConnection(wallet);
       if (!isConnected) {
+        wallet?.connect();
         setIsLoading(false);
         return;
       }
@@ -85,24 +80,14 @@ export default function CreatePodcastPage() {
       }
 
       // 4. Process payment
-      const paymentAmount = getPriceFromFormData(
-        formData.price,
-        DEFAULT_PAYMENT_AMOUNT,
-      );
-      const signature = await sendSolTransaction(
-        transferSol,
-        DESTINATION_ADDRESS,
-        paymentAmount,
-      );
-
-      if (!signature) {
-        setIsLoading(false);
-        return;
-      }
+      const paymentAmount =
+        parseFloat(formData.price) || DEFAULT_PAYMENT_AMOUNT;
 
       // 5. Call channel creation API
-      // Upload cover image to storage service, get URL
-      const coverImageUrl = await uploadCoverImage(formData.coverImage!);
+      // TODO: upload cover image to pinata server, get URL
+      // const coverImageUrl = await uploadCoverImage(formData.coverImage!);
+      const coverImageUrl =
+        'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80';
 
       // Generate symbol
       const symbol = generateSymbolFromTitle(formData.title);

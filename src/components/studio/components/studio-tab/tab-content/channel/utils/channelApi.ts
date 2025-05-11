@@ -1,6 +1,9 @@
-import { AnchorProvider } from '@coral-xyz/anchor';
+import { AnchorProvider, Program } from '@coral-xyz/anchor';
 import { WalletContextState } from '@solana/wallet-adapter-react';
+
 import { Connection, PublicKey } from '@solana/web3.js';
+// idl
+import ZokuIDL from '../../../../../../../lib/program/idl/zoku.json';
 
 // Define types needed for channel creation
 export interface Creator {
@@ -26,37 +29,26 @@ export async function initChannelNft(
   wallet: WalletContextState,
   connection: Connection,
   args: ChannelNftArgs,
-): Promise<string> {
+): Promise<any> {
   try {
-    // Based on project requirements, import or build the program interface
-    // This example is based on Anchor, adjust according to the actual project
+    if (!wallet.publicKey) {
+      throw new Error('Wallet public key not found');
+    }
+
     const provider = new AnchorProvider(
       connection,
       wallet as any,
       AnchorProvider.defaultOptions(),
     );
+    const program = new Program(ZokuIDL as any, provider);
 
-    // Import the actual program object
-    // Simplified here, should import from somewhere in a real project
-    // const program = ... (import from server or configure)
-
-    // Call the actual contract method
-    // Example call:
-    // return await program.methods
-    //  .channelNftCreate(args)
-    //  .accounts({
-    //    owner: wallet.publicKey,
-    //  })
-    //  .signers([wallet.payer])
-    //  .rpc();
-
-    // Mock call, replace with code above in a real project
-    console.log('Channel creation parameters:', args);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(`tx_${Date.now()}`);
-      }, 1000);
-    });
+    program.methods
+      .channelNftCreate(args)
+      .accounts({
+        owner: program.programId.toBase58(),
+      })
+      .signers([wallet.publicKey])
+      .rpc();
   } catch (error) {
     console.error('Failed to call channel creation API:', error);
     throw error;

@@ -64,19 +64,18 @@ export class ProgramService {
       .use(walletAdapterIdentity(this.visitorWallet));
   }
 
-  // 获取与该 Mint 地址相关的所有 token 账户
   async fetchAllTokenAccountByMint(mint: PublicKey) {
     const accounts = await this.connection.getParsedProgramAccounts(
       TOKEN_PROGRAM_ID,
       {
         filters: [
           {
-            dataSize: 165, // token 账户的大小为 165 字节
+            dataSize: 165,
           },
           {
             memcmp: {
-              offset: 0, // mint 地址在账户数据的开始部分
-              bytes: mint.toBase58(), // 比较 mint 地址
+              offset: 0,
+              bytes: mint.toBase58(),
             },
           },
         ],
@@ -97,7 +96,6 @@ export class ProgramService {
     }[];
   }
   async fetchNewTransactions(ata: string, last_signature: string) {
-    // 获取同步状态
     const allSignatures = await this.connection.getSignaturesForAddress(
       new PublicKey(ata),
       { until: last_signature || undefined },
@@ -107,7 +105,97 @@ export class ProgramService {
 
   async fetchUserWalletAddress(ata: PublicKey) {
     const ataAccount = await getAccount(this.connection, ata);
-    const ownerPublicKey = ataAccount.owner; // 直接获取用户公钥
+    const ownerPublicKey = ataAccount.owner;
     return ownerPublicKey;
+  }
+
+  parseUserInitializedEvent(logs: string[]) {
+    const hasInitialize = logs.some((l) =>
+      l.includes('Instruction: InitializeUser'),
+    );
+    if (!hasInitialize) return null;
+
+    const dataLine = logs.find((l) => l.startsWith('Program data:'));
+    if (!dataLine) return null;
+
+    const base64Data = dataLine.replace('Program data: ', '');
+
+    try {
+      const eventData = this.program.coder.events.decode(base64Data);
+
+      if (eventData.name === 'userInitialized') {
+        return {
+          user: eventData.data.user,
+          nickname: eventData.data.nickname,
+          created_at: eventData.data.createdAt.toNumber(),
+          owner: eventData.data.owner,
+        };
+      }
+      return null;
+    } catch (err) {
+      console.error('Failed to decode event:', err);
+      return null;
+    }
+  }
+
+  parseChannelNftCreateEvent(logs: string[]) {
+    const hasInitialize = logs.some((l) =>
+      l.includes('Instruction: ChannelNftCreate'),
+    );
+    if (!hasInitialize) return null;
+
+    const dataLine = logs.find((l) => l.startsWith('Program data:'));
+    if (!dataLine) return null;
+
+    const base64Data = dataLine.replace('Program data: ', '');
+
+    try {
+      const eventData = this.program.coder.events.decode(base64Data);
+      console.log('eventData', eventData);
+
+      if (eventData.name === 'channelNftCreateEvent') {
+        return {
+          channel_nft_mint: eventData.data.channelNftMint,
+          created_at: eventData.data.createdAt,
+          public_key: eventData.data.channelInfoAddress,
+          name: eventData.data.channelName,
+          symbol: eventData.data.channelSymbol,
+        };
+      }
+      return null;
+    } catch (err) {
+      console.error('Failed to decode event:', err);
+      return null;
+    }
+  }
+
+  parseEpisodeCreateEvent(logs: string[]) {
+    const hasInitialize = logs.some((l) => l.includes('Instruction: UpdateEp'));
+    if (!hasInitialize) return null;
+
+    const dataLine = logs.find((l) => l.startsWith('Program data:'));
+    if (!dataLine) return null;
+
+    const base64Data = dataLine.replace('Program data: ', '');
+
+    try {
+      const eventData = this.program.coder.events.decode(base64Data);
+      console.log('eventData', eventData);
+
+      if (eventData.name === 'episodeCreatedEvent') {
+        return {
+          episode_name: eventData.data.episodeName,
+          episode_symbol: eventData.data.episodeSymbol,
+          channel: eventData.data.channel.toString(),
+          creator: eventData.data.creator.toString(),
+          metadata_cid: eventData.data.metadataCid,
+          created_at: eventData.data.createdAt.toNumber(),
+        };
+      }
+      return null;
+    } catch (err) {
+      console.error('Failed to decode event:', err);
+      return null;
+    }
   }
 }

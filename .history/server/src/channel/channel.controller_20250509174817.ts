@@ -1,0 +1,82 @@
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
+import { UpdateChannelDto } from 'src/dto/update_channel_dto';
+import { EpisodeService } from 'src/episode/episode.service';
+import { ChannelService } from './channel.service';
+
+@Controller('api/channel')
+export class ChannelController {
+  constructor(
+    private readonly channelService: ChannelService,
+    private readonly episodeService: EpisodeService,
+  ) {}
+  @Put('update/:pubkey')
+  @ApiOperation({ summary: '更新频道信息' })
+  async updateChannel(
+    @Param('pubkey') pubkey: string, // 频道 PDA 地址
+    @Body() updateData: UpdateChannelDto,
+    @Headers('wallet') walletAddress: string, // 操作者钱包地址
+  ) {
+    return this.channelService.updateChannel(pubkey, updateData, walletAddress);
+  }
+
+  @Post('init')
+  async completeChannel(
+    @Query('txHash') txHash: string,
+    @Query('language') language?: string,
+    @Query('category') category?: string,
+    @Query('itunesType') itunesType?: string,
+    @Query('subcategory') subcategory?: string,
+  ) {
+    return this.channelService.verifyAndCompleteChannel(txHash, {
+      language,
+      itunesType,
+      category,
+      subcategory,
+    });
+  }
+  @Post('like')
+  async likeChannel(
+    @Query('channelId') channelId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.channelService.likeChannel(channelId, userId);
+  }
+
+  @Post('unlike')
+  async unlikeChannel(
+    @Query('channelId') channelId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.channelService.unlikeChannel(channelId, userId);
+  }
+
+  @Post('subscribe')
+  async subscribeChannel(
+    @Query('channelId') channelId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.channelService.subscribeChannel(channelId, userId);
+  }
+
+  @Post('unsubscribe')
+  async unsubscribeChannel(
+    @Query('channelId') channelId: string,
+    @Query('userId') userId: string,
+  ) {
+    return this.channelService.unsubscribeChannel(channelId, userId);
+  }
+
+  @Get('episodes')
+  async getChannelEpisodes(
+    @Query('channelId') channelId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return this.episodeService.getChannelEpisodes(channelId, page, limit);
+  }
+  @Get('info')
+  async getChannelInfo(@Query('id') id: string) {
+    return this.channelService.getChannelInfo(id);
+  }
+}
