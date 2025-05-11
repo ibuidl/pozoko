@@ -1,14 +1,9 @@
-import { Program } from '@coral-xyz/anchor';
-import {
-  WalletContextState,
-  useConnection,
-  useWallet,
-} from '@solana/wallet-adapter-react';
+import { AnchorProvider, Program } from '@coral-xyz/anchor';
+import { WalletContextState } from '@solana/wallet-adapter-react';
 
 import { Connection, PublicKey } from '@solana/web3.js';
 // idl
 import ZokuIDL from '../../../../../../../lib/program/idl/zoku.json';
-import { Zoku } from '../../../../../../../lib/program/types/zoku';
 
 // Define types needed for channel creation
 export interface Creator {
@@ -34,35 +29,25 @@ export async function initChannelNft(
   wallet: WalletContextState,
   connection: Connection,
   args: ChannelNftArgs,
-): Promise<string> {
+): Promise<any> {
   try {
-    const { connection } = useConnection();
-    const { wallet } = useWallet();
+    if (!wallet.publicKey) {
+      throw new Error('Wallet public key not found');
+    }
 
-    // Based on project requirements, import or build the program interface
-    // This example is based on Anchor, adjust according to the actual project
-    // const provider = new AnchorProvider(
-    //   connection,
-    //   wallet as any,
-    //   AnchorProvider.defaultOptions(),
-    // );
+    const provider = new AnchorProvider(
+      connection,
+      wallet as any,
+      AnchorProvider.defaultOptions(),
+    );
+    const program = new Program(ZokuIDL as any, provider);
 
-    // Import the actual program object
-    // dev net
-    // https://devnet.helius-rpc.com/?api-key=d6a656e9-ce97-496f-97d5-d00e66284c52
-
-    const program = new Program(ZokuIDL as Zoku);
-    console.log('Program initialized:', program.programId.toBase58());
-    // Call the actual contract method
-
-    console.log(useConnection, 'debug wallet ');
-    // Example call:
-    return await program.methods
+    program.methods
       .channelNftCreate(args)
       .accounts({
         owner: program.programId.toBase58(),
       })
-      .signers([wallet?.adapter.publicKey])
+      .signers([wallet.publicKey])
       .rpc();
   } catch (error) {
     console.error('Failed to call channel creation API:', error);

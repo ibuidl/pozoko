@@ -1,6 +1,5 @@
 'use client';
 
-import { useUserInfo } from '@/api/studio/useUserInfo';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Avatar, Tabs } from 'radix-ui';
 
@@ -23,14 +22,23 @@ export default function StudioTabs({
   children,
 }: StudioTabsProps) {
   const { connection } = useConnection();
-  console.log('connection', connection);
-  const { publicKey } = useWallet();
+  const { publicKey, wallet } = useWallet();
   //todo 如果没登录，则不请求用户信息
-  const { data: userInfo } = useUserInfo({
-    id: publicKey?.toBase58() || '',
-  });
 
-  console.log('userInfo', userInfo);
+  if (!publicKey) {
+    wallet?.adapter?.connect();
+  }
+  // const { data: userInfo } = useUserInfo({
+  //   id: publicKey?.toBase58() || '',
+  // });
+
+  // 临时变量，在实际接口可用时应取消上面的注释
+  const userInfo = {
+    avatar: '',
+    nickname: publicKey ? publicKey.toString().slice(0, 6) + '...' : '',
+  };
+
+  // console.log('userInfo', userInfo);
 
   return (
     <div className="">
