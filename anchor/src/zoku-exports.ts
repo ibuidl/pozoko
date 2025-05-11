@@ -21,7 +21,7 @@ export function getZokuProgramId(cluster: Cluster) {
     case 'devnet':
     case 'testnet':
       // This is the program ID for the Zoku program on devnet and testnet.
-      return new PublicKey('coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF')
+      return new PublicKey('34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB')
     case 'mainnet-beta':
     default:
       return ZOKU_PROGRAM_ID

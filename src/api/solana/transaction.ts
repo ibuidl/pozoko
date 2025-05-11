@@ -1,13 +1,15 @@
+import { WalletContextState } from '@solana/wallet-adapter-react';
 import {
   Connection,
   LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
+  Transaction,
   TransactionMessage,
   VersionedTransaction,
 } from '@solana/web3.js';
 
-export async function createTransaction({
+export const createTransaction = async ({
   publicKey,
   destination,
   amount,
@@ -20,7 +22,7 @@ export async function createTransaction({
 }): Promise<{
   transaction: VersionedTransaction;
   latestBlockhash: { blockhash: string; lastValidBlockHeight: number };
-}> {
+}> => {
   // Get the latest blockhash to use in our transaction
   const latestBlockhash = await connection.getLatestBlockhash();
 
@@ -47,4 +49,35 @@ export async function createTransaction({
     transaction,
     latestBlockhash,
   };
-}
+};
+
+export const signAndSendTransaction = async ({
+  transaction,
+  connection,
+  wallet,
+}: {
+  transaction: Transaction;
+  connection: Connection;
+  wallet: WalletContextState;
+}) => {
+  if (!wallet.publicKey || !wallet.signTransaction) {
+    return;
+  }
+
+  const { blockhash, lastValidBlockHeight } =
+    await connection.getLatestBlockhash('confirmed');
+
+  transaction.recentBlockhash = blockhash;
+  transaction.feePayer = wallet.publicKey;
+
+  const signedTx = await wallet.signTransaction(transaction);
+  const serializedTx = signedTx.serialize();
+  const signature = await connection.sendRawTransaction(serializedTx);
+
+  await connection.confirmTransaction(
+    { lastValidBlockHeight, blockhash, signature },
+    'finalized',
+  );
+
+  return signature;
+};
