@@ -26,6 +26,16 @@ export class EpisodeController {
     return this.episodeService.unlikeEpisode(dto);
   }
 
+  @Post('collect')
+  async collectEpisode(@Query() dto: userActionDto) {
+    return this.episodeService.collectEpisode(dto);
+  }
+
+  @Post('uncollect')
+  async uncollectEpisode(@Query() dto: userActionDto) {
+    return this.episodeService.uncollectEpisode(dto);
+  }
+
   @Post('subscribe')
   async subscribeEpisode(@Query() dto: userActionDto) {
     return this.episodeService.subscribeEpisode(dto);

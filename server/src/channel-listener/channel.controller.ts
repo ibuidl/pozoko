@@ -26,6 +26,16 @@ export class ChannelController {
     return this.channelService.unlikeChannel(dto);
   }
 
+  @Post('collect')
+  async collectChannel(@Query() dto: userActionDto) {
+    return this.channelService.collectChannel(dto);
+  }
+
+  @Post('uncollect')
+  async uncollectChannel(@Query() dto: userActionDto) {
+    return this.channelService.uncollectChannel(dto);
+  }
+
   @Post('subscribe')
   async subscribeChannel(@Query() dto: userActionDto) {
     return this.channelService.subscribeChannel(dto);
