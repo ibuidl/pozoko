@@ -25,7 +25,7 @@ export type RequestInitOptions = Exclude<RequestInit, CustomRequestOptions>;
 
 export type RequestOptions = RequestInitOptions & CustomRequestOptions;
 
-const BASE_URL = 'http://103.170.154.11:3000';
+// const BASE_URL = 'http://103.170.154.11:3000';
 // const BASE_URL = 'http://45.139.227.189:3000';
 
 interface ApiError extends Error {
@@ -42,7 +42,7 @@ export const request = <ResponseBody>({
   headers,
   ...options
 }: RequestOptions): Promise<ResponseBody> => {
-  let apiUrl = (baseUrl || BASE_URL) + url;
+  let apiUrl = (baseUrl || '') + url;
   apiUrl += params ? `?${new URLSearchParams(params).toString()}` : '';
   const configs: RequestInit = {
     method: method || 'GET',

@@ -15,15 +15,12 @@ interface UserInfoResponse {
 }
 
 const getUserInfo = (params: GetUserInfoQuery) => {
-  console.log('请求参数:', params);
   return api
     .get<UserInfoResponse>('/api/user', { params })
     .then((res) => {
-      console.log('请求成功:', res);
       return res;
     })
     .catch((err) => {
-      console.log('请求错误:', err);
       if (err.status === 404) {
         throw new Error('用户不存在');
       }
@@ -32,9 +29,7 @@ const getUserInfo = (params: GetUserInfoQuery) => {
 };
 
 export const useUserInfo = (params: GetUserInfoQuery) => {
-  console.log('useUserInfo 参数:', params);
   const fetchUserInfo = useCallback(() => {
-    console.log('fetchUserInfo 被调用');
     return getUserInfo({ ...params });
   }, [params]);
 

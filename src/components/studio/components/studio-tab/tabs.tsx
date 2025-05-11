@@ -1,7 +1,7 @@
 'use client';
 
-import { useUserInfo } from '@/api/studio/UseUserInfo';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useUserInfo } from '@/api/studio/useUserInfo';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Avatar, Tabs } from 'radix-ui';
 
 interface TabItem {
@@ -22,11 +22,15 @@ export default function StudioTabs({
   onTabChange,
   children,
 }: StudioTabsProps) {
+  const { connection } = useConnection();
+  console.log('connection', connection);
   const { publicKey } = useWallet();
+  //todo 如果没登录，则不请求用户信息
   const { data: userInfo } = useUserInfo({
-    // id: publicKey?.toBase58() || '',
-    id: '95e5b3e8-f53d-45ce-9d22-5e85b2af5442',
+    id: publicKey?.toBase58() || '',
   });
+
+  console.log('userInfo', userInfo);
 
   return (
     <div className="">
