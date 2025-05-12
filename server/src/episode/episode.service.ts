@@ -39,7 +39,7 @@ export class EpisodeService {
     console.log('event:', event);
 
     try {
-      const channel = await this.channelRepository.findOne({
+      const channel = await this.channelRepository.findOneOrFail({
         where: { public_key: event.channel.toString() },
       });
       await this.episodeRepository.upsert(
@@ -79,7 +79,7 @@ export class EpisodeService {
     userId: string,
   ) {
     try {
-      const episode = await this.episodeRepository.findOne({
+      const episode = await this.episodeRepository.findOneOrFail({
         where: { metadata_cid },
       });
 
@@ -113,7 +113,7 @@ export class EpisodeService {
   }
 
   async findById(id: string) {
-    return this.episodeRepository.findOne({
+    return this.episodeRepository.findOneOrFail({
       where: { id },
     });
   }
