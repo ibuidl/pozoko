@@ -27,7 +27,7 @@ jobs:
           context: .
           file: ./server/Dockerfile
           push: true
-          tags: ibuidl-harbor.duckdns.org:8443/pozoko/pozoko-server:latest
+          tags: ibuidl-harbor.duckdns.org:8443/pozoko/pozoko-server-dev:latest
 
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@master
