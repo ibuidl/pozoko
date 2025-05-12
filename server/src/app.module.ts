@@ -15,6 +15,8 @@ import { RssModule } from './rss/rss.module';
 import { EpisodeModule } from './episode/episode.module';
 import { EpisodeListenerModule } from './episode-listener/episode.module';
 import { ChannelListenerModule } from './channel-listener/channel.module';
+import { ExceptionFilter } from './exception/exception.filter';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -54,6 +56,6 @@ import { ChannelListenerModule } from './channel-listener/channel.module';
     SearchModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_FILTER, useClass: ExceptionFilter }],
 })
 export class AppModule {}

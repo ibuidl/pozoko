@@ -35,7 +35,7 @@ export class TasksService {
     for (const userAccount of userAccounts) {
       try {
         const publicKey = userAccount.publicKey.toString();
-        const existingUser = await this.userRepository.findOne({
+        const existingUser = await this.userRepository.findOneOrFail({
           where: { public_key: publicKey },
         });
         const userData = {
@@ -71,7 +71,7 @@ export class TasksService {
     for (const channelinfo of channelinfos) {
       try {
         const channelPublicKey = channelinfo.publicKey.toString();
-        const existingChannel = await this.channelInfoRepository.findOne({
+        const existingChannel = await this.channelInfoRepository.findOneOrFail({
           where: { public_key: channelPublicKey },
         });
         const channelData = {
@@ -134,7 +134,7 @@ export class TasksService {
         try {
           const channelPublicKey = channelinfo.publicKey.toString();
 
-          const channelEntity = await manager.findOne(ChannelInfo, {
+          const channelEntity = await manager.findOneOrFail(ChannelInfo, {
             where: { public_key: channelPublicKey },
             relations: ['episodes'],
           });
@@ -147,7 +147,7 @@ export class TasksService {
           if (channelinfo.account.episodes?.length > 0) {
             for (const episode of channelinfo.account.episodes) {
               try {
-                const existingEpisode = await manager.findOne(EpisodeInfo, {
+                const existingEpisode = await manager.findOneOrFail(EpisodeInfo, {
                   where: { metadata_cid: episode.metadataCid },
                 });
 
@@ -176,7 +176,7 @@ export class TasksService {
                 if (channelinfo.account.creators?.[0]) {
                   const creatorPublicKey =
                     channelinfo.account.creators[0].address.toString();
-                  const creator = await manager.findOne(UserInfo, {
+                  const creator = await manager.findOneOrFail(UserInfo, {
                     where: { public_key: creatorPublicKey },
                   });
 
