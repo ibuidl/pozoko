@@ -13,4 +13,10 @@ pub enum ErrorCode {
 
     #[msg("Creators Empty")]
     CreatorsEmpty,
+
+    #[msg("Maximum NFT mint amount reached")]
+    MaxNftMintReached,
+
+    #[msg("Invalid owner")]
+    InvalidOwner,
 }

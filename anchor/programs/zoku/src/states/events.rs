@@ -24,7 +24,7 @@ pub struct ChannelNftCreateEvent {
 pub struct ChannelNftMintEvent {
     pub channel_nft_mint: Pubkey,
     pub creator: Pubkey,
-    pub amount: u64,
+    pub amount: u16,
 }
 
 #[event]
