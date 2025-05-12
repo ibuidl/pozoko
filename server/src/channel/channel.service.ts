@@ -79,7 +79,7 @@ export class ChannelService {
     main_creator: string,
   ) {
     try {
-      const channel = await this.channelRepository.findOne({
+      const channel = await this.channelRepository.findOneOrFail({
         where: { public_key },
         relations: ['main_creator'],
       });
@@ -115,7 +115,7 @@ export class ChannelService {
   }
 
   async findById(id: string) {
-    return this.channelRepository.findOne({
+    return this.channelRepository.findOneOrFail({
       where: { id },
     });
   }

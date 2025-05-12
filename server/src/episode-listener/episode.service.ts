@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EpisodeInfo } from '../episode/episode.entity';
-import { findByIdDto, findByChannelIdDto, userActionDto } from './episode.dto';
+import { findByChannelIdDto, findByIdDto, userActionDto } from './episode.dto';
 
 @Injectable()
 export class EpisodeService {
@@ -12,7 +12,7 @@ export class EpisodeService {
   ) {}
 
   async findById(dto: findByIdDto) {
-    const episode = await this.episodeRepository.findOne({
+    const episode = await this.episodeRepository.findOneOrFail({
       where: { id: dto.episodeId },
       select: {
         id: true,
@@ -118,5 +118,11 @@ export class EpisodeService {
       .remove(userId);
 
     return { success: true, action: 'unsubscribe', episodeId, userId };
+  }
+
+  async playEpisode(id: string) {
+    await this.episodeRepository.increment({ id }, 'play_count', 1);
+
+    return { success: true, action: 'playCount', episodeId: id };
   }
 }
