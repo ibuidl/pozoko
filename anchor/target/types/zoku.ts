@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/zoku.json`.
  */
 export type Zoku = {
-  "address": "34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB",
+  "address": "3Mxb3vnmPRcf8UCYSVaUrCc5VKV1P33EjMGuaJMuah4q",
   "metadata": {
     "name": "zoku",
     "version": "0.1.0",
@@ -293,6 +293,77 @@ export type Zoku = {
           }
         },
         {
+          "name": "channelModelConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67,
+                  104,
+                  97,
+                  110,
+                  110,
+                  101,
+                  108,
+                  77,
+                  111,
+                  100,
+                  101,
+                  108,
+                  67,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  95,
+                  118,
+                  49
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  35,
+                  21,
+                  215,
+                  176,
+                  224,
+                  96,
+                  93,
+                  235,
+                  71,
+                  115,
+                  146,
+                  207,
+                  178,
+                  113,
+                  108,
+                  47,
+                  237,
+                  9,
+                  39,
+                  209,
+                  112,
+                  123,
+                  47,
+                  82,
+                  108,
+                  104,
+                  184,
+                  157,
+                  223,
+                  13,
+                  244,
+                  38
+                ]
+              }
+            ]
+          }
+        },
+        {
           "name": "creator",
           "writable": true,
           "signer": true
@@ -313,7 +384,7 @@ export type Zoku = {
       "args": [
         {
           "name": "amount",
-          "type": "u64"
+          "type": "u16"
         }
       ]
     },
@@ -341,6 +412,75 @@ export type Zoku = {
         }
       ],
       "args": []
+    },
+    {
+      "name": "createChannelModelConfig",
+      "discriminator": [
+        15,
+        157,
+        55,
+        53,
+        103,
+        217,
+        195,
+        71
+      ],
+      "accounts": [
+        {
+          "name": "channelModelConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67,
+                  104,
+                  97,
+                  110,
+                  110,
+                  101,
+                  108,
+                  77,
+                  111,
+                  100,
+                  101,
+                  108,
+                  67,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  95,
+                  118,
+                  49
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true,
+          "address": "3Mxb3vnmPRcf8UCYSVaUrCc5VKV1P33EjMGuaJMuah4q"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "maxChannelNftMint",
+          "type": "u16"
+        }
+      ]
     },
     {
       "name": "decrement",
@@ -594,6 +734,19 @@ export type Zoku = {
       ]
     },
     {
+      "name": "channelModelConfig",
+      "discriminator": [
+        101,
+        76,
+        120,
+        212,
+        63,
+        25,
+        150,
+        232
+      ]
+    },
+    {
       "name": "userAccount",
       "discriminator": [
         211,
@@ -694,6 +847,16 @@ export type Zoku = {
       "code": 6003,
       "name": "creatorsEmpty",
       "msg": "Creators Empty"
+    },
+    {
+      "code": 6004,
+      "name": "maxNftMintReached",
+      "msg": "Maximum NFT mint amount reached"
+    },
+    {
+      "code": 6005,
+      "name": "invalidOwner",
+      "msg": "Invalid owner"
     }
   ],
   "types": [
@@ -708,7 +871,7 @@ export type Zoku = {
           },
           {
             "name": "nftMintAmount",
-            "type": "u64"
+            "type": "u16"
           },
           {
             "name": "isEnabled",
@@ -765,6 +928,18 @@ export type Zoku = {
                 }
               }
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "channelModelConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "maxChannelNftMint",
+            "type": "u16"
           }
         ]
       }
@@ -874,7 +1049,7 @@ export type Zoku = {
           },
           {
             "name": "amount",
-            "type": "u64"
+            "type": "u16"
           }
         ]
       }

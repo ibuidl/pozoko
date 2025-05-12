@@ -4,11 +4,12 @@ use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, token::{mint_to, MintTo, Token}, token_interface::{Mint, TokenAccount}};
 
 
-use crate::states::{ChannelInfo, ChannelNftMintEvent};
+use crate::states::{ChannelInfo, ChannelModelConfig, ChannelNftMintEvent};
 use crate::error::ErrorCode;
 
-pub fn channel_nft_mint(ctx: Context<ChannelNftMint>,amount: u64)-> Result<()>{
+pub fn channel_nft_mint(ctx: Context<ChannelNftMint>,amount: u16)-> Result<()>{
     require!(amount > 0 , ErrorCode::InvalidAmount);
+    require!(ctx.accounts.channel_info.nft_mint_amount < ctx.accounts.channel_model_config.max_channel_nft_mint, ErrorCode::MaxNftMintReached);
 
     let m = ctx.accounts.channel_mint_account.key();
     let channel_info = ctx.accounts.channel_info.deref_mut();
@@ -34,7 +35,7 @@ pub fn channel_nft_mint(ctx: Context<ChannelNftMint>,amount: u64)-> Result<()>{
             },
             signer_seeds,
         ),
-        amount,
+        amount as u64,
     )?;
 
     msg!("nft minted successfully.");
@@ -72,8 +73,20 @@ pub struct ChannelNftMint<'info> {
     )]
     pub channel_nft_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
+    #[account(
+        mut,
+        seeds = [
+            ChannelModelConfig::CONFIG_PREFIX_SEED.as_bytes(),
+            &crate::admin::id().key().as_ref(),
+        ],
+        bump,   
+         
+    )]
+    pub channel_model_config: Account<'info, ChannelModelConfig>,
+
     #[account(mut)]
     pub creator: Signer<'info>,
+
 
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,

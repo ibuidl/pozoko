@@ -9,6 +9,14 @@ use instructions::*;
 
 declare_id!("34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB");
 
+pub mod admin {
+    use anchor_lang::prelude::declare_id;
+    #[cfg(feature = "devnet")]
+    declare_id!("3Mxb3vnmPRcf8UCYSVaUrCc5VKV1P33EjMGuaJMuah4q"); //Please change admin Pubkey before deploy
+    #[cfg(not(feature = "devnet"))]
+    declare_id!("3Mxb3vnmPRcf8UCYSVaUrCc5VKV1P33EjMGuaJMuah4q");
+}
+
 #[program]
 pub mod zoku {
 
@@ -49,7 +57,7 @@ pub mod zoku {
         instructions::channel_nft_create(ctx, args)
     }
 
-    pub fn channel_nft_mint(ctx: Context<ChannelNftMint>, amount: u64) -> Result<()> {
+    pub fn channel_nft_mint(ctx: Context<ChannelNftMint>, amount: u16) -> Result<()> {
         instructions::channel_nft_mint(ctx, amount)
     }
 
@@ -58,6 +66,12 @@ pub mod zoku {
     }
     pub fn update_user(ctx: Context<UserUpdate>, nickname: String, avatar: String) -> Result<()> {
         instructions::update_user(ctx, nickname, avatar)
+    }
+    pub fn create_channel_model_config(
+        ctx: Context<ChannelModelConfigCreate>,
+        max_channel_nft_mint: u16,
+    ) -> Result<()> {
+        instructions::create_channel_model_config(ctx, max_channel_nft_mint)
     }
 }
 
