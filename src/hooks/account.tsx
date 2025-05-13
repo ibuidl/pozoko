@@ -4,6 +4,7 @@ import { createTransaction } from '@/api/solana';
 import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import {
+  Connection,
   LAMPORTS_PER_SOL,
   PublicKey,
   TransactionSignature,
@@ -12,12 +13,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useTransactionToast } from './program';
 
-export function useGetBalance({ address }: { address: PublicKey }) {
+export function useGetBalance(params: { address: PublicKey } | null) {
   const { connection } = useConnection();
 
   return useQuery({
-    queryKey: ['get-balance', { endpoint: connection.rpcEndpoint, address }],
-    queryFn: () => connection.getBalance(address),
+    queryKey: [
+      'get-balance',
+      { endpoint: connection.rpcEndpoint, address: params?.address },
+    ],
+    queryFn: () => (params ? connection.getBalance(params.address) : null),
+    enabled: !!params,
   });
 }
 
@@ -152,4 +157,13 @@ export function useRequestAirdrop({ address }: { address: PublicKey }) {
       ]);
     },
   });
+}
+
+// 获取账户余额的直接函数
+export async function getBalance(
+  connection: Connection,
+  address: PublicKey,
+): Promise<number> {
+  const balance = await connection.getBalance(address);
+  return balance;
 }
