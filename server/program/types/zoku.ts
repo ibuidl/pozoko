@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/pozoko_test.json`.
  */
 export type Zoku = {
-  address: '34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB';
+  address: '3Mxb3vnmPRcf8UCYSVaUrCc5VKV1P33EjMGuaJMuah4q';
   metadata: {
     name: 'zoku';
     version: '0.1.0';
