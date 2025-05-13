@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetBalance, useTransferSol } from '@/hooks/account';
+import { useGetBalance } from '@/hooks/account';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -12,7 +12,8 @@ import { PriceSettingsForm } from './components/PriceSettingsForm';
 import { PodcastFormData } from './types';
 
 // Import utility functions
-import { initChannelNft, prepareChannelNftArgs } from './utils/channelApi';
+import { useZokuProgram } from '@/hooks/program';
+import { PublicKey } from '@solana/web3.js';
 import {
   generateSymbolFromTitle,
   validatePodcastForm,
@@ -27,9 +28,10 @@ export default function CreatePodcastPage() {
   const router = useRouter();
   const wallet = useWallet();
   const { connection } = useConnection();
-  const DESTINATION_ADDRESS = 'your_payment_sol_address'; // TODO: Replace with actual payment address
-  const transferSol = useTransferSol({ address: wallet.publicKey! });
+
   const [isLoading, setIsLoading] = useState(false);
+  const { channelCreate, deriveUserAccounPda } = useZokuProgram();
+
   const [formData, setFormData] = useState<PodcastFormData>({
     title: '',
     description: '',
@@ -50,6 +52,7 @@ export default function CreatePodcastPage() {
 
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log('handleSubmit');
     e.preventDefault();
     setIsLoading(true);
 
@@ -64,27 +67,28 @@ export default function CreatePodcastPage() {
 
       // 2. Check wallet balance
       const hasEnoughBalance = await checkWalletBalance(
-        balanceQuery.data,
+        balanceQuery.data || 0,
         MIN_SOL_REQUIRED,
       );
       if (!hasEnoughBalance) {
         setIsLoading(false);
         return;
       }
-
+      console.log('222');
       // 3. Validate form completion
       const isFormValid = validatePodcastForm(formData);
       if (!isFormValid) {
         setIsLoading(false);
+
         return;
       }
-
-      // 4. Process payment
-      const paymentAmount =
-        parseFloat(formData.price) || DEFAULT_PAYMENT_AMOUNT;
+      console.log('333');
 
       // 5. Call channel creation API
       // TODO: upload cover image to pinata server, get URL
+      const paymentAmount =
+        parseFloat(formData.price) || DEFAULT_PAYMENT_AMOUNT;
+
       // const coverImageUrl = await uploadCoverImage(formData.coverImage!);
       const coverImageUrl =
         'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80';
@@ -93,35 +97,62 @@ export default function CreatePodcastPage() {
       const symbol = generateSymbolFromTitle(formData.title);
 
       // Prepare channel creation parameters
-      const channelData = prepareChannelNftArgs(
-        formData.title,
+      console.log('111');
+      channelCreate.mutate({
+        name: formData.title,
         symbol,
-        formData.description,
-        coverImageUrl,
-        wallet.publicKey!,
-        Math.round(paymentAmount * 100),
-      );
+        description: formData.description,
+        url: coverImageUrl,
+        avatar: coverImageUrl,
+        isEnabled: true,
+        creators: [
+          {
+            address: new PublicKey(
+              deriveUserAccounPda(wallet.publicKey!.toString()),
+            ),
+            share: 100,
+            verified: false,
+          },
+        ],
+        typeOfCost: { free: {} },
+        sellerFeeBasisPoints: Math.round(paymentAmount * 100),
+      });
+      const creators = [
+        {
+          address: wallet.publicKey!,
+          share: 100,
+          verified: true,
+        },
+      ];
+      // const channelData = prepareChannelNftArgs(
+      //   formData.title,
+      //   symbol,
+      //   formData.description,
+      //   coverImageUrl,
+      //   wallet.publicKey!,
+      //   Math.round(paymentAmount * 100),
+      // );
 
       // Call API to create channel
-      try {
-        const channelNftResult = await initChannelNft(
-          wallet,
-          connection,
-          channelData,
-        );
-        console.log('Channel created successfully:', channelNftResult);
-        toast.success('Channel created successfully!');
+      // try {
+      //   const channelNftResult = await initChannelNft(
+      //     wallet,
+      //     connection,
+      //     channelData,
+      //   );
+      //   console.log('Channel created successfully:', channelNftResult);
+      //   toast.success('Channel created successfully!');
 
-        // 6. After channel creation, redirect to channel management page
-        router.push('/studio/channel');
-      } catch (error: any) {
-        console.error('Failed to create channel:', error);
-        toast.error(
-          `Channel creation failed: ${error.message || 'Unknown error'}`,
-        );
-        setIsLoading(false);
-        return;
-      }
+      //   // 6. After channel creation, redirect to channel management page
+      //   router.push('/studio/channel');
+      // } catch (error: any) {
+      //   console.error('Failed to create channel:', error);
+      //   toast.error(
+      //     `Channel creation failed: ${error.message || 'Unknown error'}`,
+      //   );
+      //   setIsLoading(false);
+      //   return;
+      // }
     } catch (err: any) {
       console.error('Operation failed:', err);
       toast.error(`Operation failed: ${err?.message || 'Unknown error'}`);
