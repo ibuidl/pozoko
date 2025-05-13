@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-zoku = "34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB"
+zoku = "Dsu4RVa6ECNuVqx1fnsFN3T5XrttdRKsXiTxUsuJS6ud"
 
 [registry]
 url = "https://api.apr.dev"

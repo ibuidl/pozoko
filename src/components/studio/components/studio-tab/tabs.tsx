@@ -1,7 +1,10 @@
 'use client';
 
+import { useUserInfo } from '@/api/studio/useUserInfo';
+import { useZokuProgram } from '@/hooks/program';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Avatar, Tabs } from 'radix-ui';
+import { useEffect } from 'react';
 
 interface TabItem {
   label: string;
@@ -24,19 +27,26 @@ export default function StudioTabs({
   const { connection } = useConnection();
   const { publicKey, wallet } = useWallet();
   //todo 如果没登录，则不请求用户信息
-
+  const { initUser, usersQuery } = useZokuProgram();
   if (!publicKey) {
     wallet?.adapter?.connect();
+
+    // initUser.mutate();
   }
-  // const { data: userInfo } = useUserInfo({
-  //   id: publicKey?.toBase58() || '',
-  // });
+  const { data: userInfo } = useUserInfo({
+    id: publicKey?.toBase58() || '',
+  });
+  useEffect(() => {
+    if (publicKey) {
+      initUser.mutate();
+    }
+  }, [publicKey]);
 
   // 临时变量，在实际接口可用时应取消上面的注释
-  const userInfo = {
-    avatar: '',
-    nickname: publicKey ? publicKey.toString().slice(0, 6) + '...' : '',
-  };
+  // const userInfo = {
+  //   avatar: '',
+  //   nickname: publicKey ? publicKey.toString().slice(0, 6) + '...' : '',
+  // };
 
   // console.log('userInfo', userInfo);
 

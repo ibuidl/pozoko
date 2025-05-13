@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 
 export const UserList = () => {
   const { initUser, usersQuery } = useZokuProgram();
+  initUser.mutate();
 
   return (
     <div>

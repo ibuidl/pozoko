@@ -7,7 +7,7 @@ pub mod states;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB");
+declare_id!("Dsu4RVa6ECNuVqx1fnsFN3T5XrttdRKsXiTxUsuJS6ud");
 
 #[program]
 pub mod zoku {

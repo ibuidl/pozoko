@@ -45,6 +45,7 @@ export function useZokuProgram() {
     mutationFn: async () => {
       const signature = await zokuProgram.initUser();
       client.invalidateQueries({ queryKey: ['zoku', 'users', { cluster }] });
+      console.log(signature, '-------------------------------');
       return signature;
     },
     onSuccess: (signature = '') => {
