@@ -24,9 +24,7 @@ export async function checkWalletBalance(
     toast.error('Unable to get wallet balance');
     return false;
   }
-
   const balanceInSol = balance / LAMPORTS_PER_SOL;
-
   if (balanceInSol < requiredBalance) {
     toast.error(
       `Insufficient SOL balance. Required: ${requiredBalance} SOL, Current: ${balanceInSol.toFixed(

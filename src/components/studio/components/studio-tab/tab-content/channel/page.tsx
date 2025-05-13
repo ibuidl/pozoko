@@ -1,7 +1,9 @@
 'use client';
 
+import { usePodCastList } from '@/api/studio/useUserInfo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -80,7 +82,15 @@ export const ChannelPage = () => {
       podcast.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       podcast.description.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  const { publicKey } = useWallet();
+  const userId = publicKey?.toBase58() || '';
 
+  const { data: podCastList } = usePodCastList({
+    userId,
+    page: 1,
+    limit: 10,
+  });
+  console.log(podCastList);
   return (
     <div className="p-[20px] mx-auto h-full">
       <div className="flex justify-between items-center mb-6">

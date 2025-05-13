@@ -71,8 +71,10 @@ export function useZokuProgram() {
       const signature = await zokuProgram.channelCreate(args);
       return signature;
     },
-    onSuccess: (signature = 'channelCreate success!') =>
-      transactionToast(signature),
+    onSuccess: (signature = 'channelCreate success!') => {
+      transactionToast(signature);
+      console.log('channelCreate success!');
+    },
     onError: (error) => console.error(error),
   });
 
