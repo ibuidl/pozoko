@@ -108,6 +108,7 @@ export function useZokuProgram() {
     initUser,
     channelCreate,
     updateEp,
+    updateUser,
     channelMint,
     usersQuery,
   };
