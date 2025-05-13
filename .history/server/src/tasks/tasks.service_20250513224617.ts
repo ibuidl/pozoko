@@ -127,9 +127,7 @@ export class TasksService {
   async handleEpisodeSync() {
     console.log('start handleEpisodeSync');
     const program = this.programService.program;
-    console.log('program', program);
     const channelinfos = await program.account.channelInfo.all();
-    console.log('channelinfos', channelinfos);
 
     for (const channelinfo of channelinfos) {
       try {
