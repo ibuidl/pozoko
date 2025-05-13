@@ -3,6 +3,7 @@
 import { usePodCastList } from '@/api/studio/useUserInfo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useZokuProgram } from '@/hooks/program';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
@@ -48,7 +49,6 @@ const PodcastCard = ({
 export const ChannelPage = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-
   const podcasts: PodcastCard[] = [
     {
       title: 'BUIDLER TALK',
@@ -76,6 +76,7 @@ export const ChannelPage = () => {
       lastUpdated: '2025/05/12',
     },
   ];
+  const [dataList, setDataList] = useState(podcasts);
 
   const filteredPodcasts = podcasts.filter(
     (podcast) =>
@@ -83,14 +84,20 @@ export const ChannelPage = () => {
       podcast.description.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   const { publicKey } = useWallet();
-  const userId = publicKey?.toBase58() || '';
+  const { deriveUserAccounPda } = useZokuProgram();
+  let userId = '';
 
-  const { data: podCastList } = usePodCastList({
+  if (publicKey) {
+    userId = deriveUserAccounPda(publicKey?.toString() || '');
+    console.log(userId, 'userId');
+  }
+  const { data } = usePodCastList({
     userId,
     page: 1,
     limit: 10,
   });
-  console.log(podCastList);
+  console.log(data, 'data');
+
   return (
     <div className="p-[20px] mx-auto h-full">
       <div className="flex justify-between items-center mb-6">
@@ -114,7 +121,7 @@ export const ChannelPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredPodcasts.map((podcast, index) => (
+        {podcasts.map((podcast, index) => (
           <PodcastCard
             key={index}
             {...podcast}

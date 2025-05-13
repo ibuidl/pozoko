@@ -5,7 +5,7 @@ import { ExplorerLink } from '@/components/dev/cluster';
 import { useAnchorProvider, useCluster } from '@/provider';
 import { getZokuProgram, getZokuProgramId } from '@project/anchor';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { Cluster } from '@solana/web3.js';
+import { Cluster, PublicKey } from '@solana/web3.js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -102,7 +102,15 @@ export function useZokuProgram() {
     queryKey: ['zoku', 'users', { cluster }],
     queryFn: () => zokuProgram.getUsers(),
   });
-
+  const deriveUserAccounPda = (userAddress: string) => {
+    const publicKey = new PublicKey(userAddress);
+    const seedStr = 'userAccount_v1';
+    const [userAccountPda] = PublicKey.findProgramAddressSync(
+      [Buffer.from(seedStr), publicKey.toBuffer()],
+      program.programId,
+    );
+    return userAccountPda.toString();
+  };
   return {
     program,
     programId,
@@ -113,6 +121,7 @@ export function useZokuProgram() {
     updateUser,
     channelMint,
     usersQuery,
+    deriveUserAccounPda,
   };
 }
 
