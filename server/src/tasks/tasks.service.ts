@@ -5,7 +5,7 @@ import { ChannelInfo } from 'src/channel/channel.entity';
 import { EpisodeInfo } from 'src/episode/episode.entity';
 import { ProgramService } from 'src/program/program.service';
 import { UserInfo } from 'src/user/user.entity';
-import { Repository, DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class TasksService {
@@ -35,7 +35,7 @@ export class TasksService {
     for (const userAccount of userAccounts) {
       try {
         const publicKey = userAccount.publicKey.toString();
-        const existingUser = await this.userRepository.findOneOrFail({
+        const existingUser = await this.userRepository.findOne({
           where: { public_key: publicKey },
         });
         const userData = {
@@ -71,7 +71,7 @@ export class TasksService {
     for (const channelinfo of channelinfos) {
       try {
         const channelPublicKey = channelinfo.publicKey.toString();
-        const existingChannel = await this.channelInfoRepository.findOneOrFail({
+        const existingChannel = await this.channelInfoRepository.findOne({
           where: { public_key: channelPublicKey },
         });
         const channelData = {
@@ -82,7 +82,7 @@ export class TasksService {
           avatar: channelinfo.account.avatar,
           description: channelinfo.account.description,
           nft_mint_account: channelinfo.account.nftMintAccount.toString(),
-          nft_mint_amount: channelinfo.account.nftMintAmount.toNumber(),
+          nft_mint_amount: channelinfo.account.nftMintAmount,
           num_of_audios: channelinfo.account.numOfAudios.toNumber(),
           is_enabled: channelinfo.account.isEnabled,
           type_of_cost: this.parseTypeOfCost(channelinfo.account.typeOfCost),
@@ -128,80 +128,77 @@ export class TasksService {
     console.log('start handleEpisodeSync');
     const program = this.programService.program;
     const channelinfos = await program.account.channelInfo.all();
+    console.log(channelinfos);
 
-    await this.dataSource.transaction(async (manager) => {
-      for (const channelinfo of channelinfos) {
-        try {
-          const channelPublicKey = channelinfo.publicKey.toString();
+    for (const channelinfo of channelinfos) {
+      try {
+        const channelPublicKey = channelinfo.publicKey.toString();
 
-          const channelEntity = await manager.findOneOrFail(ChannelInfo, {
-            where: { public_key: channelPublicKey },
-            relations: ['episodes'],
-          });
+        const channelEntity = await this.channelInfoRepository.findOne({
+          where: { public_key: channelPublicKey },
+          relations: ['episodes'],
+        });
 
-          if (!channelEntity) {
-            console.log(`channel is not exist: ${channelPublicKey}`);
-            continue;
-          }
-
-          if (channelinfo.account.episodes?.length > 0) {
-            for (const episode of channelinfo.account.episodes) {
-              try {
-                const existingEpisode = await manager.findOneOrFail(EpisodeInfo, {
-                  where: { metadata_cid: episode.metadataCid },
-                });
-
-                const episodeData = {
-                  id: existingEpisode?.id,
-                  metadata_cid: episode.metadataCid,
-                  name: episode.name,
-                  symbol: episode.symbol,
-                  created_at: episode.createdAt.toNumber(),
-                  is_published: episode.isPublished,
-                  reward: episode.rewards.toNumber(),
-                  channel: channelEntity,
-                  channel_id: channelEntity.id,
-                  creator_id: channelEntity.main_creator_id,
-                  rss_feed_id: null,
-                };
-
-                const savedEpisode = await manager.save(
-                  EpisodeInfo,
-                  episodeData,
-                );
-                console.log(
-                  ` ${existingEpisode ? 'update' : 'create'} successfully: ${savedEpisode.id}`,
-                );
-
-                if (channelinfo.account.creators?.[0]) {
-                  const creatorPublicKey =
-                    channelinfo.account.creators[0].address.toString();
-                  const creator = await manager.findOneOrFail(UserInfo, {
-                    where: { public_key: creatorPublicKey },
-                  });
-
-                  if (creator) {
-                    savedEpisode.creator = creator;
-                    await manager.save(EpisodeInfo, savedEpisode);
-                    console.log(
-                      `Update ep ${savedEpisode.id} ,Its creator is: ${creator.id}`,
-                    );
-                  }
-                }
-              } catch (error) {
-                console.error(`: ${episode.metadataCid}`, error);
-                continue;
-              }
-            }
-          }
-        } catch (error) {
-          console.error(
-            `handle channel and ep error: ${channelinfo.publicKey.toString()} `,
-            error,
-          );
+        if (!channelEntity) {
+          console.log(`channel is not exist: ${channelPublicKey}`);
           continue;
         }
+
+        if (channelinfo.account.episodes?.length > 0) {
+          for (const episode of channelinfo.account.episodes) {
+            try {
+              const existingEpisode = await this.episodeRepository.findOne({
+                where: { metadata_cid: episode.metadataCid },
+              });
+
+              const episodeData = {
+                id: existingEpisode?.id,
+                metadata_cid: episode.metadataCid,
+                name: episode.name,
+                symbol: episode.symbol,
+                created_at: episode.createdAt.toNumber(),
+                is_published: episode.isPublished,
+                reward: episode.rewards.toNumber(),
+                channel: channelEntity,
+                channel_id: channelEntity.id,
+                creator_id: channelEntity.main_creator_id,
+                rss_feed_id: null,
+              };
+
+              const savedEpisode =
+                await this.episodeRepository.save(episodeData);
+              console.log(
+                ` ${existingEpisode ? 'update' : 'create'} successfully: ${savedEpisode.id}`,
+              );
+
+              if (channelinfo.account.creators?.[0]) {
+                const creatorPublicKey =
+                  channelinfo.account.creators[0].address.toString();
+                const creator = await this.userRepository.findOne({
+                  where: { public_key: creatorPublicKey },
+                });
+
+                if (creator) {
+                  savedEpisode.creator = creator;
+                  await this.episodeRepository.save(savedEpisode);
+                  console.log(
+                    `Update ep ${savedEpisode.id} ,Its creator is: ${creator.id}`,
+                  );
+                }
+              }
+            } catch (error) {
+              console.error(`: ${episode.metadataCid}`, error);
+              continue;
+            }
+          }
+        }
+      } catch (error) {
+        console.error(
+          `handle channel and ep error: ${channelinfo.publicKey.toString()} `,
+          error,
+        );
+        continue;
       }
-    });
+    }
   }
 }

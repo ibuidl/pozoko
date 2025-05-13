@@ -38,7 +38,7 @@ export class ProgramService {
   get connection(): Connection {
     const endpoint =
       this.endpoints[Math.floor(Math.random() * this.endpoints.length)];
-    console.log(endpoint);
+
     return new Connection(endpoint, 'confirmed');
   }
 
