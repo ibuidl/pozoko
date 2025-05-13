@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApiModule } from './api/api.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProgramModule } from './program/program.module';
-import { TasksModule } from './tasks/tasks.module';
-import { RankModule } from './rank/rank.module';
-import { SearchModule } from './search/search.module';
-import { ApiModule } from './api/api.module';
-import { UserModule } from './user/user.module';
-import { ChannelModule } from './channel/channel.module';
-import { RssModule } from './rss/rss.module';
-import { EpisodeModule } from './episode/episode.module';
-import { EpisodeListenerModule } from './episode-listener/episode.module';
 import { ChannelListenerModule } from './channel-listener/channel.module';
+import { ChannelModule } from './channel/channel.module';
+import { EpisodeListenerModule } from './episode-listener/episode.module';
+import { EpisodeModule } from './episode/episode.module';
 import { ExceptionFilter } from './exception/exception.filter';
-import { APP_FILTER } from '@nestjs/core';
+import { ProgramModule } from './program/program.module';
+import { RankModule } from './rank/rank.module';
+import { RssModule } from './rss/rss.module';
+import { SearchModule } from './search/search.module';
+import { TasksModule } from './tasks/tasks.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
