@@ -13,6 +13,7 @@ import { PodcastFormData } from './types';
 
 // Import utility functions
 import { useZokuProgram } from '@/hooks/program';
+import { PublicKey } from '@solana/web3.js';
 import {
   generateSymbolFromTitle,
   validatePodcastForm,
@@ -29,7 +30,7 @@ export default function CreatePodcastPage() {
   const { connection } = useConnection();
 
   const [isLoading, setIsLoading] = useState(false);
-  const { channelCreate } = useZokuProgram();
+  const { channelCreate, deriveUserAccounPda } = useZokuProgram();
 
   const [formData, setFormData] = useState<PodcastFormData>({
     title: '',
@@ -104,7 +105,15 @@ export default function CreatePodcastPage() {
         url: coverImageUrl,
         avatar: coverImageUrl,
         isEnabled: true,
-        creators: [{ address: wallet.publicKey!, share: 100, verified: false }],
+        creators: [
+          {
+            address: new PublicKey(
+              deriveUserAccounPda(wallet.publicKey!.toString()),
+            ),
+            share: 100,
+            verified: false,
+          },
+        ],
         typeOfCost: { free: {} },
         sellerFeeBasisPoints: Math.round(paymentAmount * 100),
       });
