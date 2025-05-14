@@ -1,5 +1,5 @@
 {
-  "address": "34i6xqWDw9e67z4vyfHz8AoRdqqBpuY2nV1Fcvg9PyQB",
+  "address": "Dsu4RVa6ECNuVqx1fnsFN3T5XrttdRKsXiTxUsuJS6ud",
   "metadata": {
     "name": "zoku",
     "version": "0.1.0",
@@ -9,16 +9,7 @@
   "instructions": [
     {
       "name": "channel_nft_create",
-      "discriminator": [
-        239,
-        115,
-        168,
-        244,
-        15,
-        249,
-        118,
-        90
-      ],
+      "discriminator": [239, 115, 168, 244, 15, 249, 118, 90],
       "accounts": [
         {
           "name": "channel_info",
@@ -28,19 +19,7 @@
               {
                 "kind": "const",
                 "value": [
-                  99,
-                  104,
-                  97,
-                  110,
-                  110,
-                  101,
-                  108,
-                  73,
-                  110,
-                  102,
-                  111,
-                  95,
-                  118,
+                  99, 104, 97, 110, 110, 101, 108, 73, 110, 102, 111, 95, 118,
                   49
                 ]
               },
@@ -58,16 +37,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
-                ]
+                "value": [109, 101, 116, 97, 100, 97, 116, 97]
               },
               {
                 "kind": "account",
@@ -92,19 +62,7 @@
               {
                 "kind": "const",
                 "value": [
-                  99,
-                  104,
-                  97,
-                  110,
-                  110,
-                  101,
-                  108,
-                  73,
-                  110,
-                  102,
-                  111,
-                  95,
-                  118,
+                  99, 104, 97, 110, 110, 101, 108, 73, 110, 102, 111, 95, 118,
                   49
                 ]
               },
@@ -150,16 +108,7 @@
     },
     {
       "name": "channel_nft_mint",
-      "discriminator": [
-        109,
-        181,
-        44,
-        192,
-        242,
-        179,
-        152,
-        2
-      ],
+      "discriminator": [109, 181, 44, 192, 242, 179, 152, 2],
       "accounts": [
         {
           "name": "channel_info",
@@ -169,19 +118,7 @@
               {
                 "kind": "const",
                 "value": [
-                  99,
-                  104,
-                  97,
-                  110,
-                  110,
-                  101,
-                  108,
-                  73,
-                  110,
-                  102,
-                  111,
-                  95,
-                  118,
+                  99, 104, 97, 110, 110, 101, 108, 73, 110, 102, 111, 95, 118,
                   49
                 ]
               },
@@ -208,38 +145,9 @@
               {
                 "kind": "const",
                 "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
+                  6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206,
+                  235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140,
+                  245, 133, 126, 255, 0, 169
                 ]
               },
               {
@@ -250,40 +158,34 @@
             "program": {
               "kind": "const",
               "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
               ]
             }
+          }
+        },
+        {
+          "name": "channel_model_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67, 104, 97, 110, 110, 101, 108, 77, 111, 100, 101, 108, 67,
+                  111, 110, 102, 105, 103, 95, 118, 49
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  35, 21, 215, 176, 224, 96, 93, 235, 71, 115, 146, 207, 178,
+                  113, 108, 47, 237, 9, 39, 209, 112, 123, 47, 82, 108, 104,
+                  184, 157, 223, 13, 244, 38
+                ]
+              }
+            ]
           }
         },
         {
@@ -307,37 +209,60 @@
       "args": [
         {
           "name": "amount",
-          "type": "u64"
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "create_channel_model_config",
+      "discriminator": [15, 157, 55, 53, 103, 217, 195, 71],
+      "accounts": [
+        {
+          "name": "channel_model_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67, 104, 97, 110, 110, 101, 108, 77, 111, 100, 101, 108, 67,
+                  111, 110, 102, 105, 103, 95, 118, 49
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true,
+          "address": "3Mxb3vnmPRcf8UCYSVaUrCc5VKV1P33EjMGuaJMuah4q"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "max_channel_nft_mint",
+          "type": "u16"
         }
       ]
     },
     {
       "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
       "accounts": [],
       "args": []
     },
     {
       "name": "initialize_user",
-      "discriminator": [
-        111,
-        17,
-        185,
-        250,
-        60,
-        122,
-        38,
-        254
-      ],
+      "discriminator": [111, 17, 185, 250, 60, 122, 38, 254],
       "accounts": [
         {
           "name": "user_account",
@@ -347,19 +272,7 @@
               {
                 "kind": "const",
                 "value": [
-                  117,
-                  115,
-                  101,
-                  114,
-                  65,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                  95,
-                  118,
+                  117, 115, 101, 114, 65, 99, 99, 111, 117, 110, 116, 95, 118,
                   49
                 ]
               },
@@ -393,16 +306,7 @@
     },
     {
       "name": "update_ep",
-      "discriminator": [
-        144,
-        193,
-        119,
-        155,
-        125,
-        56,
-        250,
-        239
-      ],
+      "discriminator": [144, 193, 119, 155, 125, 56, 250, 239],
       "accounts": [
         {
           "name": "channel_info",
@@ -428,88 +332,67 @@
           }
         }
       ]
+    },
+    {
+      "name": "update_user",
+      "discriminator": [9, 2, 160, 169, 118, 12, 207, 84],
+      "accounts": [
+        {
+          "name": "user_account",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "nickname",
+          "type": "string"
+        },
+        {
+          "name": "avatar",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
     {
       "name": "ChannelInfo",
-      "discriminator": [
-        146,
-        113,
-        106,
-        43,
-        179,
-        176,
-        35,
-        241
-      ]
+      "discriminator": [146, 113, 106, 43, 179, 176, 35, 241]
+    },
+    {
+      "name": "ChannelModelConfig",
+      "discriminator": [101, 76, 120, 212, 63, 25, 150, 232]
     },
     {
       "name": "UserAccount",
-      "discriminator": [
-        211,
-        33,
-        136,
-        16,
-        186,
-        110,
-        242,
-        127
-      ]
+      "discriminator": [211, 33, 136, 16, 186, 110, 242, 127]
     }
   ],
   "events": [
     {
       "name": "ChannelNftCreateEvent",
-      "discriminator": [
-        251,
-        47,
-        98,
-        156,
-        31,
-        13,
-        138,
-        221
-      ]
+      "discriminator": [251, 47, 98, 156, 31, 13, 138, 221]
     },
     {
       "name": "ChannelNftMintEvent",
-      "discriminator": [
-        118,
-        151,
-        211,
-        238,
-        99,
-        87,
-        172,
-        101
-      ]
+      "discriminator": [118, 151, 211, 238, 99, 87, 172, 101]
     },
     {
       "name": "EpisodeCreatedEvent",
-      "discriminator": [
-        80,
-        62,
-        7,
-        30,
-        107,
-        29,
-        208,
-        31
-      ]
+      "discriminator": [80, 62, 7, 30, 107, 29, 208, 31]
     },
     {
       "name": "UserInitialized",
-      "discriminator": [
-        66,
-        195,
-        5,
-        223,
-        42,
-        84,
-        135,
-        60
-      ]
+      "discriminator": [66, 195, 5, 223, 42, 84, 135, 60]
     }
   ],
   "errors": [
@@ -532,6 +415,16 @@
       "code": 6003,
       "name": "CreatorsEmpty",
       "msg": "Creators Empty"
+    },
+    {
+      "code": 6004,
+      "name": "MaxNftMintReached",
+      "msg": "Maximum NFT mint amount reached"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidOwner",
+      "msg": "Invalid owner"
     }
   ],
   "types": [
@@ -546,7 +439,7 @@
           },
           {
             "name": "nft_mint_amount",
-            "type": "u64"
+            "type": "u16"
           },
           {
             "name": "is_enabled",
@@ -603,6 +496,18 @@
                 }
               }
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ChannelModelConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "max_channel_nft_mint",
+            "type": "u16"
           }
         ]
       }
@@ -671,12 +576,10 @@
             "type": "pubkey"
           },
           {
-            "name": "creators",
+            "name": "main_creator",
             "type": {
-              "vec": {
-                "defined": {
-                  "name": "Creator"
-                }
+              "defined": {
+                "name": "Creator"
               }
             }
           },
@@ -714,7 +617,7 @@
           },
           {
             "name": "amount",
-            "type": "u64"
+            "type": "u16"
           }
         ]
       }
@@ -873,10 +776,7 @@
           {
             "name": "padding",
             "type": {
-              "array": [
-                "u64",
-                10
-              ]
+              "array": ["u64", 10]
             }
           }
         ]

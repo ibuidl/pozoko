@@ -12,7 +12,7 @@ export class ChannelService {
   ) {}
 
   async findById(dto: findByIdDto) {
-    return this.channelRepository.findOne({
+    return this.channelRepository.findOneOrFail({
       where: { id: dto.channelId },
       select: {
         id: true,

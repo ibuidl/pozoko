@@ -56,13 +56,13 @@ export class UserService {
   }
 
   async findByPublicKey(publicKey: string): Promise<UserInfo | null> {
-    return this.userRepository.findOne({
+    return this.userRepository.findOneOrFail({
       where: { public_key: publicKey },
     });
   }
 
   async findByEmail(email: string): Promise<UserInfo | null> {
-    return this.userRepository.findOne({
+    return this.userRepository.findOneOrFail({
       where: { email },
     });
   }
@@ -82,7 +82,7 @@ export class UserService {
   }
 
   async findById(id: string) {
-    return this.userRepository.findOne({
+    return this.userRepository.findOneOrFail({
       where: { id },
     });
   }
@@ -93,7 +93,7 @@ export class UserService {
     walletAddress: string,
   ) {
     try {
-      const user = await this.userRepository.findOne({
+      const user = await this.userRepository.findOneOrFail({
         where: { public_key },
       });
 

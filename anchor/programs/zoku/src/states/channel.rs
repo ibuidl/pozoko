@@ -5,7 +5,7 @@ use anchor_spl::metadata::mpl_token_metadata;
 #[derive(InitSpace)]
 pub struct ChannelInfo {
     pub nft_mint_account: Pubkey,
-    pub nft_mint_amount: u64,
+    pub nft_mint_amount: u16,
     pub is_enabled: bool,
     pub num_of_audios: u64,
     pub created_at: i64,

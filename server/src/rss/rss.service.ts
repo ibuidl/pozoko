@@ -13,7 +13,7 @@ export class RssService {
   ) {}
 
   async getChannel(channelId: string): Promise<ChannelInfo> {
-    const channel = await this.channelRepository.findOne({
+    const channel = await this.channelRepository.findOneOrFail({
       where: { id: channelId },
       relations: ['episodes', 'main_creator'],
     });

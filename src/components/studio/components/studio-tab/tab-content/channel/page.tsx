@@ -8,7 +8,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const PodcastCard = ({
   title,
@@ -87,17 +87,16 @@ export const ChannelPage = () => {
   const { deriveUserAccounPda } = useZokuProgram();
   let userId = '';
 
-  if (publicKey) {
-    userId = deriveUserAccounPda(publicKey?.toString() || '');
-    console.log(userId, 'userId');
-  }
   const { data } = usePodCastList({
     userId,
     page: 1,
     limit: 10,
   });
-  console.log(data, 'data');
-
+  useEffect(() => {
+    if (publicKey) {
+      userId = deriveUserAccounPda(publicKey?.toString() || '');
+    }
+  }, [publicKey]);
   return (
     <div className="p-[20px] mx-auto h-full">
       <div className="flex justify-between items-center mb-6">
