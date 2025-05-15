@@ -1,15 +1,19 @@
 'use client';
 
+import { useChannel } from '@/api/studio/useUserInfo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useRouter } from 'next/navigation';
+import { useChannelPda, useZokuProgram } from '@/hooks/program';
+import { useParams, useRouter } from 'next/navigation';
 import { Switch } from 'radix-ui';
 import { useState } from 'react';
 import { Breadcrumb } from '../../../breadcrumb';
 
 export default function CreateEpisodesPage() {
+  const { detail: channelId } = useParams();
   const router = useRouter();
+  const { updateEp } = useZokuProgram();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -19,6 +23,9 @@ export default function CreateEpisodesPage() {
     price: '0',
     summary: false,
   });
+
+  const { data: channelData } = useChannel(channelId as string);
+  const { channelPda } = useChannelPda(channelData?.symbol);
 
   const handleMp3Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,7 +47,18 @@ export default function CreateEpisodesPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Implement payment and form submission logic
+
+    if (!channelPda) {
+      return;
+    }
+
+    updateEp.mutate({
+      channelPda,
+      isPublished: false,
+      name: formData.title,
+      symbol: formData.label,
+      metadataCid: 'test cid',
+    });
   };
 
   const handleCancel = () => {

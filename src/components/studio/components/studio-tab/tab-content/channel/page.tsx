@@ -1,14 +1,15 @@
 'use client';
 
-import { usePodCastList } from '@/api/studio/useUserInfo';
+import { usePodCastList, useUserInfo } from '@/api/studio/useUserInfo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useZokuProgram } from '@/hooks/program';
+import { useUserPda } from '@/hooks/program';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const PodcastCard = ({
   title,
@@ -49,54 +50,48 @@ const PodcastCard = ({
 export const ChannelPage = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const podcasts: PodcastCard[] = [
-    {
-      title: 'BUIDLER TALK',
-      description:
-        'Podcast description content Podcast description content Podcast description content Podcast description content Podcast description content Podcast description content ...',
-      coverImage:
-        'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=800&h=800&fit=crop',
-      nftInfo: 'NFT minted 100/10000',
-      lastUpdated: '2025/05/12',
-    },
-    {
-      title: 'WEB3',
-      description:
-        'Podcast description content Podcast description content Podcast description content Podcast description content Podcast description content ...',
-      coverImage:
-        'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=800&h=800&fit=crop',
-      lastUpdated: '2025/05/12',
-    },
-    {
-      title: 'Cryptoria',
-      description:
-        'Podcast description content Podcast description content Podcast description content Podcast description content Podcast description content ...',
-      coverImage:
-        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=800&fit=crop',
-      lastUpdated: '2025/05/12',
-    },
-  ];
-  const [dataList, setDataList] = useState(podcasts);
+  const { connected, publicKey } = useWallet();
+  const { setVisible } = useWalletModal();
+  const { isUserInitialized } = useUserPda();
 
-  const filteredPodcasts = podcasts.filter(
-    (podcast) =>
-      podcast.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      podcast.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-  const { publicKey } = useWallet();
-  const { deriveUserAccounPda } = useZokuProgram();
-  let userId = '';
+  const { data: userInfo } = useUserInfo({
+    publicKey: publicKey?.toBase58() || '',
+  });
 
-  const { data } = usePodCastList({
-    userId,
+  const { data: podcasts } = usePodCastList({
+    userId: userInfo?.id || '',
     page: 1,
     limit: 10,
   });
-  useEffect(() => {
-    if (publicKey) {
-      userId = deriveUserAccounPda(publicKey?.toString() || '');
-    }
-  }, [publicKey]);
+
+  const filteredPodcasts = useMemo(() => {
+    return podcasts?.filter(
+      (podcast) =>
+        podcast.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        podcast.description.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }, [podcasts, searchQuery]);
+
+  if (!connected) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-6">
+        <div className="text-2xl font-bold">Please connect your wallet</div>
+        <Button onClick={() => setVisible(true)}>Connect Wallet</Button>
+      </div>
+    );
+  }
+
+  if (!isUserInitialized) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-6">
+        <div className="text-2xl font-bold">Please initialize your account</div>
+        <Button onClick={() => router.push('/studio/profile')}>
+          Go to profile
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="p-[20px] mx-auto h-full">
       <div className="flex justify-between items-center mb-6">
@@ -120,15 +115,18 @@ export const ChannelPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {podcasts.map((podcast, index) => (
+        {podcasts?.map((podcast, index) => (
           <PodcastCard
             key={index}
-            {...podcast}
-            onClick={() => router.push(`/studio/channel/detail${index}`)}
+            title={podcast.name}
+            description={podcast.description}
+            coverImage={podcast.avatar}
+            lastUpdated={podcast.created_at}
+            onClick={() => router.push(`/studio/channel/${podcast.id}`)}
           />
         ))}
       </div>
-      {filteredPodcasts.length === 0 && (
+      {filteredPodcasts?.length === 0 && (
         <div className="text-center text-gray-500 py-8">No podcasts found</div>
       )}
     </div>

@@ -1,6 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useUserPda, useZokuProgram } from '@/hooks/program';
 import { Avatar } from 'radix-ui';
 import { useRef, useState } from 'react';
 
@@ -47,6 +48,8 @@ export const ProfilePage = () => {
     'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80',
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { userPda, isUserInitialized } = useUserPda();
+  const { initUser, updateUser } = useZokuProgram();
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -61,7 +64,22 @@ export const ProfilePage = () => {
   };
 
   const onSaveProfile = () => {
-    // TODO: 实现保存逻辑
+    if (isUserInitialized) {
+      if (!userPda) {
+        return;
+      }
+
+      updateUser.mutate({
+        userPda,
+        nickname: formData.name,
+        avatar: avatarUrl,
+      });
+    } else {
+      initUser.mutate({
+        nickname: formData.name,
+        avatar: avatarUrl,
+      });
+    }
   };
 
   return (
@@ -172,7 +190,9 @@ export const ProfilePage = () => {
             />
           </div>
         </div>
-        <Button onClick={onSaveProfile}>renew</Button>
+        <Button onClick={onSaveProfile}>
+          {isUserInitialized ? 'update' : 'initialize'}
+        </Button>
       </div>
     </div>
   );
