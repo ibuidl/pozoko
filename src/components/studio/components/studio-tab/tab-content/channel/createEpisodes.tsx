@@ -1,5 +1,6 @@
 'use client';
 
+import { pinata } from '@/api/pinata/config';
 import { useChannel } from '@/api/studio/useUserInfo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -48,16 +49,34 @@ export default function CreateEpisodesPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!channelPda) {
+    if (!channelPda || !formData.mp3File) {
       return;
     }
+
+    const urlRequest = await fetch('/api/url');
+    const urlResponse = await urlRequest.json();
+    const audioUpload = await pinata.upload.public
+      .file(formData.mp3File)
+      .url(urlResponse.url);
+    const audioUrl = await pinata.gateways.public.convert(audioUpload.cid);
+
+    const metadata = {
+      name: formData.title,
+      symbol: formData.label,
+      description: formData.description,
+      image: audioUrl,
+    };
+
+    const metadataUpload = await pinata.upload.public
+      .json(metadata)
+      .url(urlResponse.url);
 
     updateEp.mutate({
       channelPda,
       isPublished: false,
       name: formData.title,
       symbol: formData.label,
-      metadataCid: 'test cid',
+      metadataCid: metadataUpload.cid,
     });
   };
 

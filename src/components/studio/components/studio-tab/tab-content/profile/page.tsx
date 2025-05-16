@@ -1,4 +1,5 @@
 'use client';
+import { pinata } from '@/api/pinata/config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUserPda, useZokuProgram } from '@/hooks/program';
@@ -51,11 +52,15 @@ export const ProfilePage = () => {
   const { userPda, isUserInitialized } = useUserPda();
   const { initUser, updateUser } = useZokuProgram();
 
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
-      setAvatarFile(file);
-      setAvatarUrl(URL.createObjectURL(file));
+      const urlRequest = await fetch('/api/url');
+      const urlResponse = await urlRequest.json();
+      const upload = await pinata.upload.public.file(file).url(urlResponse.url);
+      const imgUrl = await pinata.gateways.public.convert(upload.cid);
+
+      setAvatarUrl(imgUrl);
     }
   };
 
