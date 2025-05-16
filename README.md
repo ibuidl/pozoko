@@ -25,6 +25,15 @@ cd <repo-name>
 pnpm install
 ```
 
+#### Configure env for testing Pinata
+
+Create `.env.local` at root folder and fill the content bellow.(or manual create your own api key from [pinata](https://app.pinata.cloud/developers/api-keys))
+
+```sh
+PINATA_JWT=
+NEXT_PUBLIC_GATEWAY_URL=
+```
+
 #### Start the web app
 
 ```
