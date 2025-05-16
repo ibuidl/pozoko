@@ -1,15 +1,20 @@
 'use client';
 
+import { pinata } from '@/api/pinata/config';
+import { useChannel } from '@/api/studio/useUserInfo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useRouter } from 'next/navigation';
+import { useChannelPda, useZokuProgram } from '@/hooks/program';
+import { useParams, useRouter } from 'next/navigation';
 import { Switch } from 'radix-ui';
 import { useState } from 'react';
 import { Breadcrumb } from '../../../breadcrumb';
 
 export default function CreateEpisodesPage() {
+  const { detail: channelId } = useParams();
   const router = useRouter();
+  const { updateEp } = useZokuProgram();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -19,6 +24,9 @@ export default function CreateEpisodesPage() {
     price: '0',
     summary: false,
   });
+
+  const { data: channelData } = useChannel(channelId as string);
+  const { channelPda } = useChannelPda(channelData?.symbol);
 
   const handleMp3Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,7 +48,36 @@ export default function CreateEpisodesPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Implement payment and form submission logic
+
+    if (!channelPda || !formData.mp3File) {
+      return;
+    }
+
+    const urlRequest = await fetch('/api/url');
+    const urlResponse = await urlRequest.json();
+    const audioUpload = await pinata.upload.public
+      .file(formData.mp3File)
+      .url(urlResponse.url);
+    const audioUrl = await pinata.gateways.public.convert(audioUpload.cid);
+
+    const metadata = {
+      name: formData.title,
+      symbol: formData.label,
+      description: formData.description,
+      image: audioUrl,
+    };
+
+    const metadataUpload = await pinata.upload.public
+      .json(metadata)
+      .url(urlResponse.url);
+
+    updateEp.mutate({
+      channelPda,
+      isPublished: false,
+      name: formData.title,
+      symbol: formData.label,
+      metadataCid: metadataUpload.cid,
+    });
   };
 
   const handleCancel = () => {

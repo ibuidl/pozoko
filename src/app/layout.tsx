@@ -4,6 +4,7 @@ import {
   SolanaProvider,
 } from '@/provider';
 import '@/style/global.css';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
   title: 'Zoku',
@@ -19,7 +20,10 @@ export default function RootLayout({
       <body>
         <ReactQueryProvider>
           <ClusterProvider>
-            <SolanaProvider>{children}</SolanaProvider>
+            <SolanaProvider>
+              {children}
+              <Toaster position="bottom-right" />
+            </SolanaProvider>
           </ClusterProvider>
         </ReactQueryProvider>
       </body>

@@ -1,14 +1,16 @@
 'use client';
 
+import { useEpisodeList } from '@/api/studio/useUserInfo';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import router from 'next/router';
+import { useMemo, useState } from 'react';
 import { Breadcrumb } from '../../../breadcrumb';
 import ActionBar from './actionBar';
 import DraftBoxList from './draftBoxList';
 import EmptyEpisodesPlaceholder from './emptyEpisodesPlaceholder';
-import PublishedEpisodes from './publishedEpisodes';
+import PublishedEpisodes from './PublishedEpisodes';
 
 const DetailCard = ({
   title,
@@ -51,43 +53,25 @@ const DetailCard = ({
 );
 
 export default function DetailEpisodes() {
-  const { id } = useParams();
-  const router = useRouter();
+  const { detail: channelId } = useParams();
   const [tab, setTab] = useState<'published' | 'draft'>('published');
   const [searchValue, setSearchValue] = useState('');
 
-  const draftData: any[] = [
-    {
-      id: 1,
-      title: 'Episode Title 1',
-      description: 'This is the description for episode 1.',
-    },
-    {
-      id: 2,
-      title: 'Episode Title 2',
-      description: 'This is the description for episode 2.',
-    },
-    {
-      id: 3,
-      title: 'Episode Title 3',
-      description: 'This is the description for episode 3.',
-    },
-  ];
-  const publishedData: any[] = [];
-  // const draftData: any[] = [];
+  const { data: episodesData } = useEpisodeList({
+    channelId: channelId as string,
+    page: 1,
+    limit: 10,
+  });
 
-  const data = {
-    title: 'titletitletitletitle',
-    description:
-      'descriptiondescriptiondescriptiondescriptiondescriptiondescription',
-    coverImage:
-      'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=800&h=800&fit=crop',
-    nftInfo: 'NFT minted 100/10000',
-    lastUpdated: '2021-01-01',
-    onClick: () => {},
-  };
+  const publishedData = useMemo(
+    () => episodesData?.filter((episode) => episode.is_published) || [],
+    [episodesData],
+  );
 
-  const episodesData = tab === 'published' ? publishedData : draftData;
+  const draftData = useMemo(
+    () => episodesData?.filter((episode) => !episode.is_published) || [],
+    [episodesData],
+  );
 
   // 创建按钮事件
   const handleCreate = () => {
@@ -130,7 +114,11 @@ export default function DetailEpisodes() {
   return (
     <div className="p-[12px] ">
       <Breadcrumb />
-      <DetailCard {...data} />
+      <DetailCard
+        title="test"
+        description="test"
+        coverImage="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+      />
       <ActionBar {...actionBarProps} />
       <div>{content}</div>
     </div>

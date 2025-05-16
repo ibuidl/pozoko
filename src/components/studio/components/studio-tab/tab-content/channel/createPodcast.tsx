@@ -1,7 +1,7 @@
 'use client';
 
 import { useGetBalance } from '@/hooks/account';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -12,7 +12,7 @@ import { PriceSettingsForm } from './components/PriceSettingsForm';
 import { PodcastFormData } from './types';
 
 // Import utility functions
-import { useZokuProgram } from '@/hooks/program';
+import { useUserPda, useZokuProgram } from '@/hooks/program';
 import { PublicKey } from '@solana/web3.js';
 import {
   generateSymbolFromTitle,
@@ -27,10 +27,10 @@ const DEFAULT_PAYMENT_AMOUNT = 0.03;
 export default function CreatePodcastPage() {
   const router = useRouter();
   const wallet = useWallet();
-  const { connection } = useConnection();
 
   const [isLoading, setIsLoading] = useState(false);
-  const { channelCreate, deriveUserAccounPda } = useZokuProgram();
+  const { channelCreate } = useZokuProgram();
+  const { userPda } = useUserPda();
 
   const [formData, setFormData] = useState<PodcastFormData>({
     title: '',
@@ -107,9 +107,7 @@ export default function CreatePodcastPage() {
         isEnabled: true,
         creators: [
           {
-            address: new PublicKey(
-              deriveUserAccounPda(wallet.publicKey!.toString()),
-            ),
+            address: new PublicKey(userPda || ''),
             share: 100,
             verified: false,
           },

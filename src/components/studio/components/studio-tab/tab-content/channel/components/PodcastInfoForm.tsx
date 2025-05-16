@@ -1,5 +1,6 @@
 'use client';
 
+import { pinata } from '@/api/pinata/config';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
@@ -12,12 +13,22 @@ interface PodcastInfoFormProps {
 
 export function PodcastInfoForm({ formData, onChange }: PodcastInfoFormProps) {
   // Handle image upload
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    const urlRequest = await fetch('/api/url');
+    const urlResponse = await urlRequest.json();
+    const upload = await pinata.upload.public.file(file).url(urlResponse.url);
+    const imgUrl = await pinata.gateways.public.convert(upload.cid);
+
     if (file) {
       onChange({
         coverImage: file,
-        previewUrl: URL.createObjectURL(file),
+        previewUrl: imgUrl,
       });
     }
   };

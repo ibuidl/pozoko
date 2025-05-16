@@ -7,7 +7,6 @@ import '@/style/dev.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode, Suspense } from 'react';
-import { Toaster } from 'react-hot-toast';
 
 const links: { label: string; path: string }[] = [
   { label: 'Account', path: '/account' },
@@ -56,7 +55,6 @@ export default function DevLayout({ children }: { children: ReactNode }) {
         >
           {children}
         </Suspense>
-        <Toaster position="bottom-right" />
       </div>
       <footer className="footer footer-center p-4 bg-base-300 text-base-content">
         <aside>

@@ -1,16 +1,10 @@
 'use client';
 
+import { Episode } from '@/api/studio/useUserInfo';
 import Image from 'next/image';
 
-interface Draft {
-  id: number;
-  title: string;
-  description: string;
-  coverImage: string;
-}
-
 interface DraftBoxListProps {
-  drafts: Draft[];
+  drafts: Episode[];
 }
 
 export default function DraftBoxList({ drafts }: DraftBoxListProps) {
@@ -29,14 +23,14 @@ export default function DraftBoxList({ drafts }: DraftBoxListProps) {
                     ? draft.coverImage
                     : 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=800&h=800&fit=crop'
                 }
-                alt={draft.title}
+                alt={draft.name}
                 fill
                 className="object-cover rounded"
                 sizes="72px"
               />
             </div>
             <div className="ml-4 flex-1">
-              <h4 className="font-semibold text-base mb-1">{draft.title}</h4>
+              <h4 className="font-semibold text-base mb-1">{draft.name}</h4>
               <p className="text-sm text-gray-600 line-clamp-2">
                 {draft.description}
               </p>

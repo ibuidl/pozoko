@@ -1,11 +1,6 @@
+import { Episode } from '@/api/studio/useUserInfo';
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
-
-interface Episode {
-  id: number;
-  title: string;
-  description: string;
-}
 
 interface PublishedEpisodesProps {
   publishedData: Episode[];
@@ -57,7 +52,7 @@ const PublishedEpisodes: React.FC<PublishedEpisodesProps> = ({
                     isSelected ? 'font-bold' : 'font-medium'
                   } text-base`}
                 >
-                  Episode {ep.id}: {ep.title}
+                  Episode {ep.id}: {ep.name}
                 </span>
                 <Button
                   variant="link"
@@ -82,7 +77,7 @@ const PublishedEpisodes: React.FC<PublishedEpisodesProps> = ({
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center">
                 <div className="text-xl font-semibold mr-3">
-                  Episode {selectedEpisode.id}: {selectedEpisode.title}
+                  Episode {selectedEpisode.id}: {selectedEpisode.name}
                 </div>
                 <span className="bg-[#222] text-white text-xs px-2 py-1 rounded ml-2">
                   Paid Episodes

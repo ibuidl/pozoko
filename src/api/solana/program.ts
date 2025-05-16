@@ -1,9 +1,12 @@
-import { BN, Program } from '@coral-xyz/anchor';
+import { Program } from '@coral-xyz/anchor';
 import { Zoku } from '@project/anchor';
 import { WalletContextState } from '@solana/wallet-adapter-react';
-import { Connection } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 import { signAndSendTransaction } from './transaction';
 import { ChannelNftArgs, EpisodeArgs } from './types';
+
+const USER_SEED_PREFIX = 'userAccount_v1';
+const CHANNEL_SEED_PREFIX = 'channelInfo_v1';
 
 export class ZokuProgram {
   program: Program<Zoku>;
@@ -20,7 +23,7 @@ export class ZokuProgram {
     this.wallet = options.wallet;
   }
 
-  async initUser() {
+  async initUser(args: { nickname: string; avatar: string }) {
     if (!this.wallet.publicKey) {
       return;
     }
@@ -30,7 +33,7 @@ export class ZokuProgram {
     };
 
     const tx = await this.program.methods
-      .initializeUser('', '')
+      .initializeUser(args.nickname, args.avatar)
       .accounts(accounts)
       .transaction();
 
@@ -72,7 +75,7 @@ export class ZokuProgram {
     };
 
     const tx = await this.program.methods
-      .channelNftMint(new BN(args.amount))
+      .channelNftMint(args.amount)
       .accounts(accounts)
       .transaction();
 
@@ -88,13 +91,9 @@ export class ZokuProgram {
       return;
     }
 
-    const accounts: any = {
-      creator: this.wallet.publicKey,
-    };
-
     const tx = await this.program.methods
       .updateEp(args)
-      .accounts(accounts)
+      .accounts({ creator: this.wallet.publicKey, channelInfo: args.channelPda })
       .transaction();
 
     return signAndSendTransaction({
@@ -104,18 +103,18 @@ export class ZokuProgram {
     });
   }
 
-  async updateUser(args: { nickname: string; avatar: string }) {
+  async updateUser(args: {
+    userPda: PublicKey;
+    nickname: string;
+    avatar: string;
+  }) {
     if (!this.wallet.publicKey) {
       return;
     }
 
-    const accounts: any = {
-      owner: this.wallet.publicKey,
-    };
-
     const tx = await this.program.methods
       .updateUser(args.nickname, args.avatar)
-      .accounts(accounts)
+      .accounts({ userAccount: args.userPda })
       .transaction();
 
     return signAndSendTransaction({
@@ -151,9 +150,5 @@ export class ZokuProgram {
       wallet: this.wallet,
     });
     */
-  }
-
-  async getUsers() {
-    return this.program.account.userAccount.all();
   }
 }

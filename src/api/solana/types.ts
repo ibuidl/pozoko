@@ -17,6 +17,7 @@ export type ChannelNftArgs = {
 };
 
 export type EpisodeArgs = {
+  channelPda: PublicKey;
   isPublished: boolean;
   name: string;
   symbol: string;
