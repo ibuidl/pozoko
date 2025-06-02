@@ -11,11 +11,11 @@ import {
   Unique,
 } from 'typeorm';
 import { ChannelInfo } from '../channel/channel.entity';
-import { UserInfo } from '../user/user.entity';
 import {
-  EpisodeTipRecord,
   EpisodePurchaseRecord,
+  EpisodeTipRecord,
 } from '../program/transaction.entity';
+import { UserInfo } from '../user/user.entity';
 
 export enum AudioMimeType {
   MP3 = 'audio/mpeg',
@@ -131,4 +131,17 @@ export class EpisodeInfo {
 
   @OneToMany(() => EpisodePurchaseRecord, (record) => record.episode)
   purchase_records: EpisodePurchaseRecord[];
+
+  @Column({ default: false })
+  is_ai_processed: boolean;
+
+  @Column({
+    type: 'int',
+    default: 0,
+    comment: 'The number of tries to get the EP AI-Processed',
+  })
+  ai_process_try_count: number;
+
+  @Column('varchar', { length: 1024, nullable: true })
+  ai_generated_summary: string;
 }
