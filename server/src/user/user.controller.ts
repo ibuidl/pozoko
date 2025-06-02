@@ -43,7 +43,7 @@ export class UserController {
   }
 
   @Get()
-  async getUserInfo(@Query('id') id: string) {
-    return this.userService.findById(id);
+  async getUserInfo(@Query('publickey') publickey: string) {
+    return this.userService.findByPublicKey(publickey);
   }
 }
